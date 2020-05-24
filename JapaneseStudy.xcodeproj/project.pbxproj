@@ -9,23 +9,73 @@
 /* Begin PBXBuildFile section */
 		735D2021245CBD1D00405CF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2020245CBD1D00405CF9 /* AppDelegate.swift */; };
 		735D2023245CBD1D00405CF9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2022245CBD1D00405CF9 /* SceneDelegate.swift */; };
-		735D2025245CBD1D00405CF9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2024245CBD1D00405CF9 /* ViewController.swift */; };
+		735D2025245CBD1D00405CF9 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2024245CBD1D00405CF9 /* HomeController.swift */; };
 		735D2028245CBD1D00405CF9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 735D2026245CBD1D00405CF9 /* Main.storyboard */; };
 		735D202B245CBD1D00405CF9 /* JapaneseStudy.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 735D2029245CBD1D00405CF9 /* JapaneseStudy.xcdatamodeld */; };
 		735D202D245CBD1F00405CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 735D202C245CBD1F00405CF9 /* Assets.xcassets */; };
 		735D2030245CBD1F00405CF9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 735D202E245CBD1F00405CF9 /* LaunchScreen.storyboard */; };
+		735D203A245CC18900405CF9 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2039245CC18900405CF9 /* Extensions.swift */; };
+		735D203E245D900900405CF9 /* ContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D203D245D900900405CF9 /* ContainerController.swift */; };
+		735D2040245D947F00405CF9 /* MainMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D203F245D947F00405CF9 /* MainMenuController.swift */; };
+		735D2044245E41BB00405CF9 /* MenuOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2043245E41BB00405CF9 /* MenuOptionCell.swift */; };
+		7365AEC1246F00EB00FB0952 /* Word.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AEC0246F00EB00FB0952 /* Word.swift */; };
+		7365AEC3246F00FC00FB0952 /* Kanji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AEC2246F00FC00FB0952 /* Kanji.swift */; };
+		7365AEC5246F012B00FB0952 /* StudyObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AEC4246F012B00FB0952 /* StudyObject.swift */; };
+		7365AEC8246F379500FB0952 /* WordKanjiDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AEC7246F379500FB0952 /* WordKanjiDatabase.swift */; };
+		7365AECA2471D0D800FB0952 /* UpComingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AEC92471D0D800FB0952 /* UpComingController.swift */; };
+		7365AECC2471D0F700FB0952 /* UpComingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AECB2471D0F700FB0952 /* UpComingCell.swift */; };
+		7365AECE24743DF500FB0952 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AECD24743DF500FB0952 /* SettingsController.swift */; };
+		7365AED024743FDE00FB0952 /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AECF24743FDE00FB0952 /* SettingsCell.swift */; };
+		7365AED2247444DA00FB0952 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AED1247444DA00FB0952 /* SettingsSection.swift */; };
+		7365AED42474935800FB0952 /* MenuSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AED32474935800FB0952 /* MenuSection.swift */; };
+		7365AED62475986C00FB0952 /* QuizController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AED52475986C00FB0952 /* QuizController.swift */; };
+		7365AED8247598DB00FB0952 /* VocabularyQuizMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AED7247598DB00FB0952 /* VocabularyQuizMenuController.swift */; };
+		7365AEDA247598EF00FB0952 /* KanjiQuizMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AED9247598EF00FB0952 /* KanjiQuizMenuController.swift */; };
+		7365AEDE2476442600FB0952 /* JapaneseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AEDD2476442600FB0952 /* JapaneseTextField.swift */; };
+		7365AEE02477317400FB0952 /* FailurePopUpWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AEDF2477317400FB0952 /* FailurePopUpWindow.swift */; };
+		7365AEE2247A3DB200FB0952 /* SuccessPopUpWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AEE1247A3DB200FB0952 /* SuccessPopUpWindow.swift */; };
+		7365AEE4247A495400FB0952 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7365AEE3247A495400FB0952 /* PersistenceService.swift */; };
+		738FC1E824649C61005BB229 /* MenuOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738FC1E724649C61005BB229 /* MenuOption.swift */; };
+		738FC1EA2464A972005BB229 /* VocabularyStudyMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738FC1E92464A972005BB229 /* VocabularyStudyMenuController.swift */; };
+		73F705722467058E00C76458 /* KanjiStudyMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F705712467058E00C76458 /* KanjiStudyMenuController.swift */; };
+		73F7057624676BA500C76458 /* StudyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F7057524676BA500C76458 /* StudyController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		735D201D245CBD1D00405CF9 /* JapaneseStudy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JapaneseStudy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		735D2020245CBD1D00405CF9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		735D2022245CBD1D00405CF9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		735D2024245CBD1D00405CF9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		735D2024245CBD1D00405CF9 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		735D2027245CBD1D00405CF9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		735D202A245CBD1D00405CF9 /* JapaneseStudy.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = JapaneseStudy.xcdatamodel; sourceTree = "<group>"; };
 		735D202C245CBD1F00405CF9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		735D202F245CBD1F00405CF9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		735D2031245CBD1F00405CF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		735D2039245CC18900405CF9 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		735D203D245D900900405CF9 /* ContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerController.swift; sourceTree = "<group>"; };
+		735D203F245D947F00405CF9 /* MainMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuController.swift; sourceTree = "<group>"; };
+		735D2043245E41BB00405CF9 /* MenuOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOptionCell.swift; sourceTree = "<group>"; };
+		7365AEC0246F00EB00FB0952 /* Word.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word.swift; sourceTree = "<group>"; };
+		7365AEC2246F00FC00FB0952 /* Kanji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kanji.swift; sourceTree = "<group>"; };
+		7365AEC4246F012B00FB0952 /* StudyObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyObject.swift; sourceTree = "<group>"; };
+		7365AEC7246F379500FB0952 /* WordKanjiDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordKanjiDatabase.swift; sourceTree = "<group>"; };
+		7365AEC92471D0D800FB0952 /* UpComingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpComingController.swift; sourceTree = "<group>"; };
+		7365AECB2471D0F700FB0952 /* UpComingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpComingCell.swift; sourceTree = "<group>"; };
+		7365AECD24743DF500FB0952 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		7365AECF24743FDE00FB0952 /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
+		7365AED1247444DA00FB0952 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
+		7365AED32474935800FB0952 /* MenuSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSection.swift; sourceTree = "<group>"; };
+		7365AED52475986C00FB0952 /* QuizController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizController.swift; sourceTree = "<group>"; };
+		7365AED7247598DB00FB0952 /* VocabularyQuizMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyQuizMenuController.swift; sourceTree = "<group>"; };
+		7365AED9247598EF00FB0952 /* KanjiQuizMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiQuizMenuController.swift; sourceTree = "<group>"; };
+		7365AEDD2476442600FB0952 /* JapaneseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JapaneseTextField.swift; sourceTree = "<group>"; };
+		7365AEDF2477317400FB0952 /* FailurePopUpWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailurePopUpWindow.swift; sourceTree = "<group>"; };
+		7365AEE1247A3DB200FB0952 /* SuccessPopUpWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessPopUpWindow.swift; sourceTree = "<group>"; };
+		7365AEE3247A495400FB0952 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
+		738FC1E724649C61005BB229 /* MenuOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOption.swift; sourceTree = "<group>"; };
+		738FC1E92464A972005BB229 /* VocabularyStudyMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyStudyMenuController.swift; sourceTree = "<group>"; };
+		73F705712467058E00C76458 /* KanjiStudyMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiStudyMenuController.swift; sourceTree = "<group>"; };
+		73F7057524676BA500C76458 /* StudyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,9 +108,13 @@
 		735D201F245CBD1D00405CF9 /* JapaneseStudy */ = {
 			isa = PBXGroup;
 			children = (
+				73E7A105247AF44F005D9AD8 /* CoreData */,
+				735D203C245D8FDC00405CF9 /* Utils */,
+				735D2037245CBD7C00405CF9 /* Models */,
+				735D203B245D8FD300405CF9 /* View */,
+				735D2038245CBD8200405CF9 /* Controllers */,
 				735D2020245CBD1D00405CF9 /* AppDelegate.swift */,
 				735D2022245CBD1D00405CF9 /* SceneDelegate.swift */,
-				735D2024245CBD1D00405CF9 /* ViewController.swift */,
 				735D2026245CBD1D00405CF9 /* Main.storyboard */,
 				735D202C245CBD1F00405CF9 /* Assets.xcassets */,
 				735D202E245CBD1F00405CF9 /* LaunchScreen.storyboard */,
@@ -68,6 +122,67 @@
 				735D2029245CBD1D00405CF9 /* JapaneseStudy.xcdatamodeld */,
 			);
 			path = JapaneseStudy;
+			sourceTree = "<group>";
+		};
+		735D2037245CBD7C00405CF9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				738FC1E724649C61005BB229 /* MenuOption.swift */,
+				7365AEC4246F012B00FB0952 /* StudyObject.swift */,
+				7365AEC2246F00FC00FB0952 /* Kanji.swift */,
+				7365AEC0246F00EB00FB0952 /* Word.swift */,
+				7365AEC7246F379500FB0952 /* WordKanjiDatabase.swift */,
+				7365AED1247444DA00FB0952 /* SettingsSection.swift */,
+				7365AED32474935800FB0952 /* MenuSection.swift */,
+				7365AEDD2476442600FB0952 /* JapaneseTextField.swift */,
+				7365AEE3247A495400FB0952 /* PersistenceService.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		735D2038245CBD8200405CF9 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				735D203D245D900900405CF9 /* ContainerController.swift */,
+				735D2024245CBD1D00405CF9 /* HomeController.swift */,
+				735D203F245D947F00405CF9 /* MainMenuController.swift */,
+				738FC1E92464A972005BB229 /* VocabularyStudyMenuController.swift */,
+				73F705712467058E00C76458 /* KanjiStudyMenuController.swift */,
+				73F7057524676BA500C76458 /* StudyController.swift */,
+				7365AEC92471D0D800FB0952 /* UpComingController.swift */,
+				7365AECD24743DF500FB0952 /* SettingsController.swift */,
+				7365AED52475986C00FB0952 /* QuizController.swift */,
+				7365AED7247598DB00FB0952 /* VocabularyQuizMenuController.swift */,
+				7365AED9247598EF00FB0952 /* KanjiQuizMenuController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		735D203B245D8FD300405CF9 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				735D2043245E41BB00405CF9 /* MenuOptionCell.swift */,
+				7365AECB2471D0F700FB0952 /* UpComingCell.swift */,
+				7365AECF24743FDE00FB0952 /* SettingsCell.swift */,
+				7365AEDF2477317400FB0952 /* FailurePopUpWindow.swift */,
+				7365AEE1247A3DB200FB0952 /* SuccessPopUpWindow.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		735D203C245D8FDC00405CF9 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				735D2039245CC18900405CF9 /* Extensions.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		73E7A105247AF44F005D9AD8 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,10 +256,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				735D2025245CBD1D00405CF9 /* ViewController.swift in Sources */,
+				7365AED024743FDE00FB0952 /* SettingsCell.swift in Sources */,
+				735D203A245CC18900405CF9 /* Extensions.swift in Sources */,
+				7365AEC1246F00EB00FB0952 /* Word.swift in Sources */,
+				7365AEC5246F012B00FB0952 /* StudyObject.swift in Sources */,
+				735D2040245D947F00405CF9 /* MainMenuController.swift in Sources */,
+				7365AEE02477317400FB0952 /* FailurePopUpWindow.swift in Sources */,
+				7365AEDA247598EF00FB0952 /* KanjiQuizMenuController.swift in Sources */,
+				7365AED2247444DA00FB0952 /* SettingsSection.swift in Sources */,
+				735D2025245CBD1D00405CF9 /* HomeController.swift in Sources */,
+				7365AECE24743DF500FB0952 /* SettingsController.swift in Sources */,
+				7365AED42474935800FB0952 /* MenuSection.swift in Sources */,
 				735D2021245CBD1D00405CF9 /* AppDelegate.swift in Sources */,
+				7365AECA2471D0D800FB0952 /* UpComingController.swift in Sources */,
+				7365AED62475986C00FB0952 /* QuizController.swift in Sources */,
 				735D202B245CBD1D00405CF9 /* JapaneseStudy.xcdatamodeld in Sources */,
+				738FC1E824649C61005BB229 /* MenuOption.swift in Sources */,
+				735D2044245E41BB00405CF9 /* MenuOptionCell.swift in Sources */,
+				7365AEC8246F379500FB0952 /* WordKanjiDatabase.swift in Sources */,
+				7365AEC3246F00FC00FB0952 /* Kanji.swift in Sources */,
+				73F7057624676BA500C76458 /* StudyController.swift in Sources */,
 				735D2023245CBD1D00405CF9 /* SceneDelegate.swift in Sources */,
+				7365AEDE2476442600FB0952 /* JapaneseTextField.swift in Sources */,
+				738FC1EA2464A972005BB229 /* VocabularyStudyMenuController.swift in Sources */,
+				7365AED8247598DB00FB0952 /* VocabularyQuizMenuController.swift in Sources */,
+				7365AEE2247A3DB200FB0952 /* SuccessPopUpWindow.swift in Sources */,
+				7365AECC2471D0F700FB0952 /* UpComingCell.swift in Sources */,
+				73F705722467058E00C76458 /* KanjiStudyMenuController.swift in Sources */,
+				735D203E245D900900405CF9 /* ContainerController.swift in Sources */,
+				7365AEE4247A495400FB0952 /* PersistenceService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +431,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HSQ48H7AH6;
 				INFOPLIST_FILE = JapaneseStudy/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -309,6 +450,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HSQ48H7AH6;
 				INFOPLIST_FILE = JapaneseStudy/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
