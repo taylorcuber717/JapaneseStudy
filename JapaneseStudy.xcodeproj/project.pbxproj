@@ -10,10 +10,8 @@
 		735D2021245CBD1D00405CF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2020245CBD1D00405CF9 /* AppDelegate.swift */; };
 		735D2023245CBD1D00405CF9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2022245CBD1D00405CF9 /* SceneDelegate.swift */; };
 		735D2025245CBD1D00405CF9 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2024245CBD1D00405CF9 /* HomeController.swift */; };
-		735D2028245CBD1D00405CF9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 735D2026245CBD1D00405CF9 /* Main.storyboard */; };
 		735D202B245CBD1D00405CF9 /* JapaneseStudy.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 735D2029245CBD1D00405CF9 /* JapaneseStudy.xcdatamodeld */; };
 		735D202D245CBD1F00405CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 735D202C245CBD1F00405CF9 /* Assets.xcassets */; };
-		735D2030245CBD1F00405CF9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 735D202E245CBD1F00405CF9 /* LaunchScreen.storyboard */; };
 		735D203A245CC18900405CF9 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D2039245CC18900405CF9 /* Extensions.swift */; };
 		735D203E245D900900405CF9 /* ContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D203D245D900900405CF9 /* ContainerController.swift */; };
 		735D2040245D947F00405CF9 /* MainMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735D203F245D947F00405CF9 /* MainMenuController.swift */; };
@@ -243,9 +241,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				735D2030245CBD1F00405CF9 /* LaunchScreen.storyboard in Resources */,
 				735D202D245CBD1F00405CF9 /* Assets.xcassets in Resources */,
-				735D2028245CBD1D00405CF9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
