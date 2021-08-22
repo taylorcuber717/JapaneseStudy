@@ -18,6 +18,7 @@ class StudyController: UIViewController {
     var wordKanjiInfo: [StudyObject]!
     static let ref = Database.database().reference()
     var isKanji: Bool!
+    var spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
     
     // Index to keep track of which StudyObject to use
     var i = 0
@@ -148,6 +149,8 @@ class StudyController: UIViewController {
         setupConstraints()
         view.backgroundColor = .white
         changeStudyObject()
+        view.setupSpinner(spinner: spinner)
+        self.spinner.color = .red
     }
     
     //MARK: - Handlers
@@ -398,11 +401,7 @@ class StudyController: UIViewController {
     
     @objc func addToStudyList() {
         
-        print("addToStudyList is running")
-        
         let data: [String: Any]!
-        
-        
         
         if self.isKanji {
             let kanjiInfo = wordKanjiInfo as! [Kanji]
@@ -438,7 +437,7 @@ class StudyController: UIViewController {
         
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        //figure this out
+        spinner.startAnimating()
         StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
             var i = 0
             if dataSnapshot.childrenCount == 0 {
@@ -448,6 +447,7 @@ class StudyController: UIViewController {
                 let snapshotData = child.value as! [String: Any]
                 if data["type"] as! String == "Kanji" && snapshotData["type"] as! String == "Kanji" {
                     if snapshotData["kanjiMeaning"] as! String == data["kanjiMeaning"] as! String {
+                        self.spinner.stopAnimating()
                         let alert = UIAlertController(title: "Alert", message: "Kanji already saved", preferredStyle: UIAlertController.Style.alert)
                         alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
                         alert.view.tintColor = .red
@@ -456,6 +456,7 @@ class StudyController: UIViewController {
                     }
                 } else if data["type"] as! String == "Vocab" && snapshotData["type"] as! String == "Vocab" {
                     if snapshotData["vocabMeaning"] as! String == data["vocabMeaning"] as! String {
+                        self.spinner.stopAnimating()
                         let alert = UIAlertController(title: "Alert", message: "Vocab already saved", preferredStyle: UIAlertController.Style.alert)
                         alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
                         alert.view.tintColor = .red
@@ -465,6 +466,11 @@ class StudyController: UIViewController {
                 }
                 if i == dataSnapshot.childrenCount - 1 {
                     StudyController.ref.child("StudyList").child(uid).childByAutoId().setValue(data)
+                    self.spinner.stopAnimating()
+                    let alert = UIAlertController(title: "Alert", message: "Successfully Saved", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                    alert.view.tintColor = .red
+                    self.present(alert, animated: true, completion: nil)
                 }
                 i += 1
             }

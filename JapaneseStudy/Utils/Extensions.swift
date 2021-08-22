@@ -85,6 +85,18 @@ extension UIView {
             heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
+    
+    func setupSpinner(spinner: UIActivityIndicatorView) {
+        
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        //spinner.startAnimating()
+        self.addSubview(spinner)
+        self.bringSubviewToFront(spinner)
+
+        spinner.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        
+    }
 }
 
 extension UITextField {

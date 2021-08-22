@@ -24,7 +24,7 @@ class FailurePopUpWindow: UIView {
         label.text = "a;sldfhaaasdfh"
         label.numberOfLines = 0
         label.textAlignment = .center
-        
+        label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 25)
         return label
     }()

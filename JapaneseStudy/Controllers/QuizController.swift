@@ -19,6 +19,7 @@ class QuizController: UIViewController {
     var isKanji = false
     var isStudyList = false
     static let ref = Database.database().reference()
+    var spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
     
     // Index to keep track of which StudyObject to use
     var i = 0
@@ -75,8 +76,9 @@ class QuizController: UIViewController {
     
     var kanjiImaAnswerTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "english:"
+        textField.attributedPlaceholder = NSAttributedString(string: "english:", attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         textField.backgroundColor = .white
+        textField.textColor = .black
         textField.font = UIFont(name: textField.font?.fontName ?? "System", size: 25)
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allTouchEvents)
         return textField
@@ -90,20 +92,13 @@ class QuizController: UIViewController {
     
     var vocabImaAnswerTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "english:"
+        textField.attributedPlaceholder = NSAttributedString(string: "english:", attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         textField.backgroundColor = .white
+        textField.textColor = .black
         textField.font = UIFont(name: textField.font?.fontName ?? "System", size: 25)
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allTouchEvents)
         return textField
     }()
-    
-//    var imaAnswerLabel: UILabel = {
-//        let label = UILabel()
-//        label.font = UIFont(name: label.font?.fontName ?? "System", size: 25)
-//        label.text = ""
-//        label.numberOfLines = 0
-//        return label
-//    }()
     
     var kunAnswerView: UIView = {
         let view = UIView()
@@ -113,22 +108,15 @@ class QuizController: UIViewController {
     
     var kunAnswerTextField: UITextField = {
         let textField = JapaneseTextField()
-        textField.placeholder = "kun:"
+        textField.attributedPlaceholder = NSAttributedString(string: "kun:", attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         textField.backgroundColor = .white
+        textField.textColor = .black
         textField.font = UIFont(name: textField.font?.fontName ?? "System", size: 25)
         let jpLanguageCode = "ja-JP"
         textField.languageCode = jpLanguageCode
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allTouchEvents)
         return textField
     }()
-    
-//    var kunAnswerLabel: UILabel = {
-//        let label = UILabel()
-//        label.font = UIFont(name: label.font?.fontName ?? "System", size: 25)
-//        label.text = "くん: "
-//        label.numberOfLines = 0
-//        return label
-//    }()
     
     var onAnswerView: UIView = {
         let view = UIView()
@@ -138,36 +126,15 @@ class QuizController: UIViewController {
     
     var onAnswerTextField: UITextField = {
         let textField = JapaneseTextField()
-        textField.placeholder = "on:"
+        textField.attributedPlaceholder = NSAttributedString(string: "on:", attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         textField.backgroundColor = .white
+        textField.textColor = .black
         textField.font = UIFont(name: textField.font?.fontName ?? "System", size: 25)
         let jpLanguageCode = "ja-JP"
         textField.languageCode = jpLanguageCode
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allTouchEvents)
         return textField
     }()
-    
-//    var onAnswerLabel: UILabel = {
-//        let label = UILabel()
-//        label.font = UIFont(name: label.font?.fontName ?? "System", size: 25)
-//        label.text = "おん: "
-//        label.numberOfLines = 0
-//        return label
-//    }()
-    
-//    var extraInfoView: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = .yellow
-//        return view
-//    }()
-//
-//    var extraInfoLabel: UILabel = {
-//        let label = UILabel()
-//        label.font = UIFont(name: label.font?.fontName ?? "System", size: 30)
-//        label.text = "Extra info: "
-//        label.numberOfLines = 0
-//        return label
-//    }()
     
     var bottomToolBarView: UIView = {
         let view = UIView()
@@ -247,7 +214,14 @@ class QuizController: UIViewController {
         visualEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         visualEffectView.alpha = 0
+        view.setupSpinner(spinner: spinner)
+        self.spinner.color = .red
         
+        onAnswerTextField.delegate = self
+        kunAnswerTextField.delegate = self
+        kanjiImaAnswerTextField.delegate = self
+        vocabImaAnswerTextField.delegate = self
+        initializeKeyboard()
     }
     
     //MARK: - Handlers
@@ -364,110 +338,6 @@ class QuizController: UIViewController {
         self.studyButton.setImage(#imageLiteral(resourceName: "delete_icon"), for: .normal)
     }
     
-    func setupKanjiConstraints() {
-        view.addSubview(displayView)
-        displayView.translatesAutoresizingMaskIntoConstraints = false
-        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        displayView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        displayView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        displayView.heightAnchor.constraint(equalToConstant: view.frame.height / 3.5).isActive = true
-        
-        displayView.addSubview(displayLabel)
-        displayLabel.translatesAutoresizingMaskIntoConstraints = false
-        displayLabel.centerXAnchor.constraint(equalTo: displayView.centerXAnchor).isActive = true
-        displayLabel.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
-
-        view.addSubview(kanjiImaAnswerView)
-        kanjiImaAnswerView.translatesAutoresizingMaskIntoConstraints = false
-        kanjiImaAnswerView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
-        kanjiImaAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        kanjiImaAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        kanjiImaAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
-        kanjiImaAnswerView.addSubview(kanjiImaAnswerTextField)
-        kanjiImaAnswerTextField.translatesAutoresizingMaskIntoConstraints = false
-        kanjiImaAnswerTextField.leftAnchor.constraint(equalTo: kanjiImaAnswerView.leftAnchor, constant: 12).isActive = true
-        kanjiImaAnswerTextField.rightAnchor.constraint(equalTo: kanjiImaAnswerView.rightAnchor, constant: -12).isActive = true
-        kanjiImaAnswerTextField.centerYAnchor.constraint(equalTo: kanjiImaAnswerView.centerYAnchor).isActive = true
-        kanjiImaAnswerTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        view.addSubview(kunAnswerView)
-        kunAnswerView.translatesAutoresizingMaskIntoConstraints = false
-        kunAnswerView.topAnchor.constraint(equalTo: kanjiImaAnswerView.bottomAnchor).isActive = true
-        kunAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        kunAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        kunAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
-        kunAnswerView.addSubview(kunAnswerTextField)
-        kunAnswerTextField.translatesAutoresizingMaskIntoConstraints = false
-        kunAnswerTextField.leftAnchor.constraint(equalTo: kunAnswerView.leftAnchor, constant: 12).isActive = true
-        kunAnswerTextField.rightAnchor.constraint(equalTo: kunAnswerView.rightAnchor, constant: -12).isActive = true
-        kunAnswerTextField.centerYAnchor.constraint(equalTo: kunAnswerView.centerYAnchor).isActive = true
-        kunAnswerTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        view.addSubview(onAnswerView)
-        onAnswerView.translatesAutoresizingMaskIntoConstraints = false
-        onAnswerView.topAnchor.constraint(equalTo: kunAnswerView.bottomAnchor).isActive = true
-        onAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        onAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        onAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
-        onAnswerView.addSubview(onAnswerTextField)
-        onAnswerTextField.translatesAutoresizingMaskIntoConstraints = false
-        onAnswerTextField.leftAnchor.constraint(equalTo: onAnswerView.leftAnchor, constant: 12).isActive = true
-        onAnswerTextField.rightAnchor.constraint(equalTo: onAnswerView.rightAnchor, constant: -12).isActive = true
-        onAnswerTextField.centerYAnchor.constraint(equalTo: onAnswerView.centerYAnchor).isActive = true
-        onAnswerTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        setupToolBarConstraints(bottom: onAnswerView.bottomAnchor)
-    }
-    
-    func setupVocabCosntraints() {
-        view.addSubview(displayView)
-        displayView.translatesAutoresizingMaskIntoConstraints = false
-        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        displayView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        displayView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        displayView.heightAnchor.constraint(equalToConstant: view.frame.height / 3.5).isActive = true
-        
-        displayView.addSubview(displayLabel)
-        displayLabel.translatesAutoresizingMaskIntoConstraints = false
-        displayLabel.leftAnchor.constraint(equalTo: displayView.leftAnchor, constant: 12).isActive = true
-        displayLabel.rightAnchor.constraint(equalTo: displayView.rightAnchor, constant: -12).isActive = true
-        displayLabel.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
-        displayLabel.font = UIFont(name: displayLabel.font?.fontName ?? "System", size: 45)
-
-        view.addSubview(vocabImaAnswerView)
-        vocabImaAnswerView.translatesAutoresizingMaskIntoConstraints = false
-        vocabImaAnswerView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
-        vocabImaAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        vocabImaAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        vocabImaAnswerView.heightAnchor.constraint(equalToConstant: 240).isActive = true
-        
-        vocabImaAnswerView.addSubview(vocabImaAnswerTextField)
-        vocabImaAnswerTextField.translatesAutoresizingMaskIntoConstraints = false
-        vocabImaAnswerTextField.leftAnchor.constraint(equalTo: vocabImaAnswerView.leftAnchor, constant: 12).isActive = true
-        vocabImaAnswerTextField.rightAnchor.constraint(equalTo: vocabImaAnswerView.rightAnchor, constant: -12).isActive = true
-        vocabImaAnswerTextField.centerYAnchor.constraint(equalTo: vocabImaAnswerView.centerYAnchor).isActive = true
-        
-//        view.addSubview(extraInfoView)
-//        extraInfoView.translatesAutoresizingMaskIntoConstraints = false
-//        extraInfoView.topAnchor.constraint(equalTo: imaAnswerView.bottomAnchor).isActive = true
-//        extraInfoView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-//        extraInfoView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-//        extraInfoView.heightAnchor.constraint(equalToConstant: 120).isActive = true
-//
-//        extraInfoView.addSubview(extraInfoLabel)
-//        extraInfoLabel.translatesAutoresizingMaskIntoConstraints = false
-//        extraInfoLabel.leftAnchor.constraint(equalTo: extraInfoView.leftAnchor, constant: 12).isActive = true
-//        extraInfoLabel.rightAnchor.constraint(equalTo: extraInfoView.rightAnchor, constant: -12).isActive = true
-//        extraInfoLabel.centerYAnchor.constraint(equalTo: extraInfoView.centerYAnchor).isActive = true
-        
-        setupToolBarConstraints(bottom: vocabImaAnswerView.bottomAnchor)
-        
-        
-    }
-    
     func setupToolBarConstraints(bottom: NSLayoutYAxisAnchor) {
         view.addSubview(bottomToolBarView)
         bottomToolBarView.translatesAutoresizingMaskIntoConstraints = false
@@ -512,20 +382,6 @@ class QuizController: UIViewController {
         studyButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         studyButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        
-//        bottomToolBarView.addSubview(nextButton)
-//        nextButton.translatesAutoresizingMaskIntoConstraints = false
-//        nextButton.heightAnchor.constraint(equalToConstant: 120).isActive = true
-//        nextButton.widthAnchor.constraint(equalToConstant: 120).isActive = true
-//        nextButton.centerXAnchor.constraint(equalTo: bottomToolBarView.centerXAnchor, constant: view.frame.width / 4).isActive = true
-//        nextButton.topAnchor.constraint(equalTo: bottomToolBarView.topAnchor, constant: 50).isActive = true
-//
-//        bottomToolBarView.addSubview(previousButton)
-//        previousButton.translatesAutoresizingMaskIntoConstraints = false
-//        previousButton.heightAnchor.constraint(equalToConstant: 120).isActive = true
-//        previousButton.widthAnchor.constraint(equalToConstant: 120).isActive = true
-//        previousButton.centerXAnchor.constraint(equalTo: bottomToolBarView.centerXAnchor, constant: -(view.frame.width / 4)).isActive = true
-//        previousButton.topAnchor.constraint(equalTo: bottomToolBarView.topAnchor, constant: 50).isActive = true
     }
     
     func randomizeStudyObjects() {
@@ -534,8 +390,6 @@ class QuizController: UIViewController {
         tempStudyObjects = tempStudyObjects.shuffled()
         self.wordKanjiInfo = firstStudyObject + tempStudyObjects
     }
-    
-    
     
     func showPopUp(success: Bool, message: String) {
         
@@ -583,8 +437,10 @@ class QuizController: UIViewController {
         var imaAnswer = ""
         if isKanji {
             imaAnswer = (kanjiImaAnswerTextField.text?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines))!
+            imaAnswer = imaAnswer.lowercased()
         } else {
             imaAnswer = (vocabImaAnswerTextField.text?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines))!
+            imaAnswer = imaAnswer.lowercased()
         }
         let kunAnswer = kunAnswerTextField.text?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         let onAnswer = onAnswerTextField.text?.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
@@ -593,8 +449,7 @@ class QuizController: UIViewController {
         var kunCorrect = false
         var onCorrect = false
         
-        if wordKanjiInfo[i].identifier == "Kanji" {
-            
+        if isKanji {
             let kanjiInfo = wordKanjiInfo[i] as! Kanji
             for answer in kanjiInfo.imaAnswer {
                 if imaAnswer == answer {
@@ -635,26 +490,15 @@ class QuizController: UIViewController {
             
             showPopUp(success: imaCorrect && kunCorrect && onCorrect, message: message)
             
-            if isKanji {
-                kanjiImaAnswerTextField.layer.borderWidth = 3
-            } else {
-                vocabImaAnswerTextField.layer.borderWidth = 3
-            }
+            
+            kanjiImaAnswerTextField.layer.borderWidth = 3
             kunAnswerTextField.layer.borderWidth = 3
             onAnswerTextField.layer.borderWidth = 3
             
             if imaCorrect {
-                if isKanji {
-                    kanjiImaAnswerTextField.layer.borderColor = UIColor.green.cgColor
-                } else {
-                    vocabImaAnswerTextField.layer.borderColor = UIColor.green.cgColor
-                }
+                kanjiImaAnswerTextField.layer.borderColor = UIColor.green.cgColor
             } else {
-                if isKanji {
-                    kanjiImaAnswerTextField.layer.borderColor = UIColor.red.cgColor
-                } else {
-                    vocabImaAnswerTextField.layer.borderColor = UIColor.red.cgColor
-                }
+                kanjiImaAnswerTextField.layer.borderColor = UIColor.red.cgColor
             }
             if kunCorrect {
                 kunAnswerTextField.layer.borderColor = UIColor.green.cgColor
@@ -667,8 +511,42 @@ class QuizController: UIViewController {
                 onAnswerTextField.layer.borderColor = UIColor.red.cgColor
             }
             
-        } else if wordKanjiInfo[i].identifier == "Vocabulary" {
+        } else {
             
+            let vocabInfo = wordKanjiInfo[i] as! Word
+            if imaAnswer == vocabInfo.imaAnswer.lowercased() {
+                imaCorrect = true
+            }
+            
+            var message = ""
+            if (imaCorrect) {
+                message = "Nailed it!"
+            } else {
+                message = "English: Nope\n"
+            }
+            
+            showPopUp(success: imaCorrect && kunCorrect && onCorrect, message: message)
+            
+            
+            vocabImaAnswerTextField.layer.borderWidth = 3
+            kunAnswerTextField.layer.borderWidth = 3
+            onAnswerTextField.layer.borderWidth = 3
+            
+            if imaCorrect {
+                vocabImaAnswerTextField.layer.borderColor = UIColor.green.cgColor
+            } else {
+                vocabImaAnswerTextField.layer.borderColor = UIColor.red.cgColor
+            }
+            if kunCorrect {
+                kunAnswerTextField.layer.borderColor = UIColor.green.cgColor
+            } else {
+                kunAnswerTextField.layer.borderColor = UIColor.red.cgColor
+            }
+            if onCorrect {
+                onAnswerTextField.layer.borderColor = UIColor.green.cgColor
+            } else {
+                onAnswerTextField.layer.borderColor = UIColor.red.cgColor
+            }
         }
 
     }
@@ -768,28 +646,32 @@ class QuizController: UIViewController {
     
     @objc func addToStudyList() {
         
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
         if self.isStudyList {
-            
-            guard let uid = Auth.auth().currentUser?.uid else { return }
-            
+            spinner.startAnimating()
             StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
-                print(dataSnapshot.childrenCount)
-                var i = 0
                 for case let child as DataSnapshot in dataSnapshot.children {
                     let snapshotData = child.value as! [String: Any]
                     if snapshotData["type"] as! String == "Kanji" && self.isKanji {
                         if snapshotData["kanjiMeaning"] as! String == self.wordKanjiInfo[self.i].object {
-                            print("we should delete this one")
-                            print(child.key)
                             let elementToDelete = StudyController.ref.child("StudyList").child(uid).child(child.key)
                             elementToDelete.removeValue()
+                            self.spinner.stopAnimating()
+                            let alert = UIAlertController(title: "Alert", message: "Kanji successfully deleted, reopen study list to see change", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                            alert.view.tintColor = .red
+                            self.present(alert, animated: true, completion: nil)
                         }
                     } else if snapshotData["type"] as! String == "Vocab" && !self.isKanji {
                         if snapshotData["vocabMeaning"] as! String == self.wordKanjiInfo[self.i].object {
-                            print("we should delete this one")
-                            print(child.key)
                             let elementToDelete = StudyController.ref.child("StudyList").child(uid).child(child.key)
                             elementToDelete.removeValue()
+                            self.spinner.stopAnimating()
+                            let alert = UIAlertController(title: "Alert", message: "Vocab successfully deleted, reopen study list to see change", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                            alert.view.tintColor = .red
+                            self.present(alert, animated: true, completion: nil)
                         }
                     }
                 }
@@ -797,7 +679,77 @@ class QuizController: UIViewController {
             
             
         } else {
-            print("add the shit")
+            let data: [String: Any]!
+            
+            if self.isKanji {
+                let kanjiInfo = wordKanjiInfo as! [Kanji]
+                var imaMeaning: [String] = []
+                var onMeaning: [String] = []
+                var kunMeaning: [String] = []
+                for meaning in kanjiInfo[i].imaAnswer {
+                    imaMeaning.append(meaning)
+                }
+                for meaning in kanjiInfo[i].onAnswer {
+                    onMeaning.append(meaning)
+                }
+                for meaning in kanjiInfo[i].kunAnswer {
+                    kunMeaning.append(meaning)
+                }
+                data = [
+                    "type": "Kanji",
+                    "imaMeaning": imaMeaning,
+                    "kunMeaning": kunMeaning,
+                    "onMeaning": onMeaning,
+                    "kanjiMeaning": kanjiInfo[i].object
+                ]
+            } else {
+                let vocabInfo = wordKanjiInfo as! [Word]
+                data = [
+                    "type": "Vocab",
+                    "imaMeaning": vocabInfo[i].imaAnswer,
+                    "extraInfo": vocabInfo[i].extraInfo,
+                    "vocabMeaning": vocabInfo[i].object
+                ]
+            }
+            
+            spinner.startAnimating()
+            StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
+                var i = 0
+                if dataSnapshot.childrenCount == 0 {
+                    StudyController.ref.child("StudyList").child(uid).childByAutoId().setValue(data)
+                }
+                for case let child as DataSnapshot in dataSnapshot.children {
+                    let snapshotData = child.value as! [String: Any]
+                    if data["type"] as! String == "Kanji" && snapshotData["type"] as! String == "Kanji" {
+                        if snapshotData["kanjiMeaning"] as! String == data["kanjiMeaning"] as! String {
+                            self.spinner.stopAnimating()
+                            let alert = UIAlertController(title: "Alert", message: "Kanji already saved", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                            alert.view.tintColor = .red
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        }
+                    } else if data["type"] as! String == "Vocab" && snapshotData["type"] as! String == "Vocab" {
+                        if snapshotData["vocabMeaning"] as! String == data["vocabMeaning"] as! String {
+                            self.spinner.stopAnimating()
+                            let alert = UIAlertController(title: "Alert", message: "Vocab already saved", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                            alert.view.tintColor = .red
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        }
+                    }
+                    if i == dataSnapshot.childrenCount - 1 {
+                        StudyController.ref.child("StudyList").child(uid).childByAutoId().setValue(data)
+                        self.spinner.stopAnimating()
+                        let alert = UIAlertController(title: "Alert", message: "Successfully Saved", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                        alert.view.tintColor = .red
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                    i += 1
+                }
+            }
         }
         
     }
@@ -813,6 +765,16 @@ class QuizController: UIViewController {
         navigationItem.title = "Home"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "hamburger_icon"), style: .plain, target: self, action: #selector(handleToggleMenu))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "expand_arrow_icon"), style: .plain, target: self, action: #selector(didTapView))
+    }
+    
+    private func initializeKeyboard() {
+        // tap gesture recognizer to remove the keyboard whenever the user taps outside of the textfield
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        self.view.endEditing(true)
     }
     
 }
@@ -853,7 +815,8 @@ extension QuizController: FailurePopUpDelegate {
             kunAnswerTextField.layer.borderWidth = 0
             onAnswerTextField.layer.borderWidth = 0
         } else if let word = wordKanjiInfo[i] as? Word {
-            // do stuff here
+            vocabImaAnswerTextField.text = word.imaAnswer
+            vocabImaAnswerTextField.layer.borderWidth = 0
         }
     }
 }
@@ -867,5 +830,12 @@ extension QuizController: SuccessPopUpDelegate {
         }) { (_) in
             self.successPopUpWindow.removeFromSuperview()
         }
+    }
+}
+
+extension QuizController: UITextFieldDelegate{
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

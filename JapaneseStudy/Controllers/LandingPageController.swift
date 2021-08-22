@@ -238,18 +238,15 @@ class LandingPageController: UIViewController {
                 alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             } else {
-                print("here is runing")
                 let containerController = ContainerController()
                 containerController.modalPresentationStyle = .fullScreen
                 self.present(containerController, animated: true, completion: nil)
             }
         }
-        print("log in is running")
     }
     
     private func checkIfLoggedIn() {
         if Auth.auth().currentUser?.uid != nil {
-            print("auth is running")
             let containerController = ContainerController()
             containerController.modalPresentationStyle = .fullScreen
             self.present(containerController, animated: false, completion: nil)

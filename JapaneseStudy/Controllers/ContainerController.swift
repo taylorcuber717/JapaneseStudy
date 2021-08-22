@@ -24,7 +24,6 @@ class ContainerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureHomeController()
-        print(Auth.auth().currentUser?.uid)
         // Do any additional setup after loading the view.
     }
     
@@ -91,8 +90,6 @@ class ContainerController: UIViewController {
     
     func didSelectMenuOption(menuOption: MenuOption) {
         // Identify which menu table view was used
-        print("function is running")
-        print(menuOption.identifier)
         switch menuOption.identifier {
         case "StudyOption":
             // Handle selecting rows in main menu table view
@@ -220,7 +217,6 @@ class ContainerController: UIViewController {
         case "DailyQuizMenuOption":
             print("handle daily menu option")
         case "StudyListQuizMenuOption":
-            print("study list quiz menu option")
             guard let uid = Auth.auth().currentUser?.uid else { return }
             var studyObjects: [StudyObject] = []
             StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
@@ -345,7 +341,6 @@ extension ContainerController: MainControllersDelegate {
 
 extension ContainerController: MenuControllerDelegate {
     func didSelect(forMenuOption menuOption: MenuOption?, forShouldExpand shouldExpand: Bool) {
-        print("here is running")
         if !isExpanded {
             configureMenuNavController()
         }
