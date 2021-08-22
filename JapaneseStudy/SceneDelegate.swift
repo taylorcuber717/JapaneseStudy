@@ -11,15 +11,14 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = ContainerController(nibName: nil, bundle: nil)
+        window?.rootViewController = LandingPageController(nibName: nil, bundle: nil)
         window?.makeKeyAndVisible()   
         
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.

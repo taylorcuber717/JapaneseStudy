@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol MainControllersDelegate: class {
+protocol MainControllersDelegate: AnyObject {
     func handleMenuToggle(forMenuOption menuOption: MenuOption?, forShouldExpand shouldExpand: Bool)
     func moveToSettings()
 }

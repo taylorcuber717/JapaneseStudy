@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol MenuControllerDelegate: class {
+protocol MenuControllerDelegate: AnyObject {
     func didSelect(forMenuOption menuOption: MenuOption?, forShouldExpand shouldExpand: Bool)
 }
 
@@ -123,8 +123,16 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
         case .Quiz:
             guard let quizOption = QuizOptions(rawValue: indexPath.row) else { return }
             let shouldExpand = quizOption.hasExpandArrow
-            delegate?.didSelect(forMenuOption: quizOption, forShouldExpand: shouldExpand)
-            pushToQuizController(quizOption: quizOption)
+            print(shouldExpand)
+            if indexPath.row == 2 {
+                print("this shoudl be daily quiz shit (line 128 of main menu controller)")
+            } else if indexPath.row == 3 {
+                delegate?.didSelect(forMenuOption: quizOption, forShouldExpand: shouldExpand)
+            } else {
+                delegate?.didSelect(forMenuOption: quizOption, forShouldExpand: shouldExpand)
+                pushToQuizController(quizOption: quizOption)
+            }
+            
         }
         
         tableView.deselectRow(at: indexPath, animated: true)

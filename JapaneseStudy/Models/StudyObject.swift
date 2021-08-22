@@ -8,12 +8,15 @@
 
 import Foundation
 
-protocol StudyObject {
+public class StudyObject: NSObject {
     
-    var identifier: String { get }
+    init(identifier: String, object: String) {
+        self.identifier = identifier
+        self.object = object
+    }
     
-    var object: String { get }
+    var identifier = ""
     
-    var shouldStudy: Bool { get }
+    var object = ""
     
 }

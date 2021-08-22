@@ -15,6 +15,7 @@ class UpComingCell: UITableViewCell {
     var studyObjectLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
+        label.textColor = .black
         return label
     }()
     

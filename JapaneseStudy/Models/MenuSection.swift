@@ -62,15 +62,20 @@ enum QuizOptions: Int, CaseIterable, MenuOption {
     case studyList
     
     var identifier: String {
-        return "QuizOption"
+        switch self {
+        case .vocab: return "VocabularyQuizMenuOption"
+        case .kanji: return "KanjiQuizMenuOption"
+        case .daily: return "DailyQuizMenuOption"
+        case .studyList: return "StudyListQuizMenuOption"
+        }
     }
     
     var image: UIImage {
         switch self {
         case .vocab: return UIImage(named: "hiragana_icon")?.withTintColor(.white) ?? UIImage()
         case .kanji: return UIImage(named: "kanji_icon")?.withTintColor(.white) ?? UIImage()
-        case .daily: return UIImage()
-        case .studyList: return UIImage()
+        case .daily: return #imageLiteral(resourceName: "daily_not_visited")
+        case .studyList: return #imageLiteral(resourceName: "good").withTintColor(.white)
         }
     }
     
@@ -94,7 +99,6 @@ enum QuizOptions: Int, CaseIterable, MenuOption {
 }
 
 enum VocabStudyOptions: Int, CaseIterable, MenuOption {
-    case chapter1
     case chapter2
     case chapter3
     case chapter4
@@ -117,7 +121,6 @@ enum VocabStudyOptions: Int, CaseIterable, MenuOption {
     
     var description: String {
         switch self {
-        case .chapter1: return "Chapter 1"
         case .chapter2: return "Chapter 2"
         case .chapter3: return "Chapter 3"
         case .chapter4: return "Chapter 4"
@@ -176,7 +179,6 @@ enum KanjiStudyOptions: Int, CaseIterable, MenuOption {
 }
 
 enum VocabQuizOptions: Int, CaseIterable, MenuOption {
-    case chapter1
     case chapter2
     case chapter3
     case chapter4
@@ -199,7 +201,6 @@ enum VocabQuizOptions: Int, CaseIterable, MenuOption {
     
     var description: String {
         switch self {
-        case .chapter1: return "Chapter 1"
         case .chapter2: return "Chapter 2"
         case .chapter3: return "Chapter 3"
         case .chapter4: return "Chapter 4"

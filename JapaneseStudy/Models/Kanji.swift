@@ -11,23 +11,18 @@ import Foundation
 class Kanji: StudyObject {
     
     init(identifier: String, objectText: String, imaAnswer: [String], kunAnswer: [String], onAnswer: [String]) {
-        self.identifier = identifier
-        self.object = objectText
+        super.init(identifier: identifier, object: objectText)
         self.imaAnswer = imaAnswer
         self.kunAnswer = kunAnswer
         self.onAnswer = onAnswer
         
     }
     
-    var identifier: String
-
-    var object: String
+    var imaAnswer = [""]
     
-    var imaAnswer: [String]
+    var kunAnswer = [""]
     
-    var kunAnswer: [String]
-    
-    var onAnswer: [String]
+    var onAnswer = [""]
     
     var shouldStudy = false
     

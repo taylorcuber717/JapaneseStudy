@@ -27,7 +27,7 @@ class MenuOptionCell: UITableViewCell {
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
         return iv
-    }()
+    }() 
     
     let descriptionLabel: UILabel = {
         let label = UILabel()

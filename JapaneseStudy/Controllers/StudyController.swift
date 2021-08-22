@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import CoreData
+import Firebase
 
 class StudyController: UIViewController {
     
@@ -14,6 +16,9 @@ class StudyController: UIViewController {
     
     weak var delegate: MainControllersDelegate?
     var wordKanjiInfo: [StudyObject]!
+    static let ref = Database.database().reference()
+    var isKanji: Bool!
+    
     // Index to keep track of which StudyObject to use
     var i = 0
     
@@ -138,6 +143,7 @@ class StudyController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkIfLoggedIn()
         configureNavigationBar()
         setupConstraints()
         view.backgroundColor = .white
@@ -146,12 +152,26 @@ class StudyController: UIViewController {
     
     //MARK: - Handlers
     
+    private func disableSaveButton() {
+        studyButton.isEnabled = false
+        //TODO: change color and stuff too
+    }
+    
+    private func checkIfLoggedIn() {
+        if Auth.auth().currentUser?.uid == nil {
+            print("user not signed in")
+            disableSaveButton()
+        }
+    }
+    
     func setupConstraints() {
         
         if wordKanjiInfo[0].identifier == "Kanji" {
             setupKanjiConstraints()
+            self.isKanji = true
         } else if wordKanjiInfo[0].identifier == "Vocab" {
             setupVocabCosntraints()
+            self.isKanji = false
         }
         
     }
@@ -336,6 +356,7 @@ class StudyController: UIViewController {
         self.onAnswerLabel.text = "おん: "
         self.extraInfoLabel.text = "Extra info: "
         if !(wordKanjiInfo.isEmpty) {
+            // figure out why this crashes
             if wordKanjiInfo[i].identifier == "Kanji" {
                 let kanjiInfo = wordKanjiInfo as! [Kanji]
                 self.displayLabel.text = kanjiInfo[i].object
@@ -366,7 +387,7 @@ class StudyController: UIViewController {
         }
         
     }
-    
+     
     @objc func moveToList() {
         let upComingController = UpComingController()
         upComingController.wordKanjiInfo = self.wordKanjiInfo
@@ -377,7 +398,77 @@ class StudyController: UIViewController {
     
     @objc func addToStudyList() {
         
-        //let kanji = CoreDataKanji(context: PersistenceService.context)
+        print("addToStudyList is running")
+        
+        let data: [String: Any]!
+        
+        
+        
+        if self.isKanji {
+            let kanjiInfo = wordKanjiInfo as! [Kanji]
+            //CHANGE i!!!
+            var imaMeaning: [String] = []
+            var onMeaning: [String] = []
+            var kunMeaning: [String] = []
+            for meaning in kanjiInfo[i].imaAnswer {
+                imaMeaning.append(meaning)
+            }
+            for meaning in kanjiInfo[i].onAnswer {
+                onMeaning.append(meaning)
+            }
+            for meaning in kanjiInfo[i].kunAnswer {
+                kunMeaning.append(meaning)
+            }
+            data = [
+                "type": "Kanji",
+                "imaMeaning": imaMeaning,
+                "kunMeaning": kunMeaning,
+                "onMeaning": onMeaning,
+                "kanjiMeaning": kanjiInfo[i].object
+            ]
+        } else {
+            let vocabInfo = wordKanjiInfo as! [Word]
+            data = [
+                "type": "Vocab",
+                "imaMeaning": vocabInfo[i].imaAnswer,
+                "extraInfo": vocabInfo[i].extraInfo,
+                "vocabMeaning": vocabInfo[i].object
+            ]
+        }
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        //figure this out
+        StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
+            var i = 0
+            if dataSnapshot.childrenCount == 0 {
+                StudyController.ref.child("StudyList").child(uid).childByAutoId().setValue(data)
+            }
+            for case let child as DataSnapshot in dataSnapshot.children {
+                let snapshotData = child.value as! [String: Any]
+                if data["type"] as! String == "Kanji" && snapshotData["type"] as! String == "Kanji" {
+                    if snapshotData["kanjiMeaning"] as! String == data["kanjiMeaning"] as! String {
+                        let alert = UIAlertController(title: "Alert", message: "Kanji already saved", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                        alert.view.tintColor = .red
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    }
+                } else if data["type"] as! String == "Vocab" && snapshotData["type"] as! String == "Vocab" {
+                    if snapshotData["vocabMeaning"] as! String == data["vocabMeaning"] as! String {
+                        let alert = UIAlertController(title: "Alert", message: "Vocab already saved", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                        alert.view.tintColor = .red
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    }
+                }
+                if i == dataSnapshot.childrenCount - 1 {
+                    StudyController.ref.child("StudyList").child(uid).childByAutoId().setValue(data)
+                }
+                i += 1
+            }
+        }
         
     }
     
