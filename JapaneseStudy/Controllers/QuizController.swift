@@ -331,7 +331,6 @@ class QuizController: UIViewController {
         self.kunAnswerTextField.isHidden = true
         self.onAnswerView.isHidden = true
         self.onAnswerTextField.isHidden = true
-        
     }
     
     private func setupStudyListView() {

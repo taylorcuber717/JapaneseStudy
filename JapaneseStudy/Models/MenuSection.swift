@@ -28,15 +28,21 @@ enum MainMenuSection: Int, CaseIterable {
 enum StudyOptions: Int, CaseIterable, MenuOption {
     case vocab
     case kanji
+    case studyList
     
     var identifier: String {
-        return "StudyOption"
+        switch self {
+        case .vocab: return "StudyOption"
+        case .kanji: return "StudyOption"
+        case .studyList: return "StudyListStudyMenuOption"
+        }
     }
     
     var image: UIImage {
         switch self {
         case .vocab: return UIImage(named: "hiragana_icon")?.withTintColor(.white) ?? UIImage()
         case .kanji: return UIImage(named: "kanji_icon")?.withTintColor(.white) ?? UIImage()
+        case .studyList: return #imageLiteral(resourceName: "good").withTintColor(.white)
         }
     }
     
@@ -44,6 +50,7 @@ enum StudyOptions: Int, CaseIterable, MenuOption {
         switch self {
         case .vocab: return "Vocab"
         case .kanji: return "Kanji"
+        case .studyList: return "Study List"
         }
     }
     
@@ -51,6 +58,7 @@ enum StudyOptions: Int, CaseIterable, MenuOption {
         switch self {
         case .vocab: return true
         case .kanji: return true
+        case .studyList: return false
         }
     }
 }

@@ -38,13 +38,27 @@ class StudyController: UIViewController {
         return label
     }()
     
-    var imaAnswerView: UIView = {
+    var kanjiImaAnswerView: UIView = {
         let view = UIView()
         view.backgroundColor = .green
         return view
     }()
     
-    var imaAnswerLabel: UILabel = {
+    var kanjiImaAnswerLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: label.font?.fontName ?? "System", size: 25)
+        label.text = ""
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    var vocabImaAnswerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        return view
+    }()
+    
+    var vocabImaAnswerLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: label.font?.fontName ?? "System", size: 25)
         label.text = ""
@@ -167,19 +181,21 @@ class StudyController: UIViewController {
         }
     }
     
+//    func setupConstraints() {
+//
+//        if wordKanjiInfo[0].identifier == "Kanji" {
+//            setupKanjiConstraints()
+//            self.isKanji = true
+//        } else if wordKanjiInfo[0].identifier == "Vocab" {
+//            setupVocabCosntraints()
+//            self.isKanji = false
+//        }
+//
+//    }
+    
     func setupConstraints() {
         
-        if wordKanjiInfo[0].identifier == "Kanji" {
-            setupKanjiConstraints()
-            self.isKanji = true
-        } else if wordKanjiInfo[0].identifier == "Vocab" {
-            setupVocabCosntraints()
-            self.isKanji = false
-        }
-        
-    }
-    
-    func setupKanjiConstraints() {
+        // setup kanji view constraints
         view.addSubview(displayView)
         displayView.translatesAutoresizingMaskIntoConstraints = false
         displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -192,39 +208,39 @@ class StudyController: UIViewController {
         displayLabel.centerXAnchor.constraint(equalTo: displayView.centerXAnchor).isActive = true
         displayLabel.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
 
-        view.addSubview(imaAnswerView)
-        imaAnswerView.translatesAutoresizingMaskIntoConstraints = false
-        imaAnswerView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
-        imaAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        imaAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        imaAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
-        imaAnswerView.addSubview(imaAnswerLabel)
-        imaAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
-        imaAnswerLabel.leftAnchor.constraint(equalTo: imaAnswerView.leftAnchor, constant: 12).isActive = true
-        imaAnswerLabel.rightAnchor.constraint(equalTo: imaAnswerView.rightAnchor, constant: -12).isActive = true
-        imaAnswerLabel.centerYAnchor.constraint(equalTo: imaAnswerView.centerYAnchor).isActive = true
-        
+        view.addSubview(kanjiImaAnswerView)
+        kanjiImaAnswerView.translatesAutoresizingMaskIntoConstraints = false
+        kanjiImaAnswerView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
+        kanjiImaAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        kanjiImaAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        kanjiImaAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+
+        kanjiImaAnswerView.addSubview(kanjiImaAnswerLabel)
+        kanjiImaAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
+        kanjiImaAnswerLabel.leftAnchor.constraint(equalTo: kanjiImaAnswerView.leftAnchor, constant: 12).isActive = true
+        kanjiImaAnswerLabel.rightAnchor.constraint(equalTo: kanjiImaAnswerView.rightAnchor, constant: -12).isActive = true
+        kanjiImaAnswerLabel.centerYAnchor.constraint(equalTo: kanjiImaAnswerView.centerYAnchor).isActive = true
+
         view.addSubview(kunAnswerView)
         kunAnswerView.translatesAutoresizingMaskIntoConstraints = false
-        kunAnswerView.topAnchor.constraint(equalTo: imaAnswerView.bottomAnchor).isActive = true
+        kunAnswerView.topAnchor.constraint(equalTo: kanjiImaAnswerView.bottomAnchor).isActive = true
         kunAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         kunAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         kunAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
+
         kunAnswerView.addSubview(kunAnswerLabel)
         kunAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
         kunAnswerLabel.leftAnchor.constraint(equalTo: kunAnswerView.leftAnchor, constant: 12).isActive = true
         kunAnswerLabel.rightAnchor.constraint(equalTo: kunAnswerView.rightAnchor, constant: -12).isActive = true
         kunAnswerLabel.centerYAnchor.constraint(equalTo: kunAnswerView.centerYAnchor).isActive = true
-        
+
         view.addSubview(onAnswerView)
         onAnswerView.translatesAutoresizingMaskIntoConstraints = false
         onAnswerView.topAnchor.constraint(equalTo: kunAnswerView.bottomAnchor).isActive = true
         onAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         onAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         onAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
+
         onAnswerView.addSubview(onAnswerLabel)
         onAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
         onAnswerLabel.leftAnchor.constraint(equalTo: onAnswerView.leftAnchor, constant: 12).isActive = true
@@ -232,56 +248,176 @@ class StudyController: UIViewController {
         onAnswerLabel.centerYAnchor.constraint(equalTo: onAnswerView.centerYAnchor).isActive = true
         
         setupToolBarConstraints(bottom: onAnswerView.bottomAnchor)
-    }
-    
-    func setupVocabCosntraints() {
-        view.addSubview(displayView)
-        displayView.translatesAutoresizingMaskIntoConstraints = false
-        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        displayView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        displayView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        displayView.heightAnchor.constraint(equalToConstant: view.frame.height / 3.5).isActive = true
         
-        displayView.addSubview(displayLabel)
-        displayLabel.translatesAutoresizingMaskIntoConstraints = false
-        displayLabel.leftAnchor.constraint(equalTo: displayView.leftAnchor, constant: 12).isActive = true
-        displayLabel.rightAnchor.constraint(equalTo: displayView.rightAnchor, constant: -12).isActive = true
-        displayLabel.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
-        displayLabel.font = UIFont(name: displayLabel.font?.fontName ?? "System", size: 45)
-        displayLabel.text = "Here"
+        // setup vocab view constraints
+        view.addSubview(vocabImaAnswerView)
+        vocabImaAnswerView.translatesAutoresizingMaskIntoConstraints = false
+        vocabImaAnswerView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
+        vocabImaAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        vocabImaAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        vocabImaAnswerView.heightAnchor.constraint(equalToConstant: 120).isActive = true
 
-        view.addSubview(imaAnswerView)
-        imaAnswerView.translatesAutoresizingMaskIntoConstraints = false
-        imaAnswerView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
-        imaAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        imaAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        imaAnswerView.heightAnchor.constraint(equalToConstant: 120).isActive = true
-        
-        imaAnswerView.addSubview(imaAnswerLabel)
-        imaAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
-        imaAnswerLabel.leftAnchor.constraint(equalTo: imaAnswerView.leftAnchor, constant: 12).isActive = true
-        imaAnswerLabel.rightAnchor.constraint(equalTo: imaAnswerView.rightAnchor, constant: -12).isActive = true
-        imaAnswerLabel.centerYAnchor.constraint(equalTo: imaAnswerView.centerYAnchor).isActive = true
-        imaAnswerLabel.font = UIFont(name: imaAnswerLabel.font?.fontName ?? "System", size: 30)
-        
+        vocabImaAnswerView.addSubview(vocabImaAnswerLabel)
+        vocabImaAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
+        vocabImaAnswerLabel.leftAnchor.constraint(equalTo: vocabImaAnswerView.leftAnchor, constant: 12).isActive = true
+        vocabImaAnswerLabel.rightAnchor.constraint(equalTo: vocabImaAnswerView.rightAnchor, constant: -12).isActive = true
+        vocabImaAnswerLabel.centerYAnchor.constraint(equalTo: vocabImaAnswerView.centerYAnchor).isActive = true
+        vocabImaAnswerLabel.font = UIFont(name: vocabImaAnswerLabel.font?.fontName ?? "System", size: 30)
+
         view.addSubview(extraInfoView)
         extraInfoView.translatesAutoresizingMaskIntoConstraints = false
-        extraInfoView.topAnchor.constraint(equalTo: imaAnswerView.bottomAnchor).isActive = true
+        extraInfoView.topAnchor.constraint(equalTo: vocabImaAnswerView.bottomAnchor).isActive = true
         extraInfoView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         extraInfoView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         extraInfoView.heightAnchor.constraint(equalToConstant: 120).isActive = true
-        
+
         extraInfoView.addSubview(extraInfoLabel)
         extraInfoLabel.translatesAutoresizingMaskIntoConstraints = false
         extraInfoLabel.leftAnchor.constraint(equalTo: extraInfoView.leftAnchor, constant: 12).isActive = true
         extraInfoLabel.rightAnchor.constraint(equalTo: extraInfoView.rightAnchor, constant: -12).isActive = true
         extraInfoLabel.centerYAnchor.constraint(equalTo: extraInfoView.centerYAnchor).isActive = true
         
-        setupToolBarConstraints(bottom: extraInfoView.bottomAnchor)
-        
+        if wordKanjiInfo[0].identifier == "Kanji" {
+            changeToKanjiView()
+        } else if wordKanjiInfo[0].identifier == "Vocab" {
+            changeToVocabView()
+        }
         
     }
     
+    private func changeToKanjiView() {
+        self.isKanji = true
+        self.displayLabel.font = UIFont(name: displayLabel.font?.fontName ?? "System", size: 150)
+        self.vocabImaAnswerView.isHidden = true
+        self.vocabImaAnswerLabel.isHidden = true
+        self.extraInfoView.isHidden = true
+        self.extraInfoLabel.isHidden = true
+        self.kanjiImaAnswerView.isHidden = false
+        self.kanjiImaAnswerLabel.isHidden = false
+        self.kunAnswerView.isHidden = false
+        self.kunAnswerLabel.isHidden = false
+        self.onAnswerView.isHidden = false
+        self.onAnswerLabel.isHidden = false
+    }
+    
+    private func changeToVocabView() {
+        self.isKanji = false
+        self.displayLabel.font = UIFont(name: displayLabel.font?.fontName ?? "System", size: 45)
+        self.vocabImaAnswerView.isHidden = false
+        self.vocabImaAnswerLabel.isHidden = false
+        self.extraInfoView.isHidden = false
+        self.extraInfoLabel.isHidden = false
+        self.kanjiImaAnswerView.isHidden = true
+        self.kanjiImaAnswerLabel.isHidden = true
+        self.kunAnswerView.isHidden = true
+        self.kunAnswerLabel.isHidden = true
+        self.onAnswerView.isHidden = true
+        self.onAnswerLabel.isHidden = true
+    }
+    
+//    func setupKanjiConstraints() {
+//        view.addSubview(displayView)
+//        displayView.translatesAutoresizingMaskIntoConstraints = false
+//        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+//        displayView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+//        displayView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+//        displayView.heightAnchor.constraint(equalToConstant: view.frame.height / 3.5).isActive = true
+//
+//        displayView.addSubview(displayLabel)
+//        displayLabel.translatesAutoresizingMaskIntoConstraints = false
+//        displayLabel.centerXAnchor.constraint(equalTo: displayView.centerXAnchor).isActive = true
+//        displayLabel.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
+//
+//        view.addSubview(kanjiImaAnswerView)
+//        kanjiImaAnswerView.translatesAutoresizingMaskIntoConstraints = false
+//        kanjiImaAnswerView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
+//        kanjiImaAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+//        kanjiImaAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+//        kanjiImaAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+//
+//        kanjiImaAnswerView.addSubview(kanjiImaAnswerLabel)
+//        kanjiImaAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
+//        kanjiImaAnswerLabel.leftAnchor.constraint(equalTo: kanjiImaAnswerView.leftAnchor, constant: 12).isActive = true
+//        kanjiImaAnswerLabel.rightAnchor.constraint(equalTo: kanjiImaAnswerView.rightAnchor, constant: -12).isActive = true
+//        kanjiImaAnswerLabel.centerYAnchor.constraint(equalTo: kanjiImaAnswerView.centerYAnchor).isActive = true
+//
+//        view.addSubview(kunAnswerView)
+//        kunAnswerView.translatesAutoresizingMaskIntoConstraints = false
+//        kunAnswerView.topAnchor.constraint(equalTo: kanjiImaAnswerView.bottomAnchor).isActive = true
+//        kunAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+//        kunAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+//        kunAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+//
+//        kunAnswerView.addSubview(kunAnswerLabel)
+//        kunAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
+//        kunAnswerLabel.leftAnchor.constraint(equalTo: kunAnswerView.leftAnchor, constant: 12).isActive = true
+//        kunAnswerLabel.rightAnchor.constraint(equalTo: kunAnswerView.rightAnchor, constant: -12).isActive = true
+//        kunAnswerLabel.centerYAnchor.constraint(equalTo: kunAnswerView.centerYAnchor).isActive = true
+//
+//        view.addSubview(onAnswerView)
+//        onAnswerView.translatesAutoresizingMaskIntoConstraints = false
+//        onAnswerView.topAnchor.constraint(equalTo: kunAnswerView.bottomAnchor).isActive = true
+//        onAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+//        onAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+//        onAnswerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+//
+//        onAnswerView.addSubview(onAnswerLabel)
+//        onAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
+//        onAnswerLabel.leftAnchor.constraint(equalTo: onAnswerView.leftAnchor, constant: 12).isActive = true
+//        onAnswerLabel.rightAnchor.constraint(equalTo: onAnswerView.rightAnchor, constant: -12).isActive = true
+//        onAnswerLabel.centerYAnchor.constraint(equalTo: onAnswerView.centerYAnchor).isActive = true
+//
+//        setupToolBarConstraints(bottom: onAnswerView.bottomAnchor)
+//    }
+    
+//    func setupVocabCosntraints() {
+//        view.addSubview(displayView)
+//        displayView.translatesAutoresizingMaskIntoConstraints = false
+//        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+//        displayView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+//        displayView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+//        displayView.heightAnchor.constraint(equalToConstant: view.frame.height / 3.5).isActive = true
+//
+//        displayView.addSubview(displayLabel)
+//        displayLabel.translatesAutoresizingMaskIntoConstraints = false
+//        displayLabel.leftAnchor.constraint(equalTo: displayView.leftAnchor, constant: 12).isActive = true
+//        displayLabel.rightAnchor.constraint(equalTo: displayView.rightAnchor, constant: -12).isActive = true
+//        displayLabel.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
+//        displayLabel.font = UIFont(name: displayLabel.font?.fontName ?? "System", size: 45)
+//        displayLabel.text = "Here"
+//
+//        view.addSubview(imaAnswerView)
+//        imaAnswerView.translatesAutoresizingMaskIntoConstraints = false
+//        imaAnswerView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
+//        imaAnswerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+//        imaAnswerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+//        imaAnswerView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+//
+//        imaAnswerView.addSubview(imaAnswerLabel)
+//        imaAnswerLabel.translatesAutoresizingMaskIntoConstraints = false
+//        imaAnswerLabel.leftAnchor.constraint(equalTo: imaAnswerView.leftAnchor, constant: 12).isActive = true
+//        imaAnswerLabel.rightAnchor.constraint(equalTo: imaAnswerView.rightAnchor, constant: -12).isActive = true
+//        imaAnswerLabel.centerYAnchor.constraint(equalTo: imaAnswerView.centerYAnchor).isActive = true
+//        imaAnswerLabel.font = UIFont(name: imaAnswerLabel.font?.fontName ?? "System", size: 30)
+//
+//        view.addSubview(extraInfoView)
+//        extraInfoView.translatesAutoresizingMaskIntoConstraints = false
+//        extraInfoView.topAnchor.constraint(equalTo: imaAnswerView.bottomAnchor).isActive = true
+//        extraInfoView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+//        extraInfoView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+//        extraInfoView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+//
+//        extraInfoView.addSubview(extraInfoLabel)
+//        extraInfoLabel.translatesAutoresizingMaskIntoConstraints = false
+//        extraInfoLabel.leftAnchor.constraint(equalTo: extraInfoView.leftAnchor, constant: 12).isActive = true
+//        extraInfoLabel.rightAnchor.constraint(equalTo: extraInfoView.rightAnchor, constant: -12).isActive = true
+//        extraInfoLabel.centerYAnchor.constraint(equalTo: extraInfoView.centerYAnchor).isActive = true
+//
+//        setupToolBarConstraints(bottom: extraInfoView.bottomAnchor)
+//
+//
+//    }
+//
     func setupToolBarConstraints(bottom: NSLayoutYAxisAnchor) {
         view.addSubview(bottomToolBarView)
         bottomToolBarView.translatesAutoresizingMaskIntoConstraints = false
@@ -289,36 +425,36 @@ class StudyController: UIViewController {
         bottomToolBarView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         bottomToolBarView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         bottomToolBarView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
+
         bottomToolBarView.addSubview(bottomStackView)
         bottomStackView.translatesAutoresizingMaskIntoConstraints = false
         bottomStackView.leftAnchor.constraint(equalTo: bottomToolBarView.leftAnchor, constant: 12).isActive = true
         bottomStackView.rightAnchor.constraint(equalTo: bottomToolBarView.rightAnchor, constant: -12).isActive = true
         bottomStackView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         bottomStackView.topAnchor.constraint(equalTo: bottomToolBarView.topAnchor, constant: 50).isActive = true
-        
+
         bottomStackView.addArrangedSubview(studyButton)
         bottomStackView.addArrangedSubview(previousButton)
         bottomStackView.addArrangedSubview(nextButton)
         bottomStackView.addArrangedSubview(listButton)
-        
+
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         nextButton.heightAnchor.constraint(equalToConstant: 80).isActive = true
         nextButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        
+
         previousButton.translatesAutoresizingMaskIntoConstraints = false
         previousButton.heightAnchor.constraint(equalToConstant: 80).isActive = true
         previousButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        
+
         listButton.translatesAutoresizingMaskIntoConstraints = false
         listButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         listButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
+
         studyButton.translatesAutoresizingMaskIntoConstraints = false
         studyButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         studyButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        
+
+
 //        bottomToolBarView.addSubview(nextButton)
 //        nextButton.translatesAutoresizingMaskIntoConstraints = false
 //        nextButton.heightAnchor.constraint(equalToConstant: 120).isActive = true
@@ -354,19 +490,20 @@ class StudyController: UIViewController {
     
     func changeStudyObject() {
         
-        self.imaAnswerLabel.text = ""
+        self.kanjiImaAnswerLabel.text = ""
         self.kunAnswerLabel.text = "くん: "
         self.onAnswerLabel.text = "おん: "
         self.extraInfoLabel.text = "Extra info: "
         if !(wordKanjiInfo.isEmpty) {
             // figure out why this crashes
             if wordKanjiInfo[i].identifier == "Kanji" {
+                changeToKanjiView()
                 let kanjiInfo = wordKanjiInfo as! [Kanji]
                 self.displayLabel.text = kanjiInfo[i].object
                 for answer in kanjiInfo[i].imaAnswer {
-                    self.imaAnswerLabel.text = self.imaAnswerLabel.text! + answer
+                    self.kanjiImaAnswerLabel.text = self.kanjiImaAnswerLabel.text! + answer
                     if answer != kanjiInfo[i].imaAnswer.last {
-                        self.imaAnswerLabel.text = self.imaAnswerLabel.text! + ", "
+                        self.kanjiImaAnswerLabel.text = self.kanjiImaAnswerLabel.text! + ", "
                     }
                 }
                 for answer in kanjiInfo[i].kunAnswer {
@@ -382,9 +519,10 @@ class StudyController: UIViewController {
                     }
                 }
             } else if wordKanjiInfo[i].identifier == "Vocab" {
+                changeToVocabView()
                 let vocabInfo = wordKanjiInfo as! [Word]
                 self.displayLabel.text = vocabInfo[i].object
-                self.imaAnswerLabel.text = vocabInfo[i].imaAnswer
+                self.vocabImaAnswerLabel.text = vocabInfo[i].imaAnswer
                 self.extraInfoLabel.text = vocabInfo[i].extraInfo
             }
         }

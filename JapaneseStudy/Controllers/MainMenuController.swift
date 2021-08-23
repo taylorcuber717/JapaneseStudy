@@ -116,14 +116,19 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
         
         switch mainMenuSection {
         case .Study:
-            guard let studyOption = StudyOptions(rawValue: indexPath.row) else { return }
-            let shouldExpand = studyOption.hasExpandArrow
-            delegate?.didSelect(forMenuOption: studyOption, forShouldExpand: shouldExpand)
-            pushToStudyController(studyOption: studyOption)
+            if indexPath.row == 2 {
+                guard let studyOption = StudyOptions(rawValue: indexPath.row) else { return }
+                let shouldExpand = studyOption.hasExpandArrow
+                delegate?.didSelect(forMenuOption: studyOption, forShouldExpand: shouldExpand)
+            } else {
+                guard let studyOption = StudyOptions(rawValue: indexPath.row) else { return }
+                let shouldExpand = studyOption.hasExpandArrow
+                delegate?.didSelect(forMenuOption: studyOption, forShouldExpand: shouldExpand)
+                pushToStudyController(studyOption: studyOption)
+            }
         case .Quiz:
             guard let quizOption = QuizOptions(rawValue: indexPath.row) else { return }
             let shouldExpand = quizOption.hasExpandArrow
-            print(shouldExpand)
             if indexPath.row == 2 {
                 print("this shoudl be daily quiz shit (line 128 of main menu controller)")
             } else if indexPath.row == 3 {
@@ -152,6 +157,10 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
             vocabularyStudyMenuController.delegate = self.delegate
             self.navigationController?.pushViewController(vocabularyStudyMenuController, animated: true)
         case .kanji:
+            let kanjiStudyMenuController = KanjiStudyMenuController()
+            kanjiStudyMenuController.delegate = self.delegate
+            self.navigationController?.pushViewController(kanjiStudyMenuController, animated: true)
+        case .studyList:
             let kanjiStudyMenuController = KanjiStudyMenuController()
             kanjiStudyMenuController.delegate = self.delegate
             self.navigationController?.pushViewController(kanjiStudyMenuController, animated: true)

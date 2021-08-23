@@ -90,6 +90,7 @@ class ContainerController: UIViewController {
     
     func didSelectMenuOption(menuOption: MenuOption) {
         // Identify which menu table view was used
+        print(menuOption.identifier)
         switch menuOption.identifier {
         case "StudyOption":
             // Handle selecting rows in main menu table view
@@ -99,6 +100,8 @@ class ContainerController: UIViewController {
                 print("show vocabulary")
             case .kanji:
                 print("show kanji")
+            case .studyList:
+                print("show study list")
             }
         case "QuizOption":
             let quizOptions = menuOption as! QuizOptions
@@ -163,6 +166,55 @@ class ContainerController: UIViewController {
                 moveToStudyController(studyObjects: WordKanjiDatabase().chapter11Kanji, type: "Kanji")
             case .chapter12:
                 moveToStudyController(studyObjects: WordKanjiDatabase().chapter12Kanji, type: "Kanji")
+            }
+        case "StudyListStudyMenuOption":
+            print("here is happening")
+            guard let uid = Auth.auth().currentUser?.uid else { return }
+            var studyObjects: [StudyObject] = []
+            StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
+                var i = 0
+                for case let child as DataSnapshot in dataSnapshot.children {
+                    let snapshotData = child.value as! [String: Any]
+                    if snapshotData["type"] as! String == "Kanji" {
+                        guard let kanjiMeaning = snapshotData["kanjiMeaning"] as? String else {
+                            print("error with kanjiMeaning")
+                            return
+                        }
+                        guard let imaMeaning = snapshotData["imaMeaning"] as? [String] else {
+                            print("error with imaMeaning")
+                            return
+                        }
+                        guard let kunMeaning = snapshotData["kunMeaning"] as? [String] else {
+                            print("error with kunMeaning")
+                            return
+                        }
+                        guard let onMeaning = snapshotData["onMeaning"] as? [String] else {
+                            print("error with onMeaning")
+                            return
+                        }
+                        let kanji = Kanji(identifier: "Kanji", objectText: kanjiMeaning, imaAnswer: imaMeaning, kunAnswer: kunMeaning, onAnswer: onMeaning)
+                        studyObjects.append(kanji)
+                    } else {
+                        guard let vocabMeaning = snapshotData["vocabMeaning"] as? String else {
+                            print("error with vocabMeaning")
+                            return
+                        }
+                        guard let imaMeaning = snapshotData["imaMeaning"] as? String else {
+                            print("error with vocabMeaning")
+                            return
+                        }
+                        guard let extraInfo = snapshotData["extraInfo"] as? String else {
+                            print("error with vocabMeaning")
+                            return
+                        }
+                        let word = Word(identifier: "Vocab", objectText: vocabMeaning, imaAnswer: imaMeaning, extraInfo: extraInfo)
+                        studyObjects.append(word)
+                    }
+                    if i == dataSnapshot.childrenCount - 1 {
+                        self.moveToStudyController(studyObjects: studyObjects, type: "StudyList")
+                    }
+                    i += 1
+                }
             }
         case "VocabularyQuizMenuOption":
             let vocabOptions = menuOption as! VocabQuizOptions
