@@ -25,7 +25,7 @@ class StudyController: UIViewController {
     
     var displayView: UIView = {
         let view = UIView()
-        view.backgroundColor = .blue
+        view.backgroundColor = .black
         return view
     }()
     
@@ -35,12 +35,13 @@ class StudyController: UIViewController {
         label.text = ""
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.textColor = .white
         return label
     }()
     
     var kanjiImaAnswerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .green
+        view.backgroundColor = .black
         return view
     }()
     
@@ -49,12 +50,13 @@ class StudyController: UIViewController {
         label.font = UIFont(name: label.font?.fontName ?? "System", size: 25)
         label.text = ""
         label.numberOfLines = 0
+        label.textColor = .white
         return label
     }()
     
     var vocabImaAnswerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .green
+        view.backgroundColor = .black
         return view
     }()
     
@@ -63,12 +65,13 @@ class StudyController: UIViewController {
         label.font = UIFont(name: label.font?.fontName ?? "System", size: 25)
         label.text = ""
         label.numberOfLines = 0
+        label.textColor = .white
         return label
     }()
     
     var kunAnswerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .red
+        view.backgroundColor = .black
         return view
     }()
     
@@ -77,12 +80,13 @@ class StudyController: UIViewController {
         label.font = UIFont(name: label.font?.fontName ?? "System", size: 25)
         label.text = "くん: "
         label.numberOfLines = 0
+        label.textColor = .white
         return label
     }()
     
     var onAnswerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .purple
+        view.backgroundColor = .black
         return view
     }()
     
@@ -91,12 +95,13 @@ class StudyController: UIViewController {
         label.font = UIFont(name: label.font?.fontName ?? "System", size: 25)
         label.text = "おん: "
         label.numberOfLines = 0
+        label.textColor = .white
         return label
     }()
     
     var extraInfoView: UIView = {
         let view = UIView()
-        view.backgroundColor = .yellow
+        view.backgroundColor = .black
         return view
     }()
     
@@ -105,12 +110,13 @@ class StudyController: UIViewController {
         label.font = UIFont(name: label.font?.fontName ?? "System", size: 30)
         label.text = "Extra info: "
         label.numberOfLines = 0
+        label.textColor = .white
         return label
     }()
     
     var bottomToolBarView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemPink
+        view.backgroundColor = .black
         return view
     }()
     
@@ -124,32 +130,32 @@ class StudyController: UIViewController {
     
     var nextButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Next", for: .normal)
-        button.backgroundColor = .orange
+        button.setImage(#imageLiteral(resourceName: "next_icon").withTintColor(.white), for: .normal)
+        button.backgroundColor = .black
         button.addTarget(self, action: #selector(onNextClick), for: .touchUpInside)
         return button
     }()
     
     var previousButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Previous", for: .normal)
-        button.backgroundColor = .orange
+        button.setImage(#imageLiteral(resourceName: "previous_icon").withTintColor(.white), for: .normal)
+        button.backgroundColor = .black
         button.addTarget(self, action: #selector(onPreviousClick), for: .touchUpInside)
         return button
     }()
     
     var listButton: UIButton = {
         let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "list_icon"), for: .normal)
-        button.backgroundColor = .gray
+        button.setImage(#imageLiteral(resourceName: "list_icon").withTintColor(.white), for: .normal)
+        button.backgroundColor = .black
         button.addTarget(self, action: #selector(moveToList), for: .touchUpInside)
         return button
     }()
     
     var studyButton: UIButton = {
         let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "good"), for: .normal)
-        button.backgroundColor = .gray
+        button.setImage(#imageLiteral(resourceName: "good").withTintColor(.white), for: .normal)
+        button.backgroundColor = .black
         button.addTarget(self, action: #selector(addToStudyList), for: .touchUpInside)
         return button
     }()
@@ -165,6 +171,7 @@ class StudyController: UIViewController {
         changeStudyObject()
         view.setupSpinner(spinner: spinner)
         self.spinner.color = .red
+        setupBorders()
     }
     
     //MARK: - Handlers
@@ -621,11 +628,40 @@ class StudyController: UIViewController {
     }
     
     func configureNavigationBar() {
-        navigationController?.navigationBar.barTintColor = .darkGray
+        navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
+        navigationController?.navigationBar.tintColor = .red
         
         navigationItem.title = "Home"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "hamburger_icon"), style: .plain, target: self, action: #selector(handleToggleMenu))
+    }
+    
+    func setupBorders() {
+        let thickness: CGFloat = 2.0
+        let kanjiImaTopBorder = CALayer()
+        kanjiImaTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        kanjiImaTopBorder.backgroundColor = UIColor.red.cgColor
+        let vocabiImaTopBorder = CALayer()
+        vocabiImaTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        vocabiImaTopBorder.backgroundColor = UIColor.red.cgColor
+        let extraInfoTopBorder = CALayer()
+        extraInfoTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        extraInfoTopBorder.backgroundColor = UIColor.red.cgColor
+        let kunTopBorder = CALayer()
+        kunTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        kunTopBorder.backgroundColor = UIColor.red.cgColor
+        let onTopBorder = CALayer()
+        onTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        onTopBorder.backgroundColor = UIColor.red.cgColor
+        let toolbarTopBorder = CALayer()
+        toolbarTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        toolbarTopBorder.backgroundColor = UIColor.red.cgColor
+        kanjiImaAnswerView.layer.addSublayer(kanjiImaTopBorder)
+        vocabImaAnswerView.layer.addSublayer(vocabiImaTopBorder)
+        extraInfoView.layer.addSublayer(extraInfoTopBorder)
+        kunAnswerView.layer.addSublayer(kunTopBorder)
+        onAnswerView.layer.addSublayer(onTopBorder)
+        bottomToolBarView.layer.addSublayer(toolbarTopBorder)
     }
     
 }

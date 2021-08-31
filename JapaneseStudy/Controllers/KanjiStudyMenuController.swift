@@ -39,10 +39,12 @@ class KanjiStudyMenuController: UIViewController {
         
         view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, paddingBottom: 0, width: 0, height: 0)
+        view.backgroundColor = .black
+        tableView.backgroundColor = .black
     }
     
     func configureNavigationBar() {
-        navigationController?.navigationBar.barTintColor = .darkGray
+        navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         

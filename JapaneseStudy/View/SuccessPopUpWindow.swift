@@ -32,7 +32,7 @@ class SuccessPopUpWindow: UIView {
         let button = UIButton()
         button.setTitle("Continue", for: .normal)
         button.addTarget(self, action: #selector(onContinue), for: .touchUpInside)
-        button.backgroundColor = UIColor.rgb(red: 0, green: 190, blue: 200)
+        button.backgroundColor = .red
         button.layer.cornerRadius = 3
         return button
     }()

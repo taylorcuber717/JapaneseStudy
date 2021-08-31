@@ -43,7 +43,7 @@ class UpComingController: UIViewController {
         tableView.dataSource = self
         
         tableView.register(UpComingCell.self, forCellReuseIdentifier: reuseIdentifier)
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .black
         
         tableView.rowHeight = 60
         

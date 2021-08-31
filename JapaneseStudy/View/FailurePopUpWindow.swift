@@ -33,7 +33,7 @@ class FailurePopUpWindow: UIView {
         let button = UIButton()
         button.setTitle("Try Again", for: .normal)
         button.addTarget(self, action: #selector(onTryAgain), for: .touchUpInside)
-        button.backgroundColor = UIColor.rgb(red: 0, green: 190, blue: 200)
+        button.backgroundColor = .red
         button.layer.cornerRadius = 3
         return button
     }()
@@ -42,7 +42,7 @@ class FailurePopUpWindow: UIView {
         let button = UIButton()
         button.setTitle("Show Answers", for: .normal)
         button.addTarget(self, action: #selector(onShowAnswers), for: .touchUpInside)
-        button.backgroundColor = UIColor.rgb(red: 0, green: 190, blue: 200)
+        button.backgroundColor = .red
         button.layer.cornerRadius = 3
         return button
     }()

@@ -31,7 +31,7 @@ class MenuOptionCell: UITableViewCell {
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = .red
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
@@ -49,7 +49,7 @@ class MenuOptionCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        backgroundColor = .darkGray
+        backgroundColor = .black
         
         addSubview(iconImageView)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false

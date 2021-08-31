@@ -15,7 +15,7 @@ class UpComingCell: UITableViewCell {
     var studyObjectLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.textColor = .black
+        label.textColor = .white
         return label
     }()
     
@@ -24,7 +24,7 @@ class UpComingCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        backgroundColor = .white
+        backgroundColor = .black
         
         self.addSubview(studyObjectLabel)
         studyObjectLabel.translatesAutoresizingMaskIntoConstraints = false

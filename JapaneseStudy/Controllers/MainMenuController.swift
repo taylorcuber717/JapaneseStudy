@@ -27,6 +27,7 @@ class MainMenuController: UIViewController {
         super.viewDidLoad()
         configureTableView()
         configureNavigationBar()
+        view.backgroundColor = .black
     }
     
     //MARK: - Handlers
@@ -37,17 +38,20 @@ class MainMenuController: UIViewController {
         tableView.dataSource = self
         
         tableView.register(MenuOptionCell.self, forCellReuseIdentifier: reuseIdentifier)
-        tableView.backgroundColor = .darkGray
+//        tableView.backgroundColor = .black
         
         tableView.rowHeight = 80
         
         view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, paddingBottom: 0, width: 0, height: 0)
+        view.backgroundColor = .black
+        tableView.backgroundColor = .black
     }
     
     func configureNavigationBar() {
-        navigationController?.navigationBar.barTintColor = .darkGray
+        navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
+        navigationController?.navigationBar.tintColor = .red
     }
     
 }
@@ -92,11 +96,11 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = .black
+        view.backgroundColor = .red
         
         let title = UILabel()
         title.font = UIFont.boldSystemFont(ofSize: 16)
-        title.textColor = .gray
+        title.textColor = .white
         title.text = MainMenuSection(rawValue: section)?.description
         view.addSubview(title)
         title.translatesAutoresizingMaskIntoConstraints = false

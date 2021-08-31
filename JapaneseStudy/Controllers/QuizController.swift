@@ -55,7 +55,7 @@ class QuizController: UIViewController {
     
     var displayView: UIView = {
         let view = UIView()
-        view.backgroundColor = .blue
+        view.backgroundColor = .black
         return view
     }()
     
@@ -70,7 +70,7 @@ class QuizController: UIViewController {
     
     var kanjiImaAnswerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .green
+        view.backgroundColor = .black
         return view
     }()
     
@@ -81,12 +81,13 @@ class QuizController: UIViewController {
         textField.textColor = .black
         textField.font = UIFont(name: textField.font?.fontName ?? "System", size: 25)
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allTouchEvents)
+        textField.layer.cornerRadius = 5
         return textField
     }()
     
     var vocabImaAnswerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .green
+        view.backgroundColor = .black
         return view
     }()
     
@@ -97,12 +98,13 @@ class QuizController: UIViewController {
         textField.textColor = .black
         textField.font = UIFont(name: textField.font?.fontName ?? "System", size: 25)
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allTouchEvents)
+        textField.layer.cornerRadius = 5
         return textField
     }()
     
     var kunAnswerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .red
+        view.backgroundColor = .black
         return view
     }()
     
@@ -115,12 +117,13 @@ class QuizController: UIViewController {
         let jpLanguageCode = "ja-JP"
         textField.languageCode = jpLanguageCode
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allTouchEvents)
+        textField.layer.cornerRadius = 5
         return textField
     }()
     
     var onAnswerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .purple
+        view.backgroundColor = .black
         return view
     }()
     
@@ -133,20 +136,23 @@ class QuizController: UIViewController {
         let jpLanguageCode = "ja-JP"
         textField.languageCode = jpLanguageCode
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .allTouchEvents)
+        textField.layer.cornerRadius = 5
         return textField
     }()
     
     var bottomToolBarView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemPink
+        view.backgroundColor = .black
         return view
     }()
     
     var submitButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .orange
+        button.backgroundColor = .red
         button.setTitle("Submit", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 25)
         button.addTarget(self, action: #selector(onSubmit), for: .touchUpInside)
+        button.layer.cornerRadius = 5
         return button
     }()
     
@@ -160,32 +166,32 @@ class QuizController: UIViewController {
     
     var nextButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Next", for: .normal)
-        button.backgroundColor = .orange
+        button.setImage(#imageLiteral(resourceName: "next_icon").withTintColor(.white), for: .normal)
+        button.backgroundColor = .black
         button.addTarget(self, action: #selector(onNextClick), for: .touchUpInside)
         return button
     }()
     
     var previousButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Previous", for: .normal)
-        button.backgroundColor = .orange
+        button.setImage(#imageLiteral(resourceName: "previous_icon").withTintColor(.white), for: .normal)
+        button.backgroundColor = .black
         button.addTarget(self, action: #selector(onPreviousClick), for: .touchUpInside)
         return button
     }()
     
     var listButton: UIButton = {
         let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "list_icon"), for: .normal)
-        button.backgroundColor = .gray
+        button.setImage(#imageLiteral(resourceName: "list_icon").withTintColor(.white), for: .normal)
+        button.backgroundColor = .black
         button.addTarget(self, action: #selector(moveToList), for: .touchUpInside)
         return button
     }()
     
     var studyButton: UIButton = {
         let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "good"), for: .normal)
-        button.backgroundColor = .gray
+        button.setImage(#imageLiteral(resourceName: "good").withTintColor(.white), for: .normal)
+        button.backgroundColor = .black
         button.addTarget(self, action: #selector(addToStudyList), for: .touchUpInside)
         return button
     }()
@@ -222,6 +228,7 @@ class QuizController: UIViewController {
         kanjiImaAnswerTextField.delegate = self
         vocabImaAnswerTextField.delegate = self
         initializeKeyboard()
+        setupBorders()
     }
     
     //MARK: - Handlers
@@ -240,6 +247,8 @@ class QuizController: UIViewController {
         displayLabel.translatesAutoresizingMaskIntoConstraints = false
         displayLabel.centerXAnchor.constraint(equalTo: displayView.centerXAnchor).isActive = true
         displayLabel.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
+        displayLabel.leftAnchor.constraint(equalTo: displayView.leftAnchor, constant: 12).isActive = true
+        displayLabel.rightAnchor.constraint(equalTo: displayView.rightAnchor, constant: -12).isActive = true
 
         view.addSubview(kanjiImaAnswerView)
         kanjiImaAnswerView.translatesAutoresizingMaskIntoConstraints = false
@@ -298,6 +307,7 @@ class QuizController: UIViewController {
         vocabImaAnswerTextField.leftAnchor.constraint(equalTo: vocabImaAnswerView.leftAnchor, constant: 12).isActive = true
         vocabImaAnswerTextField.rightAnchor.constraint(equalTo: vocabImaAnswerView.rightAnchor, constant: -12).isActive = true
         vocabImaAnswerTextField.centerYAnchor.constraint(equalTo: vocabImaAnswerView.centerYAnchor).isActive = true
+        vocabImaAnswerTextField.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
         if wordKanjiInfo[0].identifier == "Kanji" {
             changeToKanjiView()
@@ -334,7 +344,7 @@ class QuizController: UIViewController {
     }
     
     private func setupStudyListView() {
-        self.studyButton.setImage(#imageLiteral(resourceName: "delete_icon"), for: .normal)
+        self.studyButton.setImage(#imageLiteral(resourceName: "delete_icon").withTintColor(.white), for: .normal)
     }
     
     func setupToolBarConstraints(bottom: NSLayoutYAxisAnchor) {
@@ -358,7 +368,7 @@ class QuizController: UIViewController {
         bottomStackView.leftAnchor.constraint(equalTo: bottomToolBarView.leftAnchor, constant: 12).isActive = true
         bottomStackView.rightAnchor.constraint(equalTo: bottomToolBarView.rightAnchor, constant: -12).isActive = true
         bottomStackView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        bottomStackView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 25).isActive = true
+        bottomStackView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 0).isActive = true
         
         bottomStackView.addArrangedSubview(studyButton)
         bottomStackView.addArrangedSubview(previousButton)
@@ -535,16 +545,6 @@ class QuizController: UIViewController {
                 vocabImaAnswerTextField.layer.borderColor = UIColor.green.cgColor
             } else {
                 vocabImaAnswerTextField.layer.borderColor = UIColor.red.cgColor
-            }
-            if kunCorrect {
-                kunAnswerTextField.layer.borderColor = UIColor.green.cgColor
-            } else {
-                kunAnswerTextField.layer.borderColor = UIColor.red.cgColor
-            }
-            if onCorrect {
-                onAnswerTextField.layer.borderColor = UIColor.green.cgColor
-            } else {
-                onAnswerTextField.layer.borderColor = UIColor.red.cgColor
             }
         }
 
@@ -758,8 +758,9 @@ class QuizController: UIViewController {
     }
     
     func configureNavigationBar() {
-        navigationController?.navigationBar.barTintColor = .darkGray
+        navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
+        navigationController?.navigationBar.tintColor = .red
         
         navigationItem.title = "Home"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "hamburger_icon"), style: .plain, target: self, action: #selector(handleToggleMenu))
@@ -774,6 +775,33 @@ class QuizController: UIViewController {
     
     @objc func dismissKeyboard() {
         self.view.endEditing(true)
+    }
+    
+    func setupBorders() {
+        let thickness: CGFloat = 2.0
+        let kanjiImaTopBorder = CALayer()
+        kanjiImaTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        kanjiImaTopBorder.backgroundColor = UIColor.red.cgColor
+        let vocabiImaTopBorder = CALayer()
+        vocabiImaTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        vocabiImaTopBorder.backgroundColor = UIColor.red.cgColor
+        let extraInfoTopBorder = CALayer()
+        extraInfoTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        extraInfoTopBorder.backgroundColor = UIColor.red.cgColor
+        let kunTopBorder = CALayer()
+        kunTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        kunTopBorder.backgroundColor = UIColor.red.cgColor
+        let onTopBorder = CALayer()
+        onTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        onTopBorder.backgroundColor = UIColor.red.cgColor
+        let toolbarTopBorder = CALayer()
+        toolbarTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
+        toolbarTopBorder.backgroundColor = UIColor.red.cgColor
+        kanjiImaAnswerView.layer.addSublayer(kanjiImaTopBorder)
+        vocabImaAnswerView.layer.addSublayer(vocabiImaTopBorder)
+        kunAnswerView.layer.addSublayer(kunTopBorder)
+        onAnswerView.layer.addSublayer(onTopBorder)
+        bottomToolBarView.layer.addSublayer(toolbarTopBorder)
     }
     
 }
