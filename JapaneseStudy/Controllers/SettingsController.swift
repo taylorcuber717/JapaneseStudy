@@ -49,9 +49,17 @@ class SettingsController: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.barTintColor = UIColor(red: 55/255, green: 120/255, blue: 250/255, alpha: 1)
-        navigationController?.navigationBar.backgroundColor = .darkGray
+        navigationController?.navigationBar.backgroundColor = .black
+        navigationController?.navigationBar.tintColor = .red
         navigationItem.title = "Settings"
+//        let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onBack))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onBack))
         
+    }
+    
+    @objc private func onBack() {
+        print("this is running")
+        self.dismiss(animated: true, completion: nil)
     }
     
 }
@@ -76,7 +84,7 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .red
         
         let title = UILabel()
         title.font = UIFont.boldSystemFont(ofSize: 16)

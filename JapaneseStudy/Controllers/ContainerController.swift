@@ -43,7 +43,7 @@ class ContainerController: UIViewController {
     
     func configureHomeController() {
         let homeController = HomeController()
-        homeController.view.backgroundColor = .green
+        homeController.view.backgroundColor = .black
         homeController.delegate = self
         centerController = UINavigationController(rootViewController: homeController)
                 
@@ -59,7 +59,6 @@ class ContainerController: UIViewController {
             // Add menu controller here
             menuController = MainMenuController()
             let menuNavController = UINavigationController(rootViewController: menuController)
-            menuNavController.navigationBar.tintColor = .darkGray
             menuController.delegate = self
             view.insertSubview(menuNavController.view, at: 0)
             addChild(menuNavController)
@@ -384,6 +383,7 @@ extension ContainerController: MainControllersDelegate {
         let settingsController = SettingsController()
         let navController = UINavigationController(rootViewController: settingsController)
         navController.modalPresentationStyle = .fullScreen
+        navController.navigationBar.tintColor = .red
         
         self.present(navController, animated: true, completion: nil)
     }

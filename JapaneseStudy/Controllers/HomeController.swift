@@ -39,8 +39,9 @@ class HomeController: UIViewController {
     }
     
     func configureNavigationBar() {
-        navigationController?.navigationBar.barTintColor = .darkGray
+        navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
+        navigationController?.navigationBar.tintColor = .red
         
         navigationItem.title = "Home"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "hamburger_icon"), style: .plain, target: self, action: #selector(handleToggleMenu))
