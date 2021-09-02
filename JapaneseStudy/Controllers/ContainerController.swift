@@ -50,6 +50,7 @@ class ContainerController: UIViewController {
                 
         view.addSubview(centerController.view)
         addChild(centerController)
+//        centerController.navigationItem.ba
         
         centerController.didMove(toParent: self )
         

@@ -767,9 +767,25 @@ class QuizController: UIViewController {
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
         
-        navigationItem.title = "Home"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "hamburger_icon"), style: .plain, target: self, action: #selector(handleToggleMenu))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "expand_arrow_icon"), style: .plain, target: self, action: #selector(didTapView))
+        let attrs = [
+            NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 30)!
+        ]
+        UINavigationBar.appearance().titleTextAttributes = attrs
+        self.navigationItem.title = "JapWork"
+        
+        let menuButton = UIButton()
+        menuButton.setImage(#imageLiteral(resourceName: "hamburger_icon").withTintColor(.red), for: .normal)
+        menuButton.addTarget(self, action: #selector(handleToggleMenu), for: .touchUpInside)
+        menuButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        menuButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        self.navigationItem.setLeftBarButton(UIBarButtonItem(customView: menuButton), animated: false)
+        
+        let settingsButton = UIButton()
+        settingsButton.setImage(#imageLiteral(resourceName: "settings_icon").withTintColor(.red), for: .normal)
+        settingsButton.addTarget(self, action: #selector(moveToSettings), for: .touchUpInside)
+        settingsButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        settingsButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        self.navigationItem.setRightBarButton(UIBarButtonItem(customView: settingsButton), animated: false)
     }
     
     private func initializeKeyboard() {
@@ -812,6 +828,8 @@ class QuizController: UIViewController {
     private func setupGestureRecognizers() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(closeMenu))
         view.addGestureRecognizer(tap)
+        let titleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(moveToHomePage))
+        navigationItem.titleView?.addGestureRecognizer(titleTap)
     }
     
     @objc private func closeMenu() {
@@ -836,6 +854,17 @@ class QuizController: UIViewController {
     private func makeGuestChanges() {
         self.studyButton.setImage(#imageLiteral(resourceName: "good").withTintColor(.darkGray), for: .normal)
         self.studyButton.isUserInteractionEnabled = false
+    }
+    
+    @objc func moveToSettings() {
+        delegate?.moveToSettings()
+    }
+    
+    @objc func moveToHomePage() {
+        print("quiz move to home page is running")
+        let containerController = ContainerController()
+        containerController.modalPresentationStyle = .fullScreen
+        self.present(containerController, animated: true, completion: nil)
     }
     
 }

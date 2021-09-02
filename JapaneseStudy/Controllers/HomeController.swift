@@ -53,9 +53,26 @@ class HomeController: UIViewController {
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
         
-        navigationItem.title = "Home"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "hamburger_icon"), style: .plain, target: self, action: #selector(handleToggleMenu))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "settings_icon").withTintColor(.white), style: .plain, target: self, action: #selector(moveToSettings))
+        let attrs = [
+            NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 30)!
+        ]
+        UINavigationBar.appearance().titleTextAttributes = attrs
+        self.navigationItem.title = "JapWork"
+        
+        let menuButton = UIButton()
+        menuButton.setImage(#imageLiteral(resourceName: "hamburger_icon").withTintColor(.red), for: .normal)
+        menuButton.addTarget(self, action: #selector(handleToggleMenu), for: .touchUpInside)
+        menuButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        menuButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        self.navigationItem.setLeftBarButton(UIBarButtonItem(customView: menuButton), animated: false)
+        
+        let settingsButton = UIButton()
+        settingsButton.setImage(#imageLiteral(resourceName: "settings_icon").withTintColor(.red), for: .normal)
+        settingsButton.addTarget(self, action: #selector(moveToSettings), for: .touchUpInside)
+        settingsButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        settingsButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        self.navigationItem.setRightBarButton(UIBarButtonItem(customView: settingsButton), animated: false)
+        
     }
  
 }
