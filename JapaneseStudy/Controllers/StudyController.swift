@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import Firebase
+import FirebaseAuth
 
 class StudyController: UIViewController {
     
@@ -173,6 +174,9 @@ class StudyController: UIViewController {
         self.spinner.color = .red
         setupBorders()
         setupGestureRecognizers()
+        if Auth.auth().currentUser?.uid == nil {
+            makeGuestChanges()
+        }
     }
     
     //MARK: - Handlers
@@ -555,6 +559,11 @@ class StudyController: UIViewController {
     
     @objc private func closeMenu() {
         delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: false)
+    }
+    
+    private func makeGuestChanges() {
+        self.studyButton.setImage(#imageLiteral(resourceName: "good").withTintColor(.darkGray), for: .normal)
+        self.studyButton.isUserInteractionEnabled = false
     }
     
 }

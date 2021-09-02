@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SettingsCell: UITableViewCell {
     
@@ -18,6 +19,7 @@ class SettingsCell: UITableViewCell {
             textLabel?.text = sectionType.description
             switchControl.isHidden = !sectionType.containsSwitch
             switchControl.isOn = sectionType.isOn
+            
         }
     }
     

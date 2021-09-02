@@ -231,6 +231,9 @@ class QuizController: UIViewController {
         if defaults.bool(forKey: "randomizeQuizOrder") {
             shuffleWordKanjiInfo()
         }
+        if Auth.auth().currentUser?.uid == nil {
+            makeGuestChanges()
+        }
     }
     
     //MARK: - Handlers
@@ -828,6 +831,11 @@ class QuizController: UIViewController {
         
         wordKanjiInfo.shuffle()
         wordKanjiInfo.insert(start, at: 0)
+    }
+    
+    private func makeGuestChanges() {
+        self.studyButton.setImage(#imageLiteral(resourceName: "good").withTintColor(.darkGray), for: .normal)
+        self.studyButton.isUserInteractionEnabled = false
     }
     
 }

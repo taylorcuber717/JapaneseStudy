@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 protocol MenuSection {
     var hasExpandArrow: Bool { get }
@@ -42,7 +43,12 @@ enum StudyOptions: Int, CaseIterable, MenuOption {
         switch self {
         case .vocab: return UIImage(named: "hiragana_icon")?.withTintColor(.white) ?? UIImage()
         case .kanji: return UIImage(named: "kanji_icon")?.withTintColor(.white) ?? UIImage()
-        case .studyList: return #imageLiteral(resourceName: "good").withTintColor(.white)
+        case .studyList:
+            if Auth.auth().currentUser?.uid == nil {
+                return #imageLiteral(resourceName: "good").withTintColor(.darkGray)
+            } else {
+                return #imageLiteral(resourceName: "good").withTintColor(.white)
+            }
         }
     }
     
@@ -83,7 +89,12 @@ enum QuizOptions: Int, CaseIterable, MenuOption {
         case .vocab: return UIImage(named: "hiragana_icon")?.withTintColor(.white) ?? UIImage()
         case .kanji: return UIImage(named: "kanji_icon")?.withTintColor(.white) ?? UIImage()
         case .daily: return #imageLiteral(resourceName: "daily_not_visited")
-        case .studyList: return #imageLiteral(resourceName: "good").withTintColor(.white)
+        case .studyList:
+            if Auth.auth().currentUser?.uid == nil {
+                return #imageLiteral(resourceName: "good").withTintColor(.darkGray)
+            } else {
+                return #imageLiteral(resourceName: "good").withTintColor(.white)
+            }
         }
     }
     

@@ -11,6 +11,7 @@ import Foundation
 protocol SettingsSectionType: CustomStringConvertible {
     var containsSwitch: Bool { get }
     var isOn: Bool { get }
+    var identifier: String { get }
 }
 
 enum SettingsSection: Int, CaseIterable, CustomStringConvertible {

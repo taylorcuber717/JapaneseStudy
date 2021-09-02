@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class MenuOptionCell: UITableViewCell {
 
@@ -18,6 +19,11 @@ class MenuOptionCell: UITableViewCell {
             descriptionLabel.text = menuOption.description
             expandArrowImageView.isHidden = !menuOption.hasExpandArrow
             iconImageView.image = menuOption.image
+            print(menuOption.identifier)
+            if Auth.auth().currentUser?.uid == nil && (menuOption.identifier == "StudyListStudyMenuOption" || menuOption.identifier == "StudyListQuizMenuOption") {
+                descriptionLabel.textColor = .darkGray
+                self.isUserInteractionEnabled = false
+            }
             
         }
     }
