@@ -24,6 +24,7 @@ class ContainerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureHomeController()
+        setupDefaultValues()
         // Do any additional setup after loading the view.
     }
     
@@ -78,7 +79,6 @@ class ContainerController: UIViewController {
                 self.centerController.view.frame.origin.x = 0
             }) { (_) in
                 if let menuOption = menuOption {
-                    print("animate panel did sleect menu option")
                     self.didSelectMenuOption(menuOption: menuOption)
                 }
             }
@@ -89,7 +89,6 @@ class ContainerController: UIViewController {
     
     func didSelectMenuOption(menuOption: MenuOption) {
         // Identify which menu table view was used
-        print(menuOption.identifier)
         switch menuOption.identifier {
         case "StudyOption":
             // Handle selecting rows in main menu table view
@@ -118,10 +117,14 @@ class ContainerController: UIViewController {
             // Handle selecting rows in vocabulary menu table view
             //let vocabOptions = menuOption as! VocabOptions
             let vocabOptions = menuOption as! VocabStudyOptions
-            //let vocabularyMenuOption = menuOption as! VocabularyMenuOption
+            let defaults = UserDefaults.standard
             switch vocabOptions {
             case .chapter2:
-                moveToStudyController(studyObjects: WordKanjiDatabase().chapter2AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "studySupVocab") {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter2AllVocab, type: "Vocab")
+                } else {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter2MainVocab, type: "Vocab")
+                }
             case .chapter3:
                 moveToStudyController(studyObjects: WordKanjiDatabase().chapter3AllVocab, type: "Vocab")
             case .chapter4:
@@ -131,17 +134,37 @@ class ContainerController: UIViewController {
             case .chapter6:
                 moveToStudyController(studyObjects: WordKanjiDatabase().chapter6AllVocab, type: "Vocab")
             case .chapter7:
-                moveToStudyController(studyObjects: WordKanjiDatabase().chapter7AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "studySupVocab") {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter7AllVocab, type: "Vocab")
+                } else {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter7MainVocab, type: "Vocab")
+                }
             case .chapter8:
-                moveToStudyController(studyObjects: WordKanjiDatabase().chapter8AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "studySupVocab") {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter8AllVocab, type: "Vocab")
+                } else {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter8MainVocab, type: "Vocab")
+                }
             case .chapter9:
                 moveToStudyController(studyObjects: WordKanjiDatabase().chapter9AllVocab, type: "Vocab")
             case .chapter10:
-                moveToStudyController(studyObjects: WordKanjiDatabase().chapter10AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "studySupVocab") {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter10AllVocab, type: "Vocab")
+                } else {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter10MainVocab, type: "Vocab")
+                }
             case .chapter11:
-                moveToStudyController(studyObjects: WordKanjiDatabase().chapter11AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "studySupVocab") {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter11AllVocab, type: "Vocab")
+                } else {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter11MainVocab, type: "Vocab")
+                }
             case .chapter12:
-                moveToStudyController(studyObjects: WordKanjiDatabase().chapter12AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "studySupVocab") {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter12AllVocab, type: "Vocab")
+                } else {
+                    moveToStudyController(studyObjects: WordKanjiDatabase().chapter12MainVocab, type: "Vocab")
+                }
             }
         case "KanjiStudyMenuOption":
             // Handle selecting rows in vocabulary menu table view
@@ -217,10 +240,14 @@ class ContainerController: UIViewController {
             }
         case "VocabularyQuizMenuOption":
             let vocabOptions = menuOption as! VocabQuizOptions
-            //let vocabularyMenuOption = menuOption as! VocabularyMenuOption
+            let defaults = UserDefaults.standard
             switch vocabOptions {
             case .chapter2:
-                moveToQuizController(quizObjects: WordKanjiDatabase().chapter2AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "quizSupVocab") {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter2AllVocab, type: "Vocab")
+                } else {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter2MainVocab, type: "Vocab")
+                }
             case .chapter3:
                 moveToQuizController(quizObjects: WordKanjiDatabase().chapter3AllVocab, type: "Vocab")
             case .chapter4:
@@ -230,17 +257,37 @@ class ContainerController: UIViewController {
             case .chapter6:
                 moveToQuizController(quizObjects: WordKanjiDatabase().chapter6AllVocab, type: "Vocab")
             case .chapter7:
-                moveToQuizController(quizObjects: WordKanjiDatabase().chapter7AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "quizSupVocab") {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter7AllVocab, type: "Vocab")
+                } else {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter7MainVocab, type: "Vocab")
+                }
             case .chapter8:
-                moveToQuizController(quizObjects: WordKanjiDatabase().chapter8AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "quizSupVocab") {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter8AllVocab, type: "Vocab")
+                } else {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter8MainVocab, type: "Vocab")
+                }
             case .chapter9:
                 moveToQuizController(quizObjects: WordKanjiDatabase().chapter9AllVocab, type: "Vocab")
             case .chapter10:
-                moveToQuizController(quizObjects: WordKanjiDatabase().chapter10AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "quizSupVocab") {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter10AllVocab, type: "Vocab")
+                } else {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter10MainVocab, type: "Vocab")
+                }
             case .chapter11:
-                moveToQuizController(quizObjects: WordKanjiDatabase().chapter11AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "quizSupVocab") {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter11AllVocab, type: "Vocab")
+                } else {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter11MainVocab, type: "Vocab")
+                }
             case .chapter12:
-                moveToQuizController(quizObjects: WordKanjiDatabase().chapter12AllVocab, type: "Vocab")
+                if defaults.bool(forKey: "quizSupVocab") {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter12AllVocab, type: "Vocab")
+                } else {
+                    moveToQuizController(quizObjects: WordKanjiDatabase().chapter12MainVocab, type: "Vocab")
+                }
             }
         case "KanjiQuizMenuOption":
             // Handle selecting rows in vocabulary menu table view
@@ -363,7 +410,19 @@ class ContainerController: UIViewController {
         }, completion: nil)
     }
     
-    
+    private func setupDefaultValues() {
+        let defaults = UserDefaults.standard
+        
+        if defaults.object(forKey: "studySupVocab") == nil {
+            defaults.setValue(true, forKey: "studySupVocab")
+        }
+        if defaults.object(forKey: "quizSupVocab") == nil {
+            defaults.setValue(true, forKey: "quizSupVocab")
+        }
+        if defaults.object(forKey: "randomizeQuizOrder") == nil {
+            defaults.setValue(true, forKey: "randomizeQuizOrder")
+        }
+    }
 
 }
 

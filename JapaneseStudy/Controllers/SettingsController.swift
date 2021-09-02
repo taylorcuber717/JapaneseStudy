@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 private var reuseIdentifier = "SettingsCell"
 
@@ -52,13 +53,11 @@ class SettingsController: UIViewController {
         navigationController?.navigationBar.backgroundColor = .black
         navigationController?.navigationBar.tintColor = .red
         navigationItem.title = "Settings"
-//        let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onBack))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onBack))
         
     }
     
     @objc private func onBack() {
-        print("this is running")
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -78,6 +77,7 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
         switch section {
         case .Study: return SettingsStudyOptions.allCases.count
         case .Quiz: return SettingsQuizOptions.allCases.count
+        case .Account: return SettingsAccountOptions.allCases.count
         }
         
     }
@@ -105,6 +105,7 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SettingsCell
+        cell.selectionStyle = .none
         
         guard let section = SettingsSection(rawValue: indexPath.section) else { return UITableViewCell() }
         
@@ -115,6 +116,9 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
         case .Quiz:
             let quiz = SettingsQuizOptions(rawValue: indexPath.row)
             cell.settingsSectionType = quiz
+        case .Account:
+            let account = SettingsAccountOptions(rawValue: indexPath.row)
+            cell.settingsSectionType = account
         }
         
         return cell
@@ -125,8 +129,49 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
         guard let section = SettingsSection(rawValue: indexPath.section) else { return }
         
         switch section {
-        case .Study: print(SettingsStudyOptions(rawValue: indexPath.row)?.description)
-        case .Quiz: print(SettingsQuizOptions(rawValue: indexPath.row)?.description)
+        case .Study:
+            guard let studyOption = SettingsStudyOptions(rawValue: indexPath.row) else { return }
+            let defaults = UserDefaults.standard
+            switch studyOption.identifier {
+            case "studySupVocab":
+                let currentValue = defaults.bool(forKey: "studySupVocab")
+                defaults.setValue(!currentValue, forKey: "studySupVocab")
+            case "studyTest":
+                print("nothing to do here")
+            default:
+                print("bad value for studyOption identifier")
+            }
+        case .Quiz:
+            guard let quizOption = SettingsQuizOptions(rawValue: indexPath.row) else { return }
+            let defaults = UserDefaults.standard
+            switch quizOption.identifier {
+            case "quizSupVocab":
+                let currentValue = defaults.bool(forKey: "quizSupVocab")
+                defaults.setValue(!currentValue, forKey: "quizSupVocab")
+            case "randomizeQuizOrder":
+                let currentValue = defaults.bool(forKey: "randomizeQuizOrder")
+                defaults.setValue(!currentValue, forKey: "randomizeQuizOrder")
+            default:
+                print("bad value for studyOption identifier")
+            }
+        case .Account:
+            guard let accountOption = SettingsAccountOptions(rawValue: indexPath.row) else { return }
+            if accountOption.identifier == "logOut" {
+                
+                print("log out of firebase account here")
+                
+                do {
+                    try Auth.auth().signOut()
+                } catch let signOutError as NSError {
+                  print("Error signing out: %@", signOutError)
+                }
+                
+                let landingPageController = LandingPageController()
+                landingPageController.modalPresentationStyle = .fullScreen
+                self.present(landingPageController, animated: true, completion: nil)
+                
+            }
         }
+        tableView.reloadData()
     }
 }

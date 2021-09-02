@@ -26,9 +26,19 @@ class HomeController: UIViewController {
         
         view.backgroundColor = .white
         configureNavigationBar()
+        setupGestureRecognizers()
     }
     
     //MARK: - Handlers
+    
+    private func setupGestureRecognizers() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(closeMenu))
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc private func closeMenu() {
+        delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: false)
+    }
     
     @objc func handleToggleMenu() {
         delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: true)

@@ -9,10 +9,14 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import Firebase
 
 class LandingPageController: UIViewController {
     
     //MARK: Properties
+    
+    var state = "normal"
+    let spinner = UIActivityIndicatorView()
     
     var signUpButton: UIButton = {
         let button = UIButton()
@@ -100,18 +104,30 @@ class LandingPageController: UIViewController {
         return textField
     }()
     
+    var backButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .white
+        button.setTitleColor(.red, for: .normal)
+        button.setTitle("Back", for: .normal)
+        button.addTarget(self, action: #selector(onBack), for: .touchUpInside)
+        button.layer.cornerRadius = 5
+        return button
+    }()
+    
     //MARK: Init
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupConstraints()
-        setupGestureRecognizers()
+        view.setupSpinner(spinner: spinner)
         
         view.backgroundColor = .white
+        spinner.color = .red
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidLoad()
+        setupConstraints()
+        setupGestureRecognizers()
         checkIfLoggedIn()
     }
     
@@ -149,16 +165,21 @@ class LandingPageController: UIViewController {
         emailTextField.translatesAutoresizingMaskIntoConstraints = false
         emailTextField.anchor(top: nil, left: view.leftAnchor, bottom: passwordTextField.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 50, paddingRight: -50, paddingBottom: 12, width: 0, height: 50)
         
+        view.addSubview(backButton)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.anchor(top: nil, left: view.leftAnchor, bottom: emailTextField.topAnchor, right: nil, paddingTop: 0, paddingLeft: 50, paddingRight: 50, paddingBottom: 12, width: 0, height: 0)
+        
         //constraints for view when in log in mode
         view.addSubview(loginSubmitButton)
         loginSubmitButton.translatesAutoresizingMaskIntoConstraints = false
         loginSubmitButton.anchor(top: nil, left: view.leftAnchor, bottom: guestButton.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 50, paddingRight: -50, paddingBottom: 12, width: 0, height: 50)
         
         
-        signUpSubmitButton.isHidden = true
-        loginSubmitButton.isHidden = true
-        emailTextField.isHidden = true
-        passwordTextField.isHidden = true
+        signUpSubmitButton.alpha = 0
+        loginSubmitButton.alpha = 0
+        emailTextField.alpha = 0
+        passwordTextField.alpha = 0
+        backButton.alpha = 0
     }
     
     private func setupGestureRecognizers() {
@@ -168,21 +189,37 @@ class LandingPageController: UIViewController {
     }
     
     private func changeToSignUp() {
-        signUpButton.isHidden = true
-        loginButton.isHidden = true
         
-        signUpSubmitButton.isHidden = false
-        emailTextField.isHidden = false
-        passwordTextField.isHidden = false
+        self.state = "signup"
+        
+        UIView.animate(withDuration: 0.5) {
+            self.signUpButton.alpha = 0
+            self.loginButton.alpha = 0
+        } completion: { _ in
+            UIView.animate(withDuration: 0.5) {
+                self.signUpSubmitButton.alpha = 1
+                self.emailTextField.alpha = 1
+                self.passwordTextField.alpha = 1
+                self.backButton.alpha = 1
+            }
+        }
     }
     
     private func changeToLogIn() {
-        signUpButton.isHidden = true
-        loginButton.isHidden = true
         
-        loginSubmitButton.isHidden = false
-        emailTextField.isHidden = false
-        passwordTextField.isHidden = false
+        self.state = "login"
+        
+        UIView.animate(withDuration: 0.5) {
+            self.signUpButton.alpha = 0
+            self.loginButton.alpha = 0
+        } completion: { _ in
+            UIView.animate(withDuration: 0.5) {
+                self.loginSubmitButton.alpha = 1
+                self.emailTextField.alpha = 1
+                self.passwordTextField.alpha = 1
+                self.backButton.alpha = 1
+            }
+        }
     }
     
     @objc func onSignIn() {
@@ -194,6 +231,10 @@ class LandingPageController: UIViewController {
     }
     
     @objc func onGuest() {
+        
+        let defaults = UserDefaults.standard
+        defaults.setValue(true, forKey: "isGuest")
+        
         let alert = UIAlertController(title: "Alert", message: "If you continue as a guest you won't be able to save Kanji/vocab and you won't be able to create custom quizzes.  \nAre you sure you want to continue?", preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: { action in
             let containerController = ContainerController()
@@ -203,41 +244,84 @@ class LandingPageController: UIViewController {
         alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: { action in
             return
         }))
+        alert.view.tintColor = .red
         self.present(alert, animated: true, completion: nil)
     }
     
+    @objc func onBack() {
+        
+        if self.state == "login" {
+            UIView.animate(withDuration: 0.5) {
+                self.loginSubmitButton.alpha = 0
+                self.emailTextField.alpha = 0
+                self.passwordTextField.alpha = 0
+                self.backButton.alpha = 0
+            } completion: { _ in
+                UIView.animate(withDuration: 0.5) {
+                    self.signUpButton.alpha = 1
+                    self.loginButton.alpha = 1
+                }
+            }
+        } else if self.state == "signup" {
+            UIView.animate(withDuration: 0.5) {
+                self.signUpSubmitButton.alpha = 0
+                self.emailTextField.alpha = 0
+                self.passwordTextField.alpha = 0
+                self.backButton.alpha = 0
+            } completion: { _ in
+                UIView.animate(withDuration: 0.5) {
+                    self.signUpButton.alpha = 1
+                    self.loginButton.alpha = 1
+                }
+            }
+        }
+        
+        self.state = "normal"
+    }
+    
     @objc func onSignInSubmit() {
+        
+        spinner.startAnimating()
         
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            self.spinner.stopAnimating()
             if error != nil {
                 print(error?.localizedDescription)
                 let alert = UIAlertController(title: "Alert", message: error!.localizedDescription, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                alert.view.tintColor = .red
                 self.present(alert, animated: true, completion: nil)
             } else {
+                let defaults = UserDefaults.standard
+                defaults.setValue(false, forKey: "isGuest")
                 let containerController = ContainerController()
                 containerController.modalPresentationStyle = .fullScreen
                 self.present(containerController, animated: true, completion: nil)
             }
         }
-        
-        print("sign in is running")
     }
     
     @objc func onLogInSubmit() {
+        
+        spinner.startAnimating()
+        
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            self.spinner.stopAnimating()
             if error != nil {
                 print(error?.localizedDescription)
-                let alert = UIAlertController(title: "Alert", message: error!.localizedDescription, preferredStyle: UIAlertController.Style.alert)
+                let alert = UIAlertController(title: "Alert", message: "Account not found, username or password are incorrect", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                alert.view.tintColor = .red
                 self.present(alert, animated: true, completion: nil)
             } else {
+                let defaults = UserDefaults.standard
+                defaults.setValue(false, forKey: "isGuest")
                 let containerController = ContainerController()
                 containerController.modalPresentationStyle = .fullScreen
                 self.present(containerController, animated: true, completion: nil)

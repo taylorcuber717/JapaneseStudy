@@ -202,9 +202,6 @@ class QuizController: UIViewController {
         super.viewDidLoad()
         configureNavigationBar()
         setupConstraints()
-        if true {
-            randomizeStudyObjects()
-        }
         if self.isStudyList {
             setupStudyListView()
         }
@@ -229,6 +226,11 @@ class QuizController: UIViewController {
         vocabImaAnswerTextField.delegate = self
         initializeKeyboard()
         setupBorders()
+        setupGestureRecognizers()
+        let defaults = UserDefaults.standard
+        if defaults.bool(forKey: "randomizeQuizOrder") {
+            shuffleWordKanjiInfo()
+        }
     }
     
     //MARK: - Handlers
@@ -393,12 +395,12 @@ class QuizController: UIViewController {
         
     }
     
-    func randomizeStudyObjects() {
-        let firstStudyObject = [wordKanjiInfo[0]]
-        var tempStudyObjects: [StudyObject] = Array(wordKanjiInfo[1..<wordKanjiInfo.count])
-        tempStudyObjects = tempStudyObjects.shuffled()
-        self.wordKanjiInfo = firstStudyObject + tempStudyObjects
-    }
+//    func randomizeStudyObjects() {
+//        let firstStudyObject = [wordKanjiInfo[0]]
+//        var tempStudyObjects: [StudyObject] = Array(wordKanjiInfo[1..<wordKanjiInfo.count])
+//        tempStudyObjects = tempStudyObjects.shuffled()
+//        self.wordKanjiInfo = firstStudyObject + tempStudyObjects
+//    }
     
     func showPopUp(success: Bool, message: String) {
         
@@ -804,6 +806,30 @@ class QuizController: UIViewController {
         bottomToolBarView.layer.addSublayer(toolbarTopBorder)
     }
     
+    private func setupGestureRecognizers() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(closeMenu))
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc private func closeMenu() {
+        delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: false)
+    }
+    
+    private func shuffleWordKanjiInfo() {
+        
+        for i in 0...wordKanjiInfo.count - 2 {
+            if wordKanjiInfo[i].object == "Supplementary Start" {
+                wordKanjiInfo.remove(at: i)
+            }
+        }
+        
+        let start = wordKanjiInfo[0]
+        wordKanjiInfo.remove(at: 0)
+        
+        wordKanjiInfo.shuffle()
+        wordKanjiInfo.insert(start, at: 0)
+    }
+    
 }
 
 extension QuizController: UpComingControllerDelegate {
@@ -815,7 +841,6 @@ extension QuizController: UpComingControllerDelegate {
 
 extension QuizController: FailurePopUpDelegate {
     func onTryAgain() {
-        print("try again is running in quiz controller")
         UIView.animate(withDuration: 0.5, animations: {
             self.visualEffectView.alpha = 0
             self.failurePopUpWindow.alpha = 0
@@ -826,7 +851,6 @@ extension QuizController: FailurePopUpDelegate {
     }
     
     func onShowAnswers() {
-        print("show answers is running in quiz controller")
         UIView.animate(withDuration: 0.5, animations: {
             self.visualEffectView.alpha = 0
             self.failurePopUpWindow.alpha = 0

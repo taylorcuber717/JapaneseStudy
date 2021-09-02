@@ -17,6 +17,7 @@ class SettingsCell: UITableViewCell {
             guard let sectionType = settingsSectionType else { return }
             textLabel?.text = sectionType.description
             switchControl.isHidden = !sectionType.containsSwitch
+            switchControl.isOn = sectionType.isOn
         }
     }
     
@@ -47,6 +48,8 @@ class SettingsCell: UITableViewCell {
     //MARK: - Handlers:
     
     @objc func handleSwitchAction(sender: UISwitch) {
+        
+        print("handle is running")
         
         if sender.isOn {
             print("on")

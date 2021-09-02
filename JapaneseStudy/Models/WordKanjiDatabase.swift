@@ -1037,7 +1037,7 @@ class WordKanjiDatabase {
     
     var chapter11AllVocab: [Word]
     
-    var dchapter12MainVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
+    var chapter12MainVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
                                Word(identifier: "Vocab", objectText: "うみ", imaAnswer: "ocean, sea", extraInfo: "NA"),
                                Word(identifier: "Vocab", objectText: "おととし", imaAnswer: "the year before last", extraInfo: "NA"),
                                Word(identifier: "Vocab", objectText: "おもいで", imaAnswer: "memories", extraInfo: "NA"),
@@ -1089,7 +1089,7 @@ class WordKanjiDatabase {
                                Word(identifier: "Vocab", objectText: "えーと", imaAnswer: "Well, let's see...", extraInfo: "NA"),
                                Word(identifier: "Vocab", objectText: "あけましておめでとうございます", imaAnswer: "Happy New Year!", extraInfo: "NA")]
     
-    var chapter12SupVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
+    var chapter12SupVocab = [Word(identifier: "Vocab", objectText: "Supplementary Start", imaAnswer: "", extraInfo: ""),
                              Word(identifier: "Vocab", objectText: "マーティン・ルーザー・キング・デー", imaAnswer: "Martin Luther King, Jr. Day", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "プレジデンツ・デー", imaAnswer: "President's Day", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "イースター", imaAnswer: "Easter", extraInfo: "NA"),
@@ -1109,7 +1109,7 @@ class WordKanjiDatabase {
         chapter8AllVocab = chapter8MainVocab + chapter8SupVocab
         chapter10AllVocab = chapter10MainVocab + chapter10SupVocab
         chapter11AllVocab = chapter11MainVocab + chapter11SupVocab
-        chapter12AllVocab = dchapter12MainVocab + chapter12SupVocab
+        chapter12AllVocab = chapter12MainVocab + chapter12SupVocab
         
     }
 
