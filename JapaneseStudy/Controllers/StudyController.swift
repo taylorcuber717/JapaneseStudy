@@ -520,11 +520,19 @@ class StudyController: UIViewController {
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
         
+        let container = UIView()
+        container.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
+
+        let button = UIButton(type: .custom)
+        button.frame = container.frame
         let attrs = [
             NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 30)!
         ]
-        UINavigationBar.appearance().titleTextAttributes = attrs
-        self.navigationItem.title = "JapWork"
+        let attributedTitle = NSAttributedString(string: "JapWork", attributes: attrs)
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.addTarget(self, action: #selector(moveToHomePage), for: .touchUpInside)
+        container.addSubview(button)
+        navigationItem.titleView = container
         
         let menuButton = UIButton()
         menuButton.setImage(#imageLiteral(resourceName: "hamburger_icon").withTintColor(.red), for: .normal)
@@ -590,12 +598,10 @@ class StudyController: UIViewController {
     }
     
     @objc func moveToHomePage() {
-        print("study move to home page is running")
         let containerController = ContainerController()
         containerController.modalPresentationStyle = .fullScreen
-        self.present(containerController, animated: true, completion: nil)
+        self.present(containerController, animated: false, completion: nil)
     }
-    
 }
 
 extension StudyController: UpComingControllerDelegate {
