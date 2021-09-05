@@ -41,6 +41,7 @@ class SettingsController: UIViewController {
         
         view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, paddingBottom: 0, width: 0, height: 0)
+        tableView.isScrollEnabled = false
         
     }
     
@@ -78,6 +79,7 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
         case .Study: return SettingsStudyOptions.allCases.count
         case .Quiz: return SettingsQuizOptions.allCases.count
         case .Account: return SettingsAccountOptions.allCases.count
+        case .Icons8: return SettingsIcons8Options.allCases.count
         }
         
     }
@@ -119,6 +121,9 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
         case .Account:
             let account = SettingsAccountOptions(rawValue: indexPath.row)
             cell.settingsSectionType = account
+        case .Icons8:
+            let icons8 = SettingsIcons8Options(rawValue: indexPath.row)
+            cell.settingsSectionType = icons8
         }
         
         return cell
@@ -138,6 +143,12 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
                 defaults.setValue(!currentValue, forKey: "studySupVocab")
             case "studyTest":
                 print("nothing to do here")
+            case "includeKanjiDaily":
+                let currentValue = defaults.bool(forKey: "includeKanjiDaily")
+                defaults.setValue(!currentValue, forKey: "includeKanjiDaily")
+            case "includeVocabDaily":
+                let currentValue = defaults.bool(forKey: "includeVocabDaily")
+                defaults.setValue(!currentValue, forKey: "includeVocabDaily")
             default:
                 print("bad value for studyOption identifier")
             }
@@ -170,6 +181,13 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
                 landingPageController.modalPresentationStyle = .fullScreen
                 self.present(landingPageController, animated: true, completion: nil)
                 
+            }
+        case .Icons8:
+            guard let accountOption = SettingsIcons8Options(rawValue: indexPath.row) else { return }
+            if accountOption.identifier == "iconsLink" {
+                if let url = URL(string: "https://icons8.com") {
+                    UIApplication.shared.open(url)
+                }
             }
         }
         tableView.reloadData()

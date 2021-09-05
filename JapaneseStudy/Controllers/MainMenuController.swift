@@ -134,7 +134,7 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
             guard let quizOption = QuizOptions(rawValue: indexPath.row) else { return }
             let shouldExpand = quizOption.hasExpandArrow
             if indexPath.row == 2 {
-                print("this shoudl be daily quiz shit (line 128 of main menu controller)")
+                delegate?.didSelect(forMenuOption: quizOption, forShouldExpand: shouldExpand)
             } else if indexPath.row == 3 {
                 delegate?.didSelect(forMenuOption: quizOption, forShouldExpand: shouldExpand)
             } else {

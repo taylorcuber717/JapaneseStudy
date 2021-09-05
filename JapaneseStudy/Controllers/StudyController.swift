@@ -169,6 +169,7 @@ class StudyController: UIViewController {
         configureNavigationBar()
         setupConstraints()
         view.backgroundColor = .white
+        addStart()
         changeStudyObject()
         view.setupSpinner(spinner: spinner)
         self.spinner.color = .red
@@ -391,6 +392,9 @@ class StudyController: UIViewController {
         self.extraInfoLabel.text = "Extra info: "
         if !(wordKanjiInfo.isEmpty) {
             // figure out why this crashes
+            if i >= wordKanjiInfo.count {
+                return
+            }
             if wordKanjiInfo[i].identifier == "Kanji" {
                 changeToKanjiView()
                 let kanjiInfo = wordKanjiInfo as! [Kanji]
@@ -429,6 +433,7 @@ class StudyController: UIViewController {
         upComingController.wordKanjiInfo = self.wordKanjiInfo
         upComingController.offSet = i
         upComingController.delegate = self
+        upComingController.isQuiz = false
         self.present(upComingController, animated: true, completion: nil)
     }
     
@@ -602,11 +607,20 @@ class StudyController: UIViewController {
         containerController.modalPresentationStyle = .fullScreen
         self.present(containerController, animated: false, completion: nil)
     }
+    
+    private func addStart() {
+        if isKanji {
+            wordKanjiInfo.insert(WordKanjiDatabase().startKanij, at: 0)
+        } else {
+            wordKanjiInfo.insert(WordKanjiDatabase().startVocab, at: 0)
+        }
+    }
 }
 
 extension StudyController: UpComingControllerDelegate {
     func didSelect(forIndex index: Int) {
         self.i = index
         changeStudyObject()
+        print("this is happening")
     }
 }

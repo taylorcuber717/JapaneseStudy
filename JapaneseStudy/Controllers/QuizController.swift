@@ -206,6 +206,7 @@ class QuizController: UIViewController {
             setupStudyListView()
         }
         view.backgroundColor = .white
+        addStart()
         changeStudyObject()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -577,6 +578,10 @@ class QuizController: UIViewController {
     
     func changeStudyObject() {
         
+        
+        if i >= wordKanjiInfo.count {
+            return
+        }
         if wordKanjiInfo[i].identifier == "Kanji" {
             changeToKanjiView()
         } else {
@@ -597,11 +602,13 @@ class QuizController: UIViewController {
                 kunAnswerTextField.isHidden = true
                 onAnswerTextField.isHidden = true
                 submitButton.isHidden = true
+                vocabImaAnswerTextField.isHidden = true
             } else {
                 kanjiImaAnswerTextField.isHidden = false
                 kunAnswerTextField.isHidden = false
                 onAnswerTextField.isHidden = false
                 submitButton.isHidden = false
+                vocabImaAnswerTextField.isHidden = false
             }
             if wordKanjiInfo[i].identifier == "Kanji" {
                 let kanjiInfo = wordKanjiInfo as! [Kanji]
@@ -617,9 +624,9 @@ class QuizController: UIViewController {
     @objc func moveToList() {
         let upComingController = UpComingController()
         upComingController.wordKanjiInfo = self.wordKanjiInfo
-        
         upComingController.offSet = i
         upComingController.delegate = self
+        upComingController.isQuiz = true
         self.present(upComingController, animated: true, completion: nil)
     }
     
@@ -666,6 +673,7 @@ class QuizController: UIViewController {
                             alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
                             alert.view.tintColor = .red
                             self.present(alert, animated: true, completion: nil)
+                            return
                         }
                     } else if snapshotData["type"] as! String == "Vocab" && !self.isKanji {
                         if snapshotData["vocabMeaning"] as! String == self.wordKanjiInfo[self.i].object {
@@ -676,6 +684,7 @@ class QuizController: UIViewController {
                             alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
                             alert.view.tintColor = .red
                             self.present(alert, animated: true, completion: nil)
+                            return
                         }
                     }
                 }
@@ -874,12 +883,20 @@ class QuizController: UIViewController {
         self.present(containerController, animated: false, completion: nil)
     }
     
+    private func addStart() {
+        if isKanji {
+            wordKanjiInfo.insert(WordKanjiDatabase().startKanij, at: 0)
+        } else {
+            wordKanjiInfo.insert(WordKanjiDatabase().startVocab, at: 0)
+        }
+    }
 }
 
 extension QuizController: UpComingControllerDelegate {
     func didSelect(forIndex index: Int) {
         self.i = index
         changeStudyObject()
+        print("this is running")
     }
 }
 

@@ -314,7 +314,117 @@ class ContainerController: UIViewController {
                 moveToQuizController(quizObjects: WordKanjiDatabase().chapter12Kanji, type: "Kanji")
             }
         case "DailyQuizMenuOption":
+            
+            
+            
+            
+            
             print("handle daily menu option")
+            
+            print(WordKanjiDatabase().allStudyObjects.count)
+            
+            
+            var totalRandomNumList: [Int] = []
+            var i = 0
+            while i < 50 {
+                let randomNum = Int.random(in: 0..<WordKanjiDatabase().allStudyObjects.count)
+                if !totalRandomNumList.contains(randomNum) {
+                    totalRandomNumList.append(randomNum)
+                    i += 1
+                }
+            }
+            
+            var kanjiRandomNumList: [Int] = []
+            i = 0
+            while i < 50 {
+                let randomNum = Int.random(in: 0..<WordKanjiDatabase().allKanji.count)
+                if !kanjiRandomNumList.contains(randomNum) {
+                    kanjiRandomNumList.append(randomNum)
+                    i += 1
+                }
+            }
+            
+            var vocabRandomNumList: [Int] = []
+            i = 0
+            while i < 50 {
+                let randomNum = Int.random(in: 0..<WordKanjiDatabase().allVocab.count)
+                if !vocabRandomNumList.contains(randomNum) {
+                    vocabRandomNumList.append(randomNum)
+                    i += 1
+                }
+            }
+            
+            var mainVocabRandomNumList: [Int] = []
+            i = 0
+            while i < 50 {
+                let randomNum = Int.random(in: 0..<WordKanjiDatabase().allMainVocab.count)
+                if !mainVocabRandomNumList.contains(randomNum) {
+                    mainVocabRandomNumList.append(randomNum)
+                    i += 1
+                }
+            }
+            
+            
+            var dailyQuizDatabase: [StudyObject] = []
+            var randomNumList: [Int] = []
+            var randomNumListKey = ""
+            
+            let defaults = UserDefaults.standard
+            if defaults.bool(forKey: "includeKanjiDaily") && defaults.bool(forKey: "includeVocabDaily") {
+                dailyQuizDatabase = WordKanjiDatabase().allStudyObjects
+                randomNumList = totalRandomNumList
+                randomNumListKey = "totalQuizList"
+            } else if defaults.bool(forKey: "includeKanjiDaily") {
+                dailyQuizDatabase = WordKanjiDatabase().allKanji
+                randomNumList = kanjiRandomNumList
+                randomNumListKey = "kanjiQuizList"
+            } else if defaults.bool(forKey: "includeVocabDaily") {
+                if defaults.bool(forKey: "quizSupVocab") {
+                    dailyQuizDatabase = WordKanjiDatabase().allVocab
+                    randomNumList = vocabRandomNumList
+                    randomNumListKey = "vocabQuizList"
+                } else {
+                    dailyQuizDatabase = WordKanjiDatabase().allMainVocab
+                    randomNumList = mainVocabRandomNumList
+                    randomNumListKey = "mainVocabQuizList"
+                }
+            } else {
+                let alert = UIAlertController(title: "Alert", message: "You don't have vocab or kanji included in the daily quiz, please include at least one to take the quiz", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                alert.view.tintColor = .red
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM d YYYY"
+            let date = Date(timeIntervalSince1970: Date().timeIntervalSince1970)
+            
+            if formatter.string(from: date) == defaults.string(forKey: "mostRecentQuizDay") {
+                print("date == current date")
+                randomNumList = defaults.array(forKey: randomNumListKey) as! [Int]
+            } else {
+                print("else block is running")
+                defaults.setValue(formatter.string(from: date), forKey: "mostRecentQuizDay")
+                defaults.setValue(totalRandomNumList, forKey: "totalQuizList")
+                defaults.setValue(kanjiRandomNumList, forKey: "kanjiQuizList")
+                defaults.setValue(vocabRandomNumList, forKey: "vocabQuizList")
+                defaults.setValue(mainVocabRandomNumList, forKey: "mainVocabQuizList")
+            }
+            
+            print(randomNumList)
+            
+            var quizObjects: [StudyObject] = []
+            
+            for num in randomNumList {
+                print(dailyQuizDatabase[num].object)
+                if dailyQuizDatabase[num].object != "Supplementary Start" {
+                    quizObjects.append(dailyQuizDatabase[num])
+                }
+            }
+            
+            moveToQuizController(quizObjects: quizObjects, type: "Kanji")
+            
         case "StudyListQuizMenuOption":
             guard let uid = Auth.auth().currentUser?.uid else { return }
             var studyObjects: [StudyObject] = []
@@ -386,7 +496,7 @@ class ContainerController: UIViewController {
         centerController.didMove(toParent: self)
     }
     
-    func moveToQuizController(quizObjects: [StudyObject], type: String) {
+    private func moveToQuizController(quizObjects: [StudyObject], type: String) {
         let controller = QuizController()
         controller.delegate = self
         controller.wordKanjiInfo = quizObjects
@@ -405,7 +515,7 @@ class ContainerController: UIViewController {
         centerController.didMove(toParent: self)
     }
     
-    func animateStatusBar() {
+    private func animateStatusBar() {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
             self.setNeedsStatusBarAppearanceUpdate()
         }, completion: nil)
@@ -422,6 +532,12 @@ class ContainerController: UIViewController {
         }
         if defaults.object(forKey: "randomizeQuizOrder") == nil {
             defaults.setValue(true, forKey: "randomizeQuizOrder")
+        }
+        if defaults.object(forKey: "includeKanjiDaily") == nil {
+            defaults.setValue(true, forKey: "includeKanjiDaily")
+        }
+        if defaults.object(forKey: "includeVocabDaily") == nil {
+            defaults.setValue(true, forKey: "includeVocabDaily")
         }
     }
 

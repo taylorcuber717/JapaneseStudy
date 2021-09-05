@@ -36,32 +36,32 @@ class WordKanjiDatabase {
 //    var chapter11Kanji: [Kanji]
 //    var chapter12Kanji: [Kanji]
     
-     var chapter4Kanji = [Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""]),
-                     Kanji(identifier: "Kanji", objectText: "大", imaAnswer: ["big", "large"], kunAnswer: ["おお(きい)"], onAnswer: ["だい"]),
+    var startKanij = Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""])
+    var startVocab = Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: "")
+    
+    var chapter4Kanji = [Kanji(identifier: "Kanji", objectText: "大", imaAnswer: ["big", "large"], kunAnswer: ["おお(きい)"], onAnswer: ["だい"]),
                      Kanji(identifier: "Kanji", objectText: "学", imaAnswer: ["to study", "learn"], kunAnswer: ["まな(ぶ)"], onAnswer: ["がく", "がっ"]),
                      Kanji(identifier: "Kanji", objectText: "校", imaAnswer: ["school"], kunAnswer: ["NA"], onAnswer: ["こう"]),
                      Kanji(identifier: "Kanji", objectText: "先", imaAnswer: ["ahead", "previosu"], kunAnswer: ["さき"], onAnswer: ["せん"]),
                      Kanji(identifier: "Kanji", objectText: "生", imaAnswer: ["life", "to live"], kunAnswer: ["なま", "う(まれる)"], onAnswer: ["せい"])]
     
-    var chapter5Kanji = [Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""]),
-                         Kanji(identifier: "Kanji", objectText: "山", imaAnswer: ["mountain"], kunAnswer: ["やま"], onAnswer: ["さん", "ざん"]),
+    var chapter5Kanji = [Kanji(identifier: "Kanji", objectText: "山", imaAnswer: ["mountain"], kunAnswer: ["やま"], onAnswer: ["さん", "ざん"]),
                          Kanji(identifier: "Kanji", objectText: "川", imaAnswer: ["river"], kunAnswer: ["かわ", "がわ"], onAnswer: ["せん"]),
                          Kanji(identifier: "Kanji", objectText: "田", imaAnswer: ["rice paddy"], kunAnswer: ["た", "だ"], onAnswer: ["でん"]),
                          Kanji(identifier: "Kanji", objectText: "人", imaAnswer: ["person"], kunAnswer: ["ひと"], onAnswer: ["じん", "にん"]),
-                         Kanji(identifier: "Kanji", objectText: "上", imaAnswer: ["on", "up", "above"], kunAnswer: ["うえ", "かみ", "あ(がる)"], onAnswer: ["じょう"]),
-                         Kanji(identifier: "Kanji", objectText: "中", imaAnswer: ["in", "middle", "center"], kunAnswer: ["なか"], onAnswer: ["ちゅう"]),
+                         Kanji(identifier: "Kanji", objectText: "上", imaAnswer: ["on", "up", "above"], kunAnswer: ["うえ", "かみ", "あ(がる)"], onAnswer: ["じょう"])]
+    var temp5Kanji = [Kanji(identifier: "Kanji", objectText: "中", imaAnswer: ["in", "middle", "center"], kunAnswer: ["なか"], onAnswer: ["ちゅう"]),
                          Kanji(identifier: "Kanji", objectText: "下", imaAnswer: ["under", "below"], kunAnswer: ["した", "くだ(さい)"], onAnswer: ["か", "げ"]),
                          Kanji(identifier: "Kanji", objectText: "小", imaAnswer: ["small"], kunAnswer: ["ちい(さい)"], onAnswer: ["しょう"]),
                          Kanji(identifier: "Kanji", objectText: "日", imaAnswer: ["sun", "day"], kunAnswer: ["ひ", "び"], onAnswer: ["に", "にち", "じっ", "か"]),
                          Kanji(identifier: "Kanji", objectText: "本", imaAnswer: ["root", "book"], kunAnswer: ["もと"], onAnswer: ["ほん", "ぼん", "ぽん"])]
     
-    var chapter6Kanji = [Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""]),
-                         Kanji(identifier: "Kanji", objectText: "今", imaAnswer: ["now"], kunAnswer: ["いま"], onAnswer: ["こん"]),
+    var chapter6Kanji = [Kanji(identifier: "Kanji", objectText: "今", imaAnswer: ["now"], kunAnswer: ["いま"], onAnswer: ["こん"]),
                          Kanji(identifier: "Kanji", objectText: "私", imaAnswer: ["I; private"], kunAnswer: ["わたし", "わたくし"], onAnswer: ["し"]),
                          Kanji(identifier: "Kanji", objectText: "月", imaAnswer: ["moon", "month"], kunAnswer: ["つき"], onAnswer: ["げつ", "がつ"]),
                          Kanji(identifier: "Kanji", objectText: "火", imaAnswer: ["fire"], kunAnswer: ["ひ"], onAnswer: ["か"]),
-                         Kanji(identifier: "Kanji", objectText: "水", imaAnswer: ["water"], kunAnswer: ["みず"], onAnswer: ["すい"]),
-                         Kanji(identifier: "Kanji", objectText: "木", imaAnswer: ["tree"], kunAnswer: ["き"], onAnswer: ["もく"]),
+                         Kanji(identifier: "Kanji", objectText: "水", imaAnswer: ["water"], kunAnswer: ["みず"], onAnswer: ["すい"])]
+    var temp6Kanji = [Kanji(identifier: "Kanji", objectText: "木", imaAnswer: ["tree"], kunAnswer: ["き"], onAnswer: ["もく"]),
                          Kanji(identifier: "Kanji", objectText: "金", imaAnswer: ["gold", "money", "metal"], kunAnswer: ["かね"], onAnswer: ["きん"]),
                          Kanji(identifier: "Kanji", objectText: "土", imaAnswer: ["earth", "soil", "ground"], kunAnswer: ["つち"], onAnswer: ["と", "ど"]),
                          Kanji(identifier: "Kanji", objectText: "曜", imaAnswer: ["day of the week"], kunAnswer: ["NA"], onAnswer: ["よう"]),
@@ -70,12 +70,11 @@ class WordKanjiDatabase {
                          Kanji(identifier: "Kanji", objectText: "末", imaAnswer: ["end"], kunAnswer: ["すえ"], onAnswer: ["まつ"]),
                          Kanji(identifier: "Kanji", objectText: "休", imaAnswer: ["to rest"], kunAnswer: ["やす(み)"], onAnswer: ["きゅう"])]
     
-    var chapter7Kanji = [Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""]),
-                         Kanji(identifier: "Kanji", objectText: "時", imaAnswer: ["time", "hour"], kunAnswer: ["とい"], onAnswer: ["じ"]),
+    var chapter7Kanji = [Kanji(identifier: "Kanji", objectText: "時", imaAnswer: ["time", "hour"], kunAnswer: ["とい"], onAnswer: ["じ"]),
                          Kanji(identifier: "Kanji", objectText: "間", imaAnswer: ["interval", "duration"], kunAnswer: ["あいだ"], onAnswer: ["かん"]),
                          Kanji(identifier: "Kanji", objectText: "分", imaAnswer: ["to divide", "to understand", "minute"], kunAnswer: ["わ(ける)", "わ(かる)"], onAnswer: ["ふん", "ぶん", "ぷん"]),
-                         Kanji(identifier: "Kanji", objectText: "半", imaAnswer: ["half"], kunAnswer: ["NA"], onAnswer: ["はん"]),
-                         Kanji(identifier: "Kanji", objectText: "毎", imaAnswer: ["every"], kunAnswer: ["NA"], onAnswer: ["まい"]),
+                         Kanji(identifier: "Kanji", objectText: "半", imaAnswer: ["half"], kunAnswer: ["NA"], onAnswer: ["はん"])]
+    var temp7Kanji = [Kanji(identifier: "Kanji", objectText: "毎", imaAnswer: ["every"], kunAnswer: ["NA"], onAnswer: ["まい"]),
                          Kanji(identifier: "Kanji", objectText: "年", imaAnswer: ["year"], kunAnswer: ["とし"], onAnswer: ["ねん"]),
                          Kanji(identifier: "Kanji", objectText: "好", imaAnswer: ["to like"], kunAnswer: ["す(き)"], onAnswer: ["こう"]),
                          Kanji(identifier: "Kanji", objectText: "語", imaAnswer: ["language", "word"], kunAnswer: ["かた(る)"], onAnswer: ["ご"]),
@@ -87,13 +86,12 @@ class WordKanjiDatabase {
                          Kanji(identifier: "Kanji", objectText: "安", imaAnswer: ["inexpensive", "cheap"], kunAnswer: ["やす(み)"], onAnswer: ["あん"]),
                          Kanji(identifier: "Kanji", objectText: "友", imaAnswer: ["friend"], kunAnswer: ["とも"], onAnswer: ["ゆう"])]
     
-    var chapter8Kanji = [Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""]),
-                         Kanji(identifier: "Kanji", objectText: "一", imaAnswer: ["one"], kunAnswer: ["ひと(つ)"], onAnswer: ["いち"]),
+    var chapter8Kanji = [Kanji(identifier: "Kanji", objectText: "一", imaAnswer: ["one"], kunAnswer: ["ひと(つ)"], onAnswer: ["いち"]),
                          Kanji(identifier: "Kanji", objectText: "二", imaAnswer: ["two"], kunAnswer: ["ふた(つ)"], onAnswer: ["に"]),
                          Kanji(identifier: "Kanji", objectText: "三", imaAnswer: ["three"], kunAnswer: ["みっ(つ)"], onAnswer: ["さん"]),
                          Kanji(identifier: "Kanji", objectText: "四", imaAnswer: ["four"], kunAnswer: ["よ", "よん", "よっ(つ)"], onAnswer: ["し"]),
-                         Kanji(identifier: "Kanji", objectText: "五", imaAnswer: ["five"], kunAnswer: ["いつ(つ)"], onAnswer: ["ご"]),
-                         Kanji(identifier: "Kanji", objectText: "六", imaAnswer: ["six"], kunAnswer: ["むっ(つ)"], onAnswer: ["ろく", "ろっ"]),
+                         Kanji(identifier: "Kanji", objectText: "五", imaAnswer: ["five"], kunAnswer: ["いつ(つ)"], onAnswer: ["ご"])]
+    var temp8Kanji = [Kanji(identifier: "Kanji", objectText: "六", imaAnswer: ["six"], kunAnswer: ["むっ(つ)"], onAnswer: ["ろく", "ろっ"]),
                          Kanji(identifier: "Kanji", objectText: "七", imaAnswer: ["seven"], kunAnswer: ["なな(つ)"], onAnswer: ["しち"]),
                          Kanji(identifier: "Kanji", objectText: "八", imaAnswer: ["eight"], kunAnswer: ["やっ(つ)"], onAnswer: ["はち"]),
                          Kanji(identifier: "Kanji", objectText: "九", imaAnswer: ["nine"], kunAnswer: ["ここの(つ)"], onAnswer: ["きゅう", "く"]),
@@ -104,13 +102,12 @@ class WordKanjiDatabase {
                          Kanji(identifier: "Kanji", objectText: "円", imaAnswer: ["yen (Japanese currency)"], kunAnswer: ["NA"], onAnswer: ["えん"]),
                          Kanji(identifier: "Kanji", objectText: "店", imaAnswer: ["store", "shop"], kunAnswer: ["みせ"], onAnswer: ["でん"])]
     
-    var chapter9Kanji = [Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""]),
-                         Kanji(identifier: "Kanji", objectText: "行", imaAnswer: ["to go"], kunAnswer: ["い(く)"], onAnswer: ["こう"]),
+    var chapter9Kanji = [Kanji(identifier: "Kanji", objectText: "行", imaAnswer: ["to go"], kunAnswer: ["い(く)"], onAnswer: ["こう"]),
                          Kanji(identifier: "Kanji", objectText: "来", imaAnswer: ["to come", "coming"], kunAnswer: ["く(る)"], onAnswer: ["らい"]),
                          Kanji(identifier: "Kanji", objectText: "帰", imaAnswer: ["to return", "to go home"], kunAnswer: ["かえ(る)"], onAnswer: ["き"]),
                          Kanji(identifier: "Kanji", objectText: "食", imaAnswer: ["to eat"], kunAnswer: ["た(べる)"], onAnswer: ["しょく"]),
-                         Kanji(identifier: "Kanji", objectText: "飲", imaAnswer: ["to drink"], kunAnswer: ["の(む)"], onAnswer: ["いん"]),
-                         Kanji(identifier: "Kanji", objectText: "見", imaAnswer: ["to look at", "to watch"], kunAnswer: ["み(る)"], onAnswer: ["けん"]),
+                         Kanji(identifier: "Kanji", objectText: "飲", imaAnswer: ["to drink"], kunAnswer: ["の(む)"], onAnswer: ["いん"])]
+    var temp9Kanji = [Kanji(identifier: "Kanji", objectText: "見", imaAnswer: ["to look at", "to watch"], kunAnswer: ["み(る)"], onAnswer: ["けん"]),
                          Kanji(identifier: "Kanji", objectText: "聞", imaAnswer: ["to listen", "to ask", "inquire"], kunAnswer: ["き(く)"], onAnswer: ["ぶん"]),
                          Kanji(identifier: "Kanji", objectText: "読", imaAnswer: ["to read"], kunAnswer: ["よ(む)"], onAnswer: ["どく"]),
                          Kanji(identifier: "Kanji", objectText: "書", imaAnswer: ["to write", "writing"], kunAnswer: ["か(く)"], onAnswer: ["しょ"]),
@@ -123,13 +120,12 @@ class WordKanjiDatabase {
                          Kanji(identifier: "Kanji", objectText: "作", imaAnswer: ["to make"], kunAnswer: ["つく(る)"], onAnswer: ["さく"]),
                          Kanji(identifier: "Kanji", objectText: "入", imaAnswer: ["to enter"], kunAnswer: ["はい(る)", "い(れる)"], onAnswer: ["にゅう"])]
     
-    var chapter10Kanji = [Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""]),
-                          Kanji(identifier: "Kanji", objectText: "男", imaAnswer: ["male", "man"], kunAnswer: ["おとこ"], onAnswer: ["だん"]),
+    var chapter10Kanji = [Kanji(identifier: "Kanji", objectText: "男", imaAnswer: ["male", "man"], kunAnswer: ["おとこ"], onAnswer: ["だん"]),
                           Kanji(identifier: "Kanji", objectText: "女", imaAnswer: ["female", "woman"], kunAnswer: ["おんな"], onAnswer: ["じょ"]),
                           Kanji(identifier: "Kanji", objectText: "目", imaAnswer: ["eye"], kunAnswer: ["め"], onAnswer: ["もく"]),
                           Kanji(identifier: "Kanji", objectText: "口", imaAnswer: ["mouth"], kunAnswer: ["くち", "ぐち"], onAnswer: ["こう"]),
-                          Kanji(identifier: "Kanji", objectText: "耳", imaAnswer: ["ear"], kunAnswer: ["みみ"], onAnswer: ["じ"]),
-                          Kanji(identifier: "Kanji", objectText: "足", imaAnswer: ["foot", "leg"], kunAnswer: ["あし"], onAnswer: ["そく"]),
+                          Kanji(identifier: "Kanji", objectText: "耳", imaAnswer: ["ear"], kunAnswer: ["みみ"], onAnswer: ["じ"])]
+    var temp10Kanji = [Kanji(identifier: "Kanji", objectText: "足", imaAnswer: ["foot", "leg"], kunAnswer: ["あし"], onAnswer: ["そく"]),
                           Kanji(identifier: "Kanji", objectText: "手", imaAnswer: ["hand"], kunAnswer: ["て"], onAnswer: ["しゅ"]),
                           Kanji(identifier: "Kanji", objectText: "父", imaAnswer: ["father"], kunAnswer: ["ちち"], onAnswer: ["とう"]),
                           Kanji(identifier: "Kanji", objectText: "母", imaAnswer: ["mother"], kunAnswer: ["はは"], onAnswer: ["かあ"]),
@@ -143,13 +139,12 @@ class WordKanjiDatabase {
                           Kanji(identifier: "Kanji", objectText: "親", imaAnswer: ["parent"], kunAnswer: ["おや"], onAnswer: ["しん"]),
                           Kanji(identifier: "Kanji", objectText: "子", imaAnswer: ["child"], kunAnswer: ["こ"], onAnswer: ["し"])]
     
-    var chapter11Kanji = [Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""]),
-                          Kanji(identifier: "Kanji", objectText: "天", imaAnswer: ["heaven"], kunAnswer: ["NA"], onAnswer: ["てん"]),
+    var chapter11Kanji = [Kanji(identifier: "Kanji", objectText: "天", imaAnswer: ["heaven"], kunAnswer: ["NA"], onAnswer: ["てん"]),
                           Kanji(identifier: "Kanji", objectText: "気", imaAnswer: ["spirit", "mind"], kunAnswer: ["NA"], onAnswer: ["き"]),
                           Kanji(identifier: "Kanji", objectText: "雨", imaAnswer: ["rain"], kunAnswer: ["あめ"], onAnswer: ["う"]),
                           Kanji(identifier: "Kanji", objectText: "雪", imaAnswer: ["snow"], kunAnswer: ["ゆき"], onAnswer: ["せつ"]),
-                          Kanji(identifier: "Kanji", objectText: "風", imaAnswer: ["wind"], kunAnswer: ["かぜ"], onAnswer: ["ふう"]),
-                          Kanji(identifier: "Kanji", objectText: "晴", imaAnswer: ["to clear", "fine"], kunAnswer: ["は(れる)"], onAnswer: ["せい"]),
+                          Kanji(identifier: "Kanji", objectText: "風", imaAnswer: ["wind"], kunAnswer: ["かぜ"], onAnswer: ["ふう"])]
+    var temp11Kanji = [Kanji(identifier: "Kanji", objectText: "晴", imaAnswer: ["to clear", "fine"], kunAnswer: ["は(れる)"], onAnswer: ["せい"]),
                           Kanji(identifier: "Kanji", objectText: "温", imaAnswer: ["warm"], kunAnswer: ["あたた(かい)"], onAnswer: ["おん"]),
                           Kanji(identifier: "Kanji", objectText: "度", imaAnswer: ["degree"], kunAnswer: ["NA"], onAnswer: ["ど"]),
                           Kanji(identifier: "Kanji", objectText: "東", imaAnswer: ["east"], kunAnswer: ["ひがし"], onAnswer: ["とう"]),
@@ -162,13 +157,12 @@ class WordKanjiDatabase {
                           Kanji(identifier: "Kanji", objectText: "少", imaAnswer: ["a little", "a few"], kunAnswer: ["すく(ない)", "すこ(し)"], onAnswer: ["しょう"]),
                           Kanji(identifier: "Kanji", objectText: "冷", imaAnswer: ["cold"], kunAnswer: ["つめ(たい)"], onAnswer: ["れい"])]
     
-    var chapter12Kanji = [Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""]),
-                          Kanji(identifier: "Kanji", objectText: "春", imaAnswer: ["spring"], kunAnswer: ["はる"], onAnswer: ["しゅん"]),
+    var chapter12Kanji = [Kanji(identifier: "Kanji", objectText: "春", imaAnswer: ["spring"], kunAnswer: ["はる"], onAnswer: ["しゅん"]),
                           Kanji(identifier: "Kanji", objectText: "夏", imaAnswer: ["summer"], kunAnswer: ["なつ"], onAnswer: ["か"]),
                           Kanji(identifier: "Kanji", objectText: "秋", imaAnswer: ["autumn", "fall"], kunAnswer: ["あき"], onAnswer: ["しゅう"]),
                           Kanji(identifier: "Kanji", objectText: "冬", imaAnswer: ["winter"], kunAnswer: ["ふゆ"], onAnswer: ["とう"]),
-                          Kanji(identifier: "Kanji", objectText: "朝", imaAnswer: ["morning"], kunAnswer: ["あさ"], onAnswer: ["ちょう"]),
-                          Kanji(identifier: "Kanji", objectText: "昼", imaAnswer: ["noon", "daytime"], kunAnswer: ["ひる"], onAnswer: ["ちゅう"]),
+                          Kanji(identifier: "Kanji", objectText: "朝", imaAnswer: ["morning"], kunAnswer: ["あさ"], onAnswer: ["ちょう"])]
+    var temp12Kanji = [Kanji(identifier: "Kanji", objectText: "昼", imaAnswer: ["noon", "daytime"], kunAnswer: ["ひる"], onAnswer: ["ちゅう"]),
                           Kanji(identifier: "Kanji", objectText: "晩", imaAnswer: ["evening"], kunAnswer: ["NA"], onAnswer: ["ばん"]),
                           Kanji(identifier: "Kanji", objectText: "午", imaAnswer: ["noon"], kunAnswer: ["NA"], onAnswer: ["ご"]),
                           Kanji(identifier: "Kanji", objectText: "前", imaAnswer: ["before", "front"], kunAnswer: ["まえ"], onAnswer: ["ぜん"]),
@@ -181,8 +175,7 @@ class WordKanjiDatabase {
                           Kanji(identifier: "Kanji", objectText: "明", imaAnswer: ["bright", "light"], kunAnswer: ["あか(るい)"], onAnswer: ["めい"]),
                           Kanji(identifier: "Kanji", objectText: "回", imaAnswer: ["times", "frequency"], kunAnswer: ["まわ(る)"], onAnswer: ["かい"])]
     
-    var chapter2MainVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                             Word(identifier: "Vocab", objectText: "アジアけんきゅう", imaAnswer: "Asian studies", extraInfo: "NA"),
+    var chapter2MainVocab = [Word(identifier: "Vocab", objectText: "アジアけんきゅう", imaAnswer: "Asian studies", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "アメリカ", imaAnswer: "America, the United States", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "イギリス", imaAnswer: "England", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "いちねんせい", imaAnswer: "freshman, first-years student", extraInfo: "(The suffix せい may be dropped)"),
@@ -281,8 +274,7 @@ class WordKanjiDatabase {
     
     var chapter2AllVocab: [Word]
     
-    var chapter3AllVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                            Word(identifier: "Vocab", objectText: "あさ", imaAnswer: "morning", extraInfo: "NA"),
+    var chapter3AllVocab = [Word(identifier: "Vocab", objectText: "あさ", imaAnswer: "morning", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "あさごはん", imaAnswer: "breakfast", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "あさって", imaAnswer: "the day after tomorrow", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "あした", imaAnswer: "tomorrow", extraInfo: "NA"),
@@ -369,8 +361,7 @@ class WordKanjiDatabase {
                              Word(identifier: "Vocab", objectText: "~ごる", imaAnswer: "about~", extraInfo: "(used only with time expressions)"),
                              Word(identifier: "Vocab", objectText: "~ようび", imaAnswer: "day (of the week)", extraInfo: "NA")]
     
-    var chapter4AllVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                            Word(identifier: "Vocab", objectText: "アパート", imaAnswer: "apartment", extraInfo: "NA"),
+    var chapter4AllVocab = [Word(identifier: "Vocab", objectText: "アパート", imaAnswer: "apartment", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "えき", imaAnswer: "station", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "えんぴつ", imaAnswer: "pencil", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "かばん", imaAnswer: "luggage bag", extraInfo: "NA"),
@@ -427,8 +418,7 @@ class WordKanjiDatabase {
                              Word(identifier: "Vocab", objectText: "とても", imaAnswer: "very", extraInfo: "(always used with an affirmative form)"),
                              Word(identifier: "Vocab", objectText: "~や", imaAnswer: "store", extraInfo: "(ほんや bookstore")]
     
-    var chapter5AllVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                            Word(identifier: "Vocab", objectText: "うえ", imaAnswer: "on, above, over", extraInfo: "NA"),
+    var chapter5AllVocab = [Word(identifier: "Vocab", objectText: "うえ", imaAnswer: "on, above, over", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "うしろ", imaAnswer: "behind, in back of", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "した", imaAnswer: "under, beneath", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "そと", imaAnswer: "outside", extraInfo: "NA"),
@@ -500,8 +490,7 @@ class WordKanjiDatabase {
                              Word(identifier: "Vocab", objectText: "ごめんください", imaAnswer: "Excuse me, anyone home?", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "どのぐらい/どのくらい", imaAnswer: "How long, how much, how many", extraInfo: "NA")]
     
-    var chapter6AllVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                            Word(identifier: "Vocab", objectText: "アルバイト", imaAnswer: "part-time job", extraInfo: "バイト can be used in casual conversation "),
+    var chapter6AllVocab = [Word(identifier: "Vocab", objectText: "アルバイト", imaAnswer: "part-time job", extraInfo: "バイト can be used in casual conversation "),
                              Word(identifier: "Vocab", objectText: "うんどう", imaAnswer: "exercises", extraInfo: "うんどう（を）します (to) exercise (を is commonly deleted)"),
                              Word(identifier: "Vocab", objectText: "おんがく", imaAnswer: "music", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "かいもの", imaAnswer: "shopping", extraInfo: "かいもの（を）します (to) go shopping"),
@@ -566,8 +555,7 @@ class WordKanjiDatabase {
                              Word(identifier: "Vocab", objectText: "ちょっと　つごうがわるくて", imaAnswer: "I'm a little busy.", extraInfo: "(literally, Sorry, it's a little inconvenient.)"),
                              Word(identifier: "Vocab", objectText: "ちょっと　ようじがあって", imaAnswer: "Sorry, I have some errands/business to attend to.", extraInfo: "NA")]
     
-    var chapter7MainVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                             Word(identifier: "Vocab", objectText: "うた", imaAnswer: "song", extraInfo: "NA"),
+    var chapter7MainVocab = [Word(identifier: "Vocab", objectText: "うた", imaAnswer: "song", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "おちゃ", imaAnswer: "tea, green tea", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "オレンジ", imaAnswer: "orange", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "カラオケ", imaAnswer: "Karaoke, sing-along", extraInfo: "NA"),
@@ -651,8 +639,7 @@ class WordKanjiDatabase {
     
     var chapter7AllVocab: [Word]
     
-    var chapter8MainVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                             Word(identifier: "Vocab", objectText: "", imaAnswer: "accessories", extraInfo: "NA"),
+    var chapter8MainVocab = [Word(identifier: "Vocab", objectText: "", imaAnswer: "accessories", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "", imaAnswer: "accessory department", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "", imaAnswer: "earring", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "", imaAnswer: "wristwatch", extraInfo: "NA"),
@@ -689,7 +676,7 @@ class WordKanjiDatabase {
                              Word(identifier: "Vocab", objectText: "", imaAnswer: "women's clothing section", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "", imaAnswer: "blouse", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "", imaAnswer: "stationery", extraInfo: "NA"),
-                             Word(identifier: "Vocab", objectText: "", imaAnswer: "stationery sectino", extraInfo: "NA"),
+                             Word(identifier: "Vocab", objectText: "", imaAnswer: "stationery section", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "", imaAnswer: "belt", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "", imaAnswer: "hat, cap", extraInfo: "NA"),
                              Word(identifier: "Vocab", objectText: "", imaAnswer: "store, shop", extraInfo: "NA"),
@@ -742,8 +729,7 @@ class WordKanjiDatabase {
     
     var chapter8AllVocab: [Word]
     
-    var chapter9AllVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                            Word(identifier: "Vocab", objectText: "アイスクリーム", imaAnswer: "ice cream", extraInfo: "NA"),
+    var chapter9AllVocab = [Word(identifier: "Vocab", objectText: "アイスクリーム", imaAnswer: "ice cream", extraInfo: "NA"),
                             Word(identifier: "Vocab", objectText: "あぶら", imaAnswer: "oil", extraInfo: "あぶらが　おおい fatty, oily"),
                             Word(identifier: "Vocab", objectText: "イタリア", imaAnswer: "Italy", extraInfo: "イタリアりょうり Italian cuisine"),
                             Word(identifier: "Vocab", objectText: "うどん", imaAnswer: "Japanese wheat noodles", extraInfo: "NA"),
@@ -800,8 +786,7 @@ class WordKanjiDatabase {
                             Word(identifier: "Vocab", objectText: "~に　します", imaAnswer: "to decide on !", extraInfo: "NA"),
                             Word(identifier: "Vocab", objectText: "~を　おねがいします", imaAnswer: "I would like to have ~", extraInfo: "NA")]
     
-    var chapter10MainVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                              Word(identifier: "Vocab", objectText: "あし", imaAnswer: "leg, foot", extraInfo: "NA"),
+    var chapter10MainVocab = [Word(identifier: "Vocab", objectText: "あし", imaAnswer: "leg, foot", extraInfo: "NA"),
                               Word(identifier: "Vocab", objectText: "あたま", imaAnswer: "head", extraInfo: "あたまがいい smart, intelligent"),
                               Word(identifier: "Vocab", objectText: "あに", imaAnswer: "older brother", extraInfo: "(the speaker's)"),
                               Word(identifier: "Vocab", objectText: "あね", imaAnswer: "older sister", extraInfo: "(the speaker's)"),
@@ -938,8 +923,7 @@ class WordKanjiDatabase {
     
     var chapter10AllVocab: [Word]
     
-    var chapter11MainVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                              Word(identifier: "Vocab", objectText: "あき", imaAnswer: "fall, autumn", extraInfo: "NA"),
+    var chapter11MainVocab = [Word(identifier: "Vocab", objectText: "あき", imaAnswer: "fall, autumn", extraInfo: "NA"),
                               Word(identifier: "Vocab", objectText: "あめ", imaAnswer: "rain", extraInfo: "NA"),
                               Word(identifier: "Vocab", objectText: "おんど", imaAnswer: "temperature", extraInfo: "NA"),
                               Word(identifier: "Vocab", objectText: "かぜ", imaAnswer: "wind", extraInfo: "NA"),
@@ -1037,8 +1021,7 @@ class WordKanjiDatabase {
     
     var chapter11AllVocab: [Word]
     
-    var chapter12MainVocab = [Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: ""),
-                               Word(identifier: "Vocab", objectText: "うみ", imaAnswer: "ocean, sea", extraInfo: "NA"),
+    var chapter12MainVocab = [Word(identifier: "Vocab", objectText: "うみ", imaAnswer: "ocean, sea", extraInfo: "NA"),
                                Word(identifier: "Vocab", objectText: "おととし", imaAnswer: "the year before last", extraInfo: "NA"),
                                Word(identifier: "Vocab", objectText: "おもいで", imaAnswer: "memories", extraInfo: "NA"),
                                Word(identifier: "Vocab", objectText: "がいこく", imaAnswer: "foreign countries", extraInfo: "NA"),
@@ -1101,9 +1084,25 @@ class WordKanjiDatabase {
     
     var chapter12AllVocab: [Word]
     
+    var allStudyObjects: [StudyObject]
+    var allKanji: [Kanji]
+    var allVocab: [Word]
+    var allMainVocab: [Word]
+    
     //MARK: - Init:
     
     init() {
+        // These lines are needed to avoid an error where the compiler can't check the types within a reasonable time
+        chapter5Kanji = chapter5Kanji + temp5Kanji
+        chapter6Kanji = chapter6Kanji + temp6Kanji
+        chapter7Kanji = chapter7Kanji + temp7Kanji
+        chapter8Kanji = chapter8Kanji + temp8Kanji
+        chapter9Kanji = chapter9Kanji + temp9Kanji
+        chapter10Kanji = chapter10Kanji + temp10Kanji
+        chapter11Kanji = chapter11Kanji + temp11Kanji
+        chapter12Kanji = chapter12Kanji + temp12Kanji
+        
+        // Combine vocabs
         chapter2AllVocab = chapter2MainVocab + chapter2SupVocab
         chapter7AllVocab = chapter7MainVocab + chapter7SupVocab
         chapter8AllVocab = chapter8MainVocab + chapter8SupVocab
@@ -1111,6 +1110,61 @@ class WordKanjiDatabase {
         chapter11AllVocab = chapter11MainVocab + chapter11SupVocab
         chapter12AllVocab = chapter12MainVocab + chapter12SupVocab
         
+        // Put all of the kanji into a single list
+        allKanji = chapter4Kanji + chapter5Kanji
+        allKanji = allKanji + chapter6Kanji
+        allKanji = allKanji + chapter7Kanji
+        allKanji = allKanji + chapter8Kanji
+        allKanji = allKanji + chapter9Kanji
+        allKanji = allKanji + chapter10Kanji
+        allKanji = allKanji + chapter11Kanji
+        allKanji = allKanji + chapter12Kanji
+        
+        // Put all of the vocab into a single list
+        allVocab = chapter2AllVocab + chapter3AllVocab
+        allVocab = allVocab + chapter4AllVocab
+        allVocab = allVocab + chapter5AllVocab
+        allVocab = allVocab + chapter6AllVocab
+        allVocab = allVocab + chapter7AllVocab
+        allVocab = allVocab + chapter8AllVocab
+        allVocab = allVocab + chapter9AllVocab
+        allVocab = allVocab + chapter10AllVocab
+        allVocab = allVocab + chapter11AllVocab
+        allVocab = allVocab + chapter12AllVocab
+        
+        // Put all of the vocab without supplementary vocab into a single list
+        allMainVocab = chapter2MainVocab + chapter3AllVocab
+        allMainVocab = allMainVocab + chapter4AllVocab
+        allMainVocab = allMainVocab + chapter5AllVocab
+        allMainVocab = allMainVocab + chapter6AllVocab
+        allMainVocab = allMainVocab + chapter7MainVocab
+        allMainVocab = allMainVocab + chapter8MainVocab
+        allMainVocab = allMainVocab + chapter9AllVocab
+        allMainVocab = allMainVocab + chapter10MainVocab
+        allMainVocab = allMainVocab + chapter11MainVocab
+        allMainVocab = allMainVocab + chapter12MainVocab
+        
+        // Put all of the study objects into a single list
+        allStudyObjects = chapter2AllVocab + chapter3AllVocab
+        allStudyObjects = allStudyObjects + chapter4AllVocab
+        allStudyObjects = allStudyObjects + chapter4AllVocab
+        allStudyObjects = allStudyObjects + chapter5AllVocab
+        allStudyObjects = allStudyObjects + chapter6AllVocab
+        allStudyObjects = allStudyObjects + chapter7AllVocab
+        allStudyObjects = allStudyObjects + chapter8AllVocab
+        allStudyObjects = allStudyObjects + chapter9AllVocab
+        allStudyObjects = allStudyObjects + chapter10AllVocab
+        allStudyObjects = allStudyObjects + chapter11AllVocab
+        allStudyObjects = allStudyObjects + chapter12AllVocab
+        allStudyObjects = allStudyObjects + chapter4Kanji
+        allStudyObjects = allStudyObjects + chapter5Kanji
+        allStudyObjects = allStudyObjects + chapter6Kanji
+        allStudyObjects = allStudyObjects + chapter7Kanji
+        allStudyObjects = allStudyObjects + chapter8Kanji
+        allStudyObjects = allStudyObjects + chapter9Kanji
+        allStudyObjects = allStudyObjects + chapter10Kanji
+        allStudyObjects = allStudyObjects + chapter11Kanji
+        allStudyObjects = allStudyObjects + chapter12Kanji
     }
 
 }

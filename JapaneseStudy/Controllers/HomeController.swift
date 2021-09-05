@@ -19,6 +19,25 @@ class HomeController: UIViewController {
     
     weak var delegate: MainControllersDelegate?
     
+    let japWorkIconImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = #imageLiteral(resourceName: "JapWorkAppIcon")
+        return imageView
+    }()
+    
+    let japWorkLabel: UILabel = {
+        let label = UILabel()
+        let attrs = [
+            NSAttributedString.Key.font: UIFont(name: "Helvetica-Bold", size: 50)!
+        ]
+        let attributedTitle = NSAttributedString(string: "Welcome to\nJapWork", attributes: attrs)
+        label.attributedText = attributedTitle
+        label.textAlignment = .center
+        label.textColor = .white
+        label.numberOfLines = 0
+        return label
+    }()
+    
     //MARK: - Init
 
     override func viewDidLoad() {
@@ -27,6 +46,7 @@ class HomeController: UIViewController {
         view.backgroundColor = .white
         configureNavigationBar()
         setupGestureRecognizers()
+        setupConstraints()
     }
     
     //MARK: - Handlers
@@ -79,6 +99,18 @@ class HomeController: UIViewController {
         settingsButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         settingsButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         self.navigationItem.setRightBarButton(UIBarButtonItem(customView: settingsButton), animated: false)
+        
+    }
+    
+    func setupConstraints() {
+        
+        view.addSubview(japWorkIconImageView)
+        japWorkIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        japWorkIconImageView.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, centerX: view.centerXAnchor, centerY: nil, paddingTop: 175, paddingLeft: 0, paddingRight: 0, paddingBottom: 0, width: 300, height: 300)
+        
+        view.addSubview(japWorkLabel)
+        japWorkLabel.translatesAutoresizingMaskIntoConstraints = false
+        japWorkLabel.anchor(top: japWorkIconImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 25, paddingRight: -25, paddingBottom: 0, width: 0, height: 0)
         
     }
  

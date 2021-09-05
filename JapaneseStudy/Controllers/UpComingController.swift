@@ -22,6 +22,7 @@ class UpComingController: UIViewController {
     var wordKanjiInfo: [StudyObject]!
     var offSet: Int!
     var delegate: UpComingControllerDelegate!
+    var isQuiz: Bool!
     
     //MARK: - Init:
     
@@ -70,10 +71,18 @@ extension UpComingController: UITableViewDelegate, UITableViewDataSource {
         
         if wordKanjiInfo[i].identifier == "Kanji" {
             let kanji = wordKanjiInfo[i] as! Kanji
-            cell.studyObjectLabel.text = kanji.object + ": " + kanji.imaAnswer[0]
+            if isQuiz {
+                cell.studyObjectLabel.text = kanji.object
+            } else {
+                cell.studyObjectLabel.text = kanji.object + ": " + kanji.imaAnswer[0]
+            }
         } else if wordKanjiInfo[i].identifier == "Vocab" {
             let word = wordKanjiInfo[i] as! Word
-            cell.studyObjectLabel.text = word.object + ": " + word.imaAnswer
+            if isQuiz {
+                cell.studyObjectLabel.text = word.object
+            } else {
+                cell.studyObjectLabel.text = word.object + ": " + word.imaAnswer
+            }
         }
         return cell
     }
@@ -85,6 +94,13 @@ extension UpComingController: UITableViewDelegate, UITableViewDataSource {
         } else {
             i = indexPath.row + offSet
         }
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! UpComingCell
+        if cell.studyObjectLabel.text == "Start:" {
+            print("////////////////////////////////////////////")
+            return
+        }
+        print(cell.studyObjectLabel.text)
+        print(i)
         delegate.didSelect(forIndex: i)
         tableView.deselectRow(at: indexPath, animated: true)
         self.dismiss(animated: true, completion: nil)
