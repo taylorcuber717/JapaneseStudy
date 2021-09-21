@@ -5,6 +5,8 @@
 //  Created by Taylor McLaughlin on 5/19/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: These enumerators hold the settings page sections and rows within those sections.
+//
 
 import Foundation
 

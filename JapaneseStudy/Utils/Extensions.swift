@@ -5,6 +5,10 @@
 //  Created by Taylor McLaughlin on 5/1/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: These extensions make it easier to create a color using RGB values, add programmatic anchors (this is a life saver),
+//  add a UIActivityIndicatorView to a view, shake a text field, add a private button that will make the text on a keyboard private
+//  or undo that, and check if an email is valid.
+//
 
 import UIKit
 
@@ -14,9 +18,6 @@ extension UIColor {
             return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
     }
     
-    static func mainGreen() -> UIColor {
-        return UIColor.rgb(red: 0, green: 180.5, blue: 0)
-    }
 }
 
 extension UIView {
@@ -89,7 +90,6 @@ extension UIView {
     func setupSpinner(spinner: UIActivityIndicatorView) {
         
         spinner.translatesAutoresizingMaskIntoConstraints = false
-        //spinner.startAnimating()
         self.addSubview(spinner)
         self.bringSubviewToFront(spinner)
 

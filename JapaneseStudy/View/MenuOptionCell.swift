@@ -5,6 +5,8 @@
 //  Created by Taylor McLaughlin on 5/2/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This cell holds the contents one of the options of the main menu.
+//
 
 import UIKit
 import FirebaseAuth
@@ -19,7 +21,7 @@ class MenuOptionCell: UITableViewCell {
             descriptionLabel.text = menuOption.description
             expandArrowImageView.isHidden = !menuOption.hasExpandArrow
             iconImageView.image = menuOption.image
-            print(menuOption.identifier)
+            
             if Auth.auth().currentUser?.uid == nil && (menuOption.identifier == "StudyListStudyMenuOption" || menuOption.identifier == "StudyListQuizMenuOption") {
                 descriptionLabel.textColor = .darkGray
                 self.isUserInteractionEnabled = false

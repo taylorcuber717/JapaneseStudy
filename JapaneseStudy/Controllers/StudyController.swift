@@ -5,6 +5,9 @@
 //  Created by Taylor McLaughlin on 5/9/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This view controller presents either a Kanji or Vocab object to the user.  The user can go to the next study object, the previous,
+//  select a particular one via the UpcomingController, or save the study object to a personal study list.
+//
 
 import UIKit
 import CoreData
@@ -18,11 +21,12 @@ class StudyController: UIViewController {
     weak var delegate: MainControllersDelegate?
     var wordKanjiInfo: [StudyObject]!
     static let ref = Database.database().reference()
+    var isStudyList = false
     var isKanji: Bool!
     var spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
     
     // Index to keep track of which StudyObject to use
-    var i = 0
+    var studyObjectIndex = 0
     
     var displayView: UIView = {
         let view = UIView()
@@ -168,6 +172,9 @@ class StudyController: UIViewController {
         checkIfLoggedIn()
         configureNavigationBar()
         setupConstraints()
+        if self.isStudyList {
+            setupStudyListView()
+        }
         view.backgroundColor = .white
         addStart()
         changeStudyObject()
@@ -189,24 +196,14 @@ class StudyController: UIViewController {
     
     private func checkIfLoggedIn() {
         if Auth.auth().currentUser?.uid == nil {
-            print("user not signed in")
             disableSaveButton()
         }
     }
     
-//    func setupConstraints() {
-//
-//        if wordKanjiInfo[0].identifier == "Kanji" {
-//            setupKanjiConstraints()
-//            self.isKanji = true
-//        } else if wordKanjiInfo[0].identifier == "Vocab" {
-//            setupVocabCosntraints()
-//            self.isKanji = false
-//        }
-//
-//    }
     
-    func setupConstraints() {
+    // This screen has UI elements that are used for only the vocabulary view, only the kanji view, and some user in both views.
+    // Setup all of them and then hide the UI elements by calling either changeToKanjiView or changeToVocabView
+    private func setupConstraints() {
         
         // setup kanji view constraints
         view.addSubview(displayView)
@@ -298,6 +295,7 @@ class StudyController: UIViewController {
         
     }
     
+    // Hide each of the UI elements only related to the vocab view and unhide the ones related to the kanji view
     private func changeToKanjiView() {
         self.isKanji = true
         self.displayLabel.font = UIFont(name: displayLabel.font?.fontName ?? "System", size: 150)
@@ -313,6 +311,7 @@ class StudyController: UIViewController {
         self.onAnswerLabel.isHidden = false
     }
     
+    // Hide each of the UI elements only related to the kanji view and unhide the ones related to the vocab view
     private func changeToVocabView() {
         self.isKanji = false
         self.displayLabel.font = UIFont(name: displayLabel.font?.fontName ?? "System", size: 45)
@@ -327,8 +326,14 @@ class StudyController: UIViewController {
         self.onAnswerView.isHidden = true
         self.onAnswerLabel.isHidden = true
     }
- 
-    func setupToolBarConstraints(bottom: NSLayoutYAxisAnchor) {
+    
+    // Change the icon of the studyButton to a trash can if in data is from study list
+    private func setupStudyListView() {
+        self.studyButton.setImage(#imageLiteral(resourceName: "delete_icon").withTintColor(.white), for: .normal)
+    }
+    
+    // Theis is the view at the bottom that holds the next and previous buttons, the save to study list button, and the upcoming button
+    private func setupToolBarConstraints(bottom: NSLayoutYAxisAnchor) {
         view.addSubview(bottomToolBarView)
         bottomToolBarView.translatesAutoresizingMaskIntoConstraints = false
         bottomToolBarView.topAnchor.constraint(equalTo: bottom).isActive = true
@@ -366,25 +371,28 @@ class StudyController: UIViewController {
 
     }
     
-    @objc func onNextClick() {
-        if i < (wordKanjiInfo.count - 1) {
-            i += 1
+    // Move to the next study object, then call change studyObject to present it
+    @objc private func onNextClick() {
+        if studyObjectIndex < (wordKanjiInfo.count - 1) {
+            studyObjectIndex += 1
         } else {
-            i = 0
+            studyObjectIndex = 0
         }
         changeStudyObject()
     }
     
-    @objc func onPreviousClick() {
-        if i > 0 {
-            i -= 1
+    // Move to the previous study object, then call change studyObject to present it
+    @objc private func onPreviousClick() {
+        if studyObjectIndex > 0 {
+            studyObjectIndex -= 1
         } else {
-            i = (wordKanjiInfo.count) - 1
+            studyObjectIndex = (wordKanjiInfo.count) - 1
         }
         changeStudyObject()
     }
     
-    func changeStudyObject() {
+    // Appropriately change each of the labels to show the kanji or vocab info depending on which is currently being presented
+    private func changeStudyObject() {
         
         self.kanjiImaAnswerLabel.text = ""
         self.kunAnswerLabel.text = "くん: "
@@ -392,135 +400,179 @@ class StudyController: UIViewController {
         self.extraInfoLabel.text = "Extra info: "
         if !(wordKanjiInfo.isEmpty) {
             // figure out why this crashes
-            if i >= wordKanjiInfo.count {
+            if studyObjectIndex >= wordKanjiInfo.count {
                 return
             }
-            if wordKanjiInfo[i].identifier == "Kanji" {
+            if wordKanjiInfo[studyObjectIndex].identifier == "Kanji" {
                 changeToKanjiView()
                 let kanjiInfo = wordKanjiInfo as! [Kanji]
-                self.displayLabel.text = kanjiInfo[i].object
-                for answer in kanjiInfo[i].imaAnswer {
+                self.displayLabel.text = kanjiInfo[studyObjectIndex].object
+                for answer in kanjiInfo[studyObjectIndex].imaAnswer {
                     self.kanjiImaAnswerLabel.text = self.kanjiImaAnswerLabel.text! + answer
-                    if answer != kanjiInfo[i].imaAnswer.last {
+                    if answer != kanjiInfo[studyObjectIndex].imaAnswer.last {
                         self.kanjiImaAnswerLabel.text = self.kanjiImaAnswerLabel.text! + ", "
                     }
                 }
-                for answer in kanjiInfo[i].kunAnswer {
+                for answer in kanjiInfo[studyObjectIndex].kunAnswer {
                     self.kunAnswerLabel.text = self.kunAnswerLabel.text! + answer
-                    if answer != kanjiInfo[i].kunAnswer.last {
+                    if answer != kanjiInfo[studyObjectIndex].kunAnswer.last {
                         self.kunAnswerLabel.text = self.kunAnswerLabel.text! + ", "
                     }
                 }
-                for answer in kanjiInfo[i].onAnswer {
+                for answer in kanjiInfo[studyObjectIndex].onAnswer {
                     self.onAnswerLabel.text = self.onAnswerLabel.text! + answer
-                    if answer != kanjiInfo[i].onAnswer.last {
+                    if answer != kanjiInfo[studyObjectIndex].onAnswer.last {
                         self.onAnswerLabel.text = self.onAnswerLabel.text! + ", "
                     }
                 }
-            } else if wordKanjiInfo[i].identifier == "Vocab" {
+            } else if wordKanjiInfo[studyObjectIndex].identifier == "Vocab" {
                 changeToVocabView()
                 let vocabInfo = wordKanjiInfo as! [Word]
-                self.displayLabel.text = vocabInfo[i].object
-                self.vocabImaAnswerLabel.text = vocabInfo[i].imaAnswer
-                self.extraInfoLabel.text = vocabInfo[i].extraInfo
+                self.displayLabel.text = vocabInfo[studyObjectIndex].object
+                self.vocabImaAnswerLabel.text = vocabInfo[studyObjectIndex].imaAnswer
+                self.extraInfoLabel.text = vocabInfo[studyObjectIndex].extraInfo
             }
         }
         
-    }
-     
-    @objc func moveToList() {
-        let upComingController = UpComingController()
-        upComingController.wordKanjiInfo = self.wordKanjiInfo
-        upComingController.offSet = i
-        upComingController.delegate = self
-        upComingController.isQuiz = false
-        self.present(upComingController, animated: true, completion: nil)
     }
     
-    @objc func addToStudyList() {
-        
-        let data: [String: Any]!
-        
-        if self.isKanji {
-            let kanjiInfo = wordKanjiInfo as! [Kanji]
-            //CHANGE i!!!
-            var imaMeaning: [String] = []
-            var onMeaning: [String] = []
-            var kunMeaning: [String] = []
-            for meaning in kanjiInfo[i].imaAnswer {
-                imaMeaning.append(meaning)
-            }
-            for meaning in kanjiInfo[i].onAnswer {
-                onMeaning.append(meaning)
-            }
-            for meaning in kanjiInfo[i].kunAnswer {
-                kunMeaning.append(meaning)
-            }
-            data = [
-                "type": "Kanji",
-                "imaMeaning": imaMeaning,
-                "kunMeaning": kunMeaning,
-                "onMeaning": onMeaning,
-                "kanjiMeaning": kanjiInfo[i].object
-            ]
-        } else {
-            let vocabInfo = wordKanjiInfo as! [Word]
-            data = [
-                "type": "Vocab",
-                "imaMeaning": vocabInfo[i].imaAnswer,
-                "extraInfo": vocabInfo[i].extraInfo,
-                "vocabMeaning": vocabInfo[i].object
-            ]
-        }
+    // Open the upcoming controller, which shows each of the study objects, with the current one at the beginning of the list
+    @objc private func moveToList() {
+        let upcomingController = UpcomingController()
+        upcomingController.wordKanjiInfo = self.wordKanjiInfo
+        upcomingController.offSet = studyObjectIndex
+        upcomingController.delegate = self
+        upcomingController.isQuiz = false
+        self.present(upcomingController, animated: true, completion: nil)
+    }
+    
+    // This function assume the user is logged in.  It then checks if the data is from the study list (using the isStudyList
+    // variable).  If it NOT, it creates a document model to hold either the vocab or kanji details.  It then checks if the
+    // kanji/vocab has already been saved to Firebase, if so, it diplays an alert, if not, it saves it to the database using
+    // the users uid and sends an alert to notify the user upon completion
+    // If the data is from the study list, it finds the current study object in the database and deletes it.  Then notifies
+    // the user with an alert
+    @objc private func addToStudyList() {
         
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        spinner.startAnimating()
-        StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
-            var i = 0
-            if dataSnapshot.childrenCount == 0 {
-                StudyController.ref.child("StudyList").child(uid).childByAutoId().setValue(data)
+        if self.isStudyList {
+            spinner.startAnimating()
+            StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
+                for case let child as DataSnapshot in dataSnapshot.children {
+                    let snapshotData = child.value as! [String: Any]
+                    if snapshotData["type"] as! String == "Kanji" && self.isKanji {
+                        if snapshotData["kanjiMeaning"] as! String == self.wordKanjiInfo[self.studyObjectIndex].object {
+                            let elementToDelete = StudyController.ref.child("StudyList").child(uid).child(child.key)
+                            elementToDelete.removeValue()
+                            self.spinner.stopAnimating()
+                            let alert = UIAlertController(title: "Alert", message: "Kanji successfully deleted, reopen study list to see change", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                            alert.view.tintColor = .red
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        }
+                    } else if snapshotData["type"] as! String == "Vocab" && !self.isKanji {
+                        if snapshotData["vocabMeaning"] as! String == self.wordKanjiInfo[self.studyObjectIndex].object {
+                            let elementToDelete = StudyController.ref.child("StudyList").child(uid).child(child.key)
+                            elementToDelete.removeValue()
+                            self.spinner.stopAnimating()
+                            let alert = UIAlertController(title: "Alert", message: "Vocab successfully deleted, reopen study list to see change", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                            alert.view.tintColor = .red
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        }
+                    }
+                }
             }
-            for case let child as DataSnapshot in dataSnapshot.children {
-                let snapshotData = child.value as! [String: Any]
-                if data["type"] as! String == "Kanji" && snapshotData["type"] as! String == "Kanji" {
-                    if snapshotData["kanjiMeaning"] as! String == data["kanjiMeaning"] as! String {
-                        self.spinner.stopAnimating()
-                        let alert = UIAlertController(title: "Alert", message: "Kanji already saved", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
-                        alert.view.tintColor = .red
-                        self.present(alert, animated: true, completion: nil)
-                        return
-                    }
-                } else if data["type"] as! String == "Vocab" && snapshotData["type"] as! String == "Vocab" {
-                    if snapshotData["vocabMeaning"] as! String == data["vocabMeaning"] as! String {
-                        self.spinner.stopAnimating()
-                        let alert = UIAlertController(title: "Alert", message: "Vocab already saved", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
-                        alert.view.tintColor = .red
-                        self.present(alert, animated: true, completion: nil)
-                        return
-                    }
+            
+            
+        } else {
+            let data: [String: Any]!
+            
+            if self.isKanji {
+                let kanjiInfo = wordKanjiInfo as! [Kanji]
+                //CHANGE i!!!
+                var imaMeaning: [String] = []
+                var onMeaning: [String] = []
+                var kunMeaning: [String] = []
+                for meaning in kanjiInfo[studyObjectIndex].imaAnswer {
+                    imaMeaning.append(meaning)
                 }
-                if i == dataSnapshot.childrenCount - 1 {
+                for meaning in kanjiInfo[studyObjectIndex].onAnswer {
+                    onMeaning.append(meaning)
+                }
+                for meaning in kanjiInfo[studyObjectIndex].kunAnswer {
+                    kunMeaning.append(meaning)
+                }
+                data = [
+                    "type": "Kanji",
+                    "imaMeaning": imaMeaning,
+                    "kunMeaning": kunMeaning,
+                    "onMeaning": onMeaning,
+                    "kanjiMeaning": kanjiInfo[studyObjectIndex].object
+                ]
+            } else {
+                let vocabInfo = wordKanjiInfo as! [Word]
+                data = [
+                    "type": "Vocab",
+                    "imaMeaning": vocabInfo[studyObjectIndex].imaAnswer,
+                    "extraInfo": vocabInfo[studyObjectIndex].extraInfo,
+                    "vocabMeaning": vocabInfo[studyObjectIndex].object
+                ]
+            }
+            
+            spinner.startAnimating()
+            StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
+                var i = 0
+                if dataSnapshot.childrenCount == 0 {
                     StudyController.ref.child("StudyList").child(uid).childByAutoId().setValue(data)
-                    self.spinner.stopAnimating()
-                    let alert = UIAlertController(title: "Alert", message: "Successfully Saved", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
-                    alert.view.tintColor = .red
-                    self.present(alert, animated: true, completion: nil)
                 }
-                i += 1
+                for case let child as DataSnapshot in dataSnapshot.children {
+                    let snapshotData = child.value as! [String: Any]
+                    if data["type"] as! String == "Kanji" && snapshotData["type"] as! String == "Kanji" {
+                        if snapshotData["kanjiMeaning"] as! String == data["kanjiMeaning"] as! String {
+                            self.spinner.stopAnimating()
+                            let alert = UIAlertController(title: "Alert", message: "Kanji already saved", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                            alert.view.tintColor = .red
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        }
+                    } else if data["type"] as! String == "Vocab" && snapshotData["type"] as! String == "Vocab" {
+                        if snapshotData["vocabMeaning"] as! String == data["vocabMeaning"] as! String {
+                            self.spinner.stopAnimating()
+                            let alert = UIAlertController(title: "Alert", message: "Vocab already saved", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                            alert.view.tintColor = .red
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        }
+                    }
+                    if i == dataSnapshot.childrenCount - 1 {
+                        StudyController.ref.child("StudyList").child(uid).childByAutoId().setValue(data)
+                        self.spinner.stopAnimating()
+                        let alert = UIAlertController(title: "Alert", message: "Successfully Saved", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+                        alert.view.tintColor = .red
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                    i += 1
+                }
             }
         }
         
+        
+        
     }
     
-    @objc func handleToggleMenu() {
+    @objc private func handleToggleMenu() {
         delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: true)
     }
     
-    func configureNavigationBar() {
+    // Handle the UI of the navigation bar and setup the functionality of the navigation bar buttons
+    private func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
@@ -554,7 +606,8 @@ class StudyController: UIViewController {
         self.navigationItem.setRightBarButton(UIBarButtonItem(customView: settingsButton), animated: false)
     }
     
-    func setupBorders() {
+    // sets up the red horizontal lines that separate the labels
+    private func setupBorders() {
         let thickness: CGFloat = 2.0
         let kanjiImaTopBorder = CALayer()
         kanjiImaTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
@@ -593,21 +646,26 @@ class StudyController: UIViewController {
         delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: false)
     }
     
+    // Deactivate the add to study list button if the user is not logged in
     private func makeGuestChanges() {
         self.studyButton.setImage(#imageLiteral(resourceName: "good").withTintColor(.darkGray), for: .normal)
         self.studyButton.isUserInteractionEnabled = false
     }
     
-    @objc func moveToSettings() {
+    @objc private func moveToSettings() {
         delegate?.moveToSettings()
     }
     
-    @objc func moveToHomePage() {
+    // Function that moves to the home screen, is called when the user taps on the main title
+    @objc private func moveToHomePage() {
         let containerController = ContainerController()
         containerController.modalPresentationStyle = .fullScreen
         self.present(containerController, animated: false, completion: nil)
     }
     
+    // Whenever the user is at the beginning of a kanji, vocab, or study list or quiz, START is diplayed in the main
+    // text with all other fields blank.  This is achieve by creating a Kanji or Word object that just has START as
+    // the object text with everything else blank, this function adds this start object to the beginning of the list
     private func addStart() {
         if isKanji {
             wordKanjiInfo.insert(WordKanjiDatabase().startKanij, at: 0)
@@ -617,10 +675,12 @@ class StudyController: UIViewController {
     }
 }
 
-extension StudyController: UpComingControllerDelegate {
+extension StudyController: UpcomingControllerDelegate {
+    
+    // This function is called when a user selects a cell in the upcoming controller.  The function jumps to that
+    //study object and presents it using changeStudyObject
     func didSelect(forIndex index: Int) {
-        self.i = index
+        self.studyObjectIndex = index
         changeStudyObject()
-        print("this is happening")
     }
 }

@@ -5,6 +5,9 @@
 //  Created by Taylor McLaughlin on 5/21/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This is a cool pop up view for a failure message.  Must implement delegate to handle the try again
+//  and show correct answers functions.
+//
 
 import UIKit
 
@@ -21,7 +24,6 @@ class FailurePopUpWindow: UIView {
     
     var messageLabel: UILabel = {
         let label = UILabel()
-        label.text = "a;sldfhaaasdfh"
         label.numberOfLines = 0
         label.textAlignment = .center
         label.textColor = .black

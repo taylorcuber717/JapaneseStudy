@@ -5,6 +5,11 @@
 //  Created by Taylor McLaughlin on 5/2/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This view controller holds the home controller and menu controller.  The home controller is in front of the
+//  controller and will be moved aside when the menu controller is activated.  This class also handles the "didSelect"
+//  function, which handles the selections of rows in the menu controller.  This involes either opening the kanji and
+//  vocabulary menus, or opening the study or quiz controller with the appropriate data.
+//
 
 import UIKit
 import FirebaseAuth
@@ -42,7 +47,10 @@ class ContainerController: UIViewController {
      
     //MARK: - Handlers
     
-    func configureHomeController() {
+    /**
+     Create the home controller then set it as the root controller of the center controller
+     */
+    private func configureHomeController() {
         let homeController = HomeController()
         homeController.view.backgroundColor = .black
         homeController.delegate = self
@@ -50,13 +58,16 @@ class ContainerController: UIViewController {
                 
         view.addSubview(centerController.view)
         addChild(centerController)
-//        centerController.navigationItem.ba
         
-        centerController.didMove(toParent: self )
+        centerController.didMove(toParent: self)
         
     }
     
-    func configureMenuNavController() {
+    /**
+     This function creates the menu controller and adds it to the navigation controller, it only does so if the menu controller has not been created yet
+     (this is the first time the menu has been accessed)
+     */
+    private func configureMenuNavController() {
         if menuController == nil {
             // Add menu controller here
             menuController = MainMenuController()
@@ -68,7 +79,12 @@ class ContainerController: UIViewController {
         }
     }
     
-    func animatePanel(shouldExpand: Bool, menuOption: MenuOption?) {
+    /**
+     @parameter: shouldExpand - A boolean, if true then move the center view to the side to show the menu view behind it with an animation, if false, move the center view back
+     @parameter: menuOption - the menu option that was selected
+     Moves the center view, if moving it back, then call didSelectMenuOption to handle the selection.
+     */
+    private func animatePanel(shouldExpand: Bool, menuOption: MenuOption?) {
         if shouldExpand {
             // show view
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
@@ -88,35 +104,17 @@ class ContainerController: UIViewController {
         animateStatusBar()
     }
     
+    /**
+     @parameter: menuOption - the menu option (row of the menu table view) that was selected
+     Handle the selection of the menu options: kanji study, vocab study, studyList study, kanji quiz, vocab quiz,
+     daily quiz, and studyList quiz.  These all relate to populating the study or quiz controller with the correct
+     data, for the daily quiz and studyList this is more complicated.
+     */
     func didSelectMenuOption(menuOption: MenuOption) {
         // Identify which menu table view was used
         switch menuOption.identifier {
-        case "StudyOption":
-            // Handle selecting rows in main menu table view
-            let studyOptions = menuOption as! StudyOptions
-            switch studyOptions {
-            case .vocab:
-                print("show vocabulary")
-            case .kanji:
-                print("show kanji")
-            case .studyList:
-                print("show study list")
-            }
-        case "QuizOption":
-            let quizOptions = menuOption as! QuizOptions
-            switch quizOptions {
-            case .vocab:
-                print("quiz vocab")
-            case .kanji:
-                print("quiz kanji")
-            case .daily:
-                print("quiz daily")
-            case .studyList:
-                print("quiz study list")
-            }
         case "VocabularyStudyMenuOption":
-            // Handle selecting rows in vocabulary menu table view
-            //let vocabOptions = menuOption as! VocabOptions
+            // Handle selecting rows in vocabulary study menu table view
             let vocabOptions = menuOption as! VocabStudyOptions
             let defaults = UserDefaults.standard
             switch vocabOptions {
@@ -168,7 +166,7 @@ class ContainerController: UIViewController {
                 }
             }
         case "KanjiStudyMenuOption":
-            // Handle selecting rows in vocabulary menu table view
+            // Handle selecting rows in kanji study menu table view
             let kanjiOptions = menuOption as! KanjiStudyOptions
             switch kanjiOptions {
             case .chapter4:
@@ -191,55 +189,10 @@ class ContainerController: UIViewController {
                 moveToStudyController(studyObjects: WordKanjiDatabase().chapter12Kanji, type: "Kanji")
             }
         case "StudyListStudyMenuOption":
-            print("here is happening")
-            guard let uid = Auth.auth().currentUser?.uid else { return }
-            var studyObjects: [StudyObject] = []
-            StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
-                var i = 0
-                for case let child as DataSnapshot in dataSnapshot.children {
-                    let snapshotData = child.value as! [String: Any]
-                    if snapshotData["type"] as! String == "Kanji" {
-                        guard let kanjiMeaning = snapshotData["kanjiMeaning"] as? String else {
-                            print("error with kanjiMeaning")
-                            return
-                        }
-                        guard let imaMeaning = snapshotData["imaMeaning"] as? [String] else {
-                            print("error with imaMeaning")
-                            return
-                        }
-                        guard let kunMeaning = snapshotData["kunMeaning"] as? [String] else {
-                            print("error with kunMeaning")
-                            return
-                        }
-                        guard let onMeaning = snapshotData["onMeaning"] as? [String] else {
-                            print("error with onMeaning")
-                            return
-                        }
-                        let kanji = Kanji(identifier: "Kanji", objectText: kanjiMeaning, imaAnswer: imaMeaning, kunAnswer: kunMeaning, onAnswer: onMeaning)
-                        studyObjects.append(kanji)
-                    } else {
-                        guard let vocabMeaning = snapshotData["vocabMeaning"] as? String else {
-                            print("error with vocabMeaning")
-                            return
-                        }
-                        guard let imaMeaning = snapshotData["imaMeaning"] as? String else {
-                            print("error with vocabMeaning")
-                            return
-                        }
-                        guard let extraInfo = snapshotData["extraInfo"] as? String else {
-                            print("error with vocabMeaning")
-                            return
-                        }
-                        let word = Word(identifier: "Vocab", objectText: vocabMeaning, imaAnswer: imaMeaning, extraInfo: extraInfo)
-                        studyObjects.append(word)
-                    }
-                    if i == dataSnapshot.childrenCount - 1 {
-                        self.moveToStudyController(studyObjects: studyObjects, type: "StudyList")
-                    }
-                    i += 1
-                }
-            }
+            prepareStudyList()
+            
         case "VocabularyQuizMenuOption":
+            // Handle selecting rows in vocabulary quiz menu table view
             let vocabOptions = menuOption as! VocabQuizOptions
             let defaults = UserDefaults.standard
             switch vocabOptions {
@@ -291,7 +244,7 @@ class ContainerController: UIViewController {
                 }
             }
         case "KanjiQuizMenuOption":
-            // Handle selecting rows in vocabulary menu table view
+            // Handle selecting rows in kanji quiz menu table view
             let kanjiOptions = menuOption as! KanjiQuizOptions
             switch kanjiOptions {
             case .chapter4:
@@ -314,176 +267,29 @@ class ContainerController: UIViewController {
                 moveToQuizController(quizObjects: WordKanjiDatabase().chapter12Kanji, type: "Kanji")
             }
         case "DailyQuizMenuOption":
-            
-            
-            
-            
-            
-            print("handle daily menu option")
-            
-            print(WordKanjiDatabase().allStudyObjects.count)
-            
-            
-            var totalRandomNumList: [Int] = []
-            var i = 0
-            while i < 50 {
-                let randomNum = Int.random(in: 0..<WordKanjiDatabase().allStudyObjects.count)
-                if !totalRandomNumList.contains(randomNum) {
-                    totalRandomNumList.append(randomNum)
-                    i += 1
-                }
-            }
-            
-            var kanjiRandomNumList: [Int] = []
-            i = 0
-            while i < 50 {
-                let randomNum = Int.random(in: 0..<WordKanjiDatabase().allKanji.count)
-                if !kanjiRandomNumList.contains(randomNum) {
-                    kanjiRandomNumList.append(randomNum)
-                    i += 1
-                }
-            }
-            
-            var vocabRandomNumList: [Int] = []
-            i = 0
-            while i < 50 {
-                let randomNum = Int.random(in: 0..<WordKanjiDatabase().allVocab.count)
-                if !vocabRandomNumList.contains(randomNum) {
-                    vocabRandomNumList.append(randomNum)
-                    i += 1
-                }
-            }
-            
-            var mainVocabRandomNumList: [Int] = []
-            i = 0
-            while i < 50 {
-                let randomNum = Int.random(in: 0..<WordKanjiDatabase().allMainVocab.count)
-                if !mainVocabRandomNumList.contains(randomNum) {
-                    mainVocabRandomNumList.append(randomNum)
-                    i += 1
-                }
-            }
-            
-            
-            var dailyQuizDatabase: [StudyObject] = []
-            var randomNumList: [Int] = []
-            var randomNumListKey = ""
-            
-            let defaults = UserDefaults.standard
-            if defaults.bool(forKey: "includeKanjiDaily") && defaults.bool(forKey: "includeVocabDaily") {
-                dailyQuizDatabase = WordKanjiDatabase().allStudyObjects
-                randomNumList = totalRandomNumList
-                randomNumListKey = "totalQuizList"
-            } else if defaults.bool(forKey: "includeKanjiDaily") {
-                dailyQuizDatabase = WordKanjiDatabase().allKanji
-                randomNumList = kanjiRandomNumList
-                randomNumListKey = "kanjiQuizList"
-            } else if defaults.bool(forKey: "includeVocabDaily") {
-                if defaults.bool(forKey: "quizSupVocab") {
-                    dailyQuizDatabase = WordKanjiDatabase().allVocab
-                    randomNumList = vocabRandomNumList
-                    randomNumListKey = "vocabQuizList"
-                } else {
-                    dailyQuizDatabase = WordKanjiDatabase().allMainVocab
-                    randomNumList = mainVocabRandomNumList
-                    randomNumListKey = "mainVocabQuizList"
-                }
-            } else {
-                let alert = UIAlertController(title: "Alert", message: "You don't have vocab or kanji included in the daily quiz, please include at least one to take the quiz", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
-                alert.view.tintColor = .red
-                self.present(alert, animated: true, completion: nil)
-                return
-            }
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM d YYYY"
-            let date = Date(timeIntervalSince1970: Date().timeIntervalSince1970)
-            
-            if formatter.string(from: date) == defaults.string(forKey: "mostRecentQuizDay") {
-                print("date == current date")
-                randomNumList = defaults.array(forKey: randomNumListKey) as! [Int]
-            } else {
-                print("else block is running")
-                defaults.setValue(formatter.string(from: date), forKey: "mostRecentQuizDay")
-                defaults.setValue(totalRandomNumList, forKey: "totalQuizList")
-                defaults.setValue(kanjiRandomNumList, forKey: "kanjiQuizList")
-                defaults.setValue(vocabRandomNumList, forKey: "vocabQuizList")
-                defaults.setValue(mainVocabRandomNumList, forKey: "mainVocabQuizList")
-            }
-            
-            print(randomNumList)
-            
-            var quizObjects: [StudyObject] = []
-            
-            for num in randomNumList {
-                print(dailyQuizDatabase[num].object)
-                if dailyQuizDatabase[num].object != "Supplementary Start" {
-                    quizObjects.append(dailyQuizDatabase[num])
-                }
-            }
-            
-            moveToQuizController(quizObjects: quizObjects, type: "Kanji")
+            prepareDailyQuiz()
             
         case "StudyListQuizMenuOption":
-            guard let uid = Auth.auth().currentUser?.uid else { return }
-            var studyObjects: [StudyObject] = []
-            StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
-                var i = 0
-                for case let child as DataSnapshot in dataSnapshot.children {
-                    let snapshotData = child.value as! [String: Any]
-                    if snapshotData["type"] as! String == "Kanji" {
-                        guard let kanjiMeaning = snapshotData["kanjiMeaning"] as? String else {
-                            print("error with kanjiMeaning")
-                            return
-                        }
-                        guard let imaMeaning = snapshotData["imaMeaning"] as? [String] else {
-                            print("error with imaMeaning")
-                            return
-                        }
-                        guard let kunMeaning = snapshotData["kunMeaning"] as? [String] else {
-                            print("error with kunMeaning")
-                            return
-                        }
-                        guard let onMeaning = snapshotData["onMeaning"] as? [String] else {
-                            print("error with onMeaning")
-                            return
-                        }
-                        let kanji = Kanji(identifier: "Kanji", objectText: kanjiMeaning, imaAnswer: imaMeaning, kunAnswer: kunMeaning, onAnswer: onMeaning)
-                        studyObjects.append(kanji)
-                    } else {
-                        guard let vocabMeaning = snapshotData["vocabMeaning"] as? String else {
-                            print("error with vocabMeaning")
-                            return
-                        }
-                        guard let imaMeaning = snapshotData["imaMeaning"] as? String else {
-                            print("error with vocabMeaning")
-                            return
-                        }
-                        guard let extraInfo = snapshotData["extraInfo"] as? String else {
-                            print("error with vocabMeaning")
-                            return
-                        }
-                        let word = Word(identifier: "Vocab", objectText: vocabMeaning, imaAnswer: imaMeaning, extraInfo: extraInfo)
-                        studyObjects.append(word)
-                    }
-                    if i == dataSnapshot.childrenCount - 1 {
-                        self.moveToQuizController(quizObjects: studyObjects, type: "StudyList")
-                    }
-                    i += 1
-                }
-            }
+            prepareStudyListQuiz()
+            
         default:
-            print("Unknown identifier")
+            print("Error: ContainerController.didSelectMenuOption() Unknown identifier")
             print(menuOption.identifier)
         }
     }
     
-    func moveToStudyController(studyObjects: [StudyObject], type: String) {
+    /**
+     @parameter: quizObjects - the list of kanji or vocab that populate the quiz controller
+     @parameter: type - the type of list (Kanji, Vocab, DailyQuiz, StudyList, etc.)
+     Segue to the studyController
+     */
+    private func moveToStudyController(studyObjects: [StudyObject], type: String) {
         let controller = StudyController()
         controller.delegate = self
         controller.wordKanjiInfo = studyObjects
-        
+        if type == "StudyList" {
+            controller.isStudyList = true
+        }
         
         centerController.willMove(toParent: nil)
         centerController.view.removeFromSuperview()
@@ -496,6 +302,12 @@ class ContainerController: UIViewController {
         centerController.didMove(toParent: self)
     }
     
+    
+    /**
+     @parameter: quizObjects - the list of kanji or vocab that populate the quiz controller
+     @parameter: type - the type of list (Kanji, Vocab, DailyQuiz, StudyList, etc.) currently only used to set the quizController to studylist
+     Segue to the quizController
+     */
     private func moveToQuizController(quizObjects: [StudyObject], type: String) {
         let controller = QuizController()
         controller.delegate = self
@@ -515,12 +327,20 @@ class ContainerController: UIViewController {
         centerController.didMove(toParent: self)
     }
     
+    
+    /**
+     Animate the movement of the status bar moving, so that it moves with the main screen (always called from animatePanel)
+     */
     private func animateStatusBar() {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
             self.setNeedsStatusBarAppearanceUpdate()
         }, completion: nil)
     }
     
+    
+    /**
+     Set defaults values for each of the settings, whose values will be saved locally
+     */
     private func setupDefaultValues() {
         let defaults = UserDefaults.standard
         
@@ -540,12 +360,228 @@ class ContainerController: UIViewController {
             defaults.setValue(true, forKey: "includeVocabDaily")
         }
     }
+    
+    
+    /**
+     To create a random daily quiz, I save four different random quizzes for the permutation of potential settings, kanji and vocab,
+     just kanji, just vocab, and vocab without supplementary vocab.  I also save the most recent date the quiz was accessed.
+     When a user opens the daily quiz I check if the current is equal to the most recently accessed date, if it is then I get the locally
+     saved quiz, if it isn't then I create four new random quizzes and save them locally as well as updating the most recently accessed
+     date.  Once I have the correct quiz I move to the quiz controller with that quiz.
+     */
+    private func prepareDailyQuiz() {
+        var totalRandomNumList: [Int] = []
+        var i = 0
+        while i < 50 {
+            let randomNum = Int.random(in: 0..<WordKanjiDatabase().allStudyObjects.count)
+            if !totalRandomNumList.contains(randomNum) {
+                totalRandomNumList.append(randomNum)
+                i += 1
+            }
+        }
+        
+        var kanjiRandomNumList: [Int] = []
+        i = 0
+        while i < 50 {
+            let randomNum = Int.random(in: 0..<WordKanjiDatabase().allKanji.count)
+            if !kanjiRandomNumList.contains(randomNum) {
+                kanjiRandomNumList.append(randomNum)
+                i += 1
+            }
+        }
+        
+        var vocabRandomNumList: [Int] = []
+        i = 0
+        while i < 50 {
+            let randomNum = Int.random(in: 0..<WordKanjiDatabase().allVocab.count)
+            if !vocabRandomNumList.contains(randomNum) {
+                vocabRandomNumList.append(randomNum)
+                i += 1
+            }
+        }
+        
+        var mainVocabRandomNumList: [Int] = []
+        i = 0
+        while i < 50 {
+            let randomNum = Int.random(in: 0..<WordKanjiDatabase().allMainVocab.count)
+            if !mainVocabRandomNumList.contains(randomNum) {
+                mainVocabRandomNumList.append(randomNum)
+                i += 1
+            }
+        }
+        
+        var dailyQuizDatabase: [StudyObject] = []
+        var randomNumList: [Int] = []
+        var randomNumListKey = ""
+        
+        let defaults = UserDefaults.standard
+        if defaults.bool(forKey: "includeKanjiDaily") && defaults.bool(forKey: "includeVocabDaily") {
+            dailyQuizDatabase = WordKanjiDatabase().allStudyObjects
+            randomNumList = totalRandomNumList
+            randomNumListKey = "totalQuizList"
+        } else if defaults.bool(forKey: "includeKanjiDaily") {
+            dailyQuizDatabase = WordKanjiDatabase().allKanji
+            randomNumList = kanjiRandomNumList
+            randomNumListKey = "kanjiQuizList"
+        } else if defaults.bool(forKey: "includeVocabDaily") {
+            if defaults.bool(forKey: "quizSupVocab") {
+                dailyQuizDatabase = WordKanjiDatabase().allVocab
+                randomNumList = vocabRandomNumList
+                randomNumListKey = "vocabQuizList"
+            } else {
+                dailyQuizDatabase = WordKanjiDatabase().allMainVocab
+                randomNumList = mainVocabRandomNumList
+                randomNumListKey = "mainVocabQuizList"
+            }
+        } else {
+            let alert = UIAlertController(title: "Alert", message: "You don't have vocab or kanji included in the daily quiz, please include at least one to take the quiz", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+            alert.view.tintColor = .red
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d YYYY"
+        let date = Date(timeIntervalSince1970: Date().timeIntervalSince1970)
+        
+        if formatter.string(from: date) == defaults.string(forKey: "mostRecentQuizDay") {
+            randomNumList = defaults.array(forKey: randomNumListKey) as! [Int]
+        } else {
+            defaults.setValue(formatter.string(from: date), forKey: "mostRecentQuizDay")
+            defaults.setValue(totalRandomNumList, forKey: "totalQuizList")
+            defaults.setValue(kanjiRandomNumList, forKey: "kanjiQuizList")
+            defaults.setValue(vocabRandomNumList, forKey: "vocabQuizList")
+            defaults.setValue(mainVocabRandomNumList, forKey: "mainVocabQuizList")
+        }
+        
+        var quizObjects: [StudyObject] = []
+        
+        // Since the "Supplementary Start" is in the WordKanjiDatabase, remove any in the quiz
+        for num in randomNumList {
+            if dailyQuizDatabase[num].object != "Supplementary Start" {
+                quizObjects.append(dailyQuizDatabase[num])
+            }
+        }
+        
+        moveToQuizController(quizObjects: quizObjects, type: "DailyQuiz")
+    }
+    
+    /**
+     Retrieve the user's study list from Firebase, then for object from Firebase convert it into either a Kanji ro Vocab object,
+     add those objects to a list and segue to the study controller with that list
+     */
+    private func prepareStudyList() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        var studyObjects: [StudyObject] = []
+        StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
+            var i = 0
+            for case let child as DataSnapshot in dataSnapshot.children {
+                let snapshotData = child.value as! [String: Any]
+                if snapshotData["type"] as! String == "Kanji" {
+                    guard let kanjiMeaning = snapshotData["kanjiMeaning"] as? String else {
+                        print("Error: ContainerController.prepareStudyList() problem with kanjiMeaning")
+                        return
+                    }
+                    guard let imaMeaning = snapshotData["imaMeaning"] as? [String] else {
+                        print("Error: ContainerController.prepareStudyList() problem with kanjiImaMeaning")
+                        return
+                    }
+                    guard let kunMeaning = snapshotData["kunMeaning"] as? [String] else {
+                        print("Error: ContainerController.prepareStudyList() problem with kunMeaning")
+                        return
+                    }
+                    guard let onMeaning = snapshotData["onMeaning"] as? [String] else {
+                        print("Error: ContainerController.prepareStudyList() problem with onMeaning")
+                        return
+                    }
+                    let kanji = Kanji(identifier: "Kanji", objectText: kanjiMeaning, imaAnswer: imaMeaning, kunAnswer: kunMeaning, onAnswer: onMeaning)
+                    studyObjects.append(kanji)
+                } else {
+                    guard let vocabMeaning = snapshotData["vocabMeaning"] as? String else {
+                        print("Error: ContainerController.prepareStudyList() problem with vocabMeaning")
+                        return
+                    }
+                    guard let imaMeaning = snapshotData["imaMeaning"] as? String else {
+                        print("Error: ContainerController.prepareStudyList() problem with vocabImaMeaning")
+                        return
+                    }
+                    guard let extraInfo = snapshotData["extraInfo"] as? String else {
+                        print("Error: ContainerController.prepareStudyList() problem with extraInfo")
+                        return
+                    }
+                    let word = Word(identifier: "Vocab", objectText: vocabMeaning, imaAnswer: imaMeaning, extraInfo: extraInfo)
+                    studyObjects.append(word)
+                }
+                if i == dataSnapshot.childrenCount - 1 {
+                    self.moveToStudyController(studyObjects: studyObjects, type: "StudyList")
+                }
+                i += 1
+            }
+        }
+    }
+    
+    /**
+     Retrieve the user's study list from Firebase, then for object from Firebase convert it into either a Kanji ro Vocab object,
+     add those objects to a list and segue to the quiz controller with that list
+     */
+    private func prepareStudyListQuiz() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        var studyObjects: [StudyObject] = []
+        StudyController.ref.child("StudyList").child(uid).observeSingleEvent(of: .value) { dataSnapshot in
+            var i = 0
+            for case let child as DataSnapshot in dataSnapshot.children {
+                let snapshotData = child.value as! [String: Any]
+                if snapshotData["type"] as! String == "Kanji" {
+                    guard let kanjiMeaning = snapshotData["kanjiMeaning"] as? String else {
+                        print("Error: ContainerController.prepareStudyListQuiz() problem with kanjiMeaning")
+                        return
+                    }
+                    guard let imaMeaning = snapshotData["imaMeaning"] as? [String] else {
+                        print("Error: ContainerController.prepareStudyListQuiz() problem with kanjiImaMeaning")
+                        return
+                    }
+                    guard let kunMeaning = snapshotData["kunMeaning"] as? [String] else {
+                        print("Error: ContainerController.prepareStudyListQuiz() problem with kunMeaning")
+                        return
+                    }
+                    guard let onMeaning = snapshotData["onMeaning"] as? [String] else {
+                        print("Error: ContainerController.prepareStudyListQuiz() problem with onMeaning")
+                        return
+                    }
+                    let kanji = Kanji(identifier: "Kanji", objectText: kanjiMeaning, imaAnswer: imaMeaning, kunAnswer: kunMeaning, onAnswer: onMeaning)
+                    studyObjects.append(kanji)
+                } else {
+                    guard let vocabMeaning = snapshotData["vocabMeaning"] as? String else {
+                        print("Error: ContainerController.prepareStudyListQuiz() problem with vocabMeaning")
+                        return
+                    }
+                    guard let imaMeaning = snapshotData["imaMeaning"] as? String else {
+                        print("Error: ContainerController.prepareStudyListQuiz() problem with vocabImaMeaning")
+                        return
+                    }
+                    guard let extraInfo = snapshotData["extraInfo"] as? String else {
+                        print("Error: ContainerController.prepareStudyListQuiz() problem with extraInfo")
+                        return
+                    }
+                    let word = Word(identifier: "Vocab", objectText: vocabMeaning, imaAnswer: imaMeaning, extraInfo: extraInfo)
+                    studyObjects.append(word)
+                }
+                if i == dataSnapshot.childrenCount - 1 {
+                    self.moveToQuizController(quizObjects: studyObjects, type: "StudyList")
+                }
+                i += 1
+            }
+        }
+    }
 
 }
 
 //MARK: - HomeControllerDelegate
 
 extension ContainerController: MainControllersDelegate {
+    
+    // Handle moving the home controller when a menu row is selected
     func handleMenuToggle(forMenuOption menuOption: MenuOption?, forShouldExpand shouldExpand: Bool) {
         
         if !isExpanded {
@@ -555,6 +591,7 @@ extension ContainerController: MainControllersDelegate {
         animatePanel(shouldExpand: shouldExpand, menuOption: menuOption)
     }
     
+    // Sets up the navigation bar and then segues to the settingsController
     func moveToSettings() {
         let settingsController = SettingsController()
         let navController = UINavigationController(rootViewController: settingsController)
@@ -568,6 +605,8 @@ extension ContainerController: MainControllersDelegate {
 //MARK: - MenuControllerDelegate
 
 extension ContainerController: MenuControllerDelegate {
+    
+    // Handle the user selecting a men row (this usually involves opening and populating the study or quiz controller)
     func didSelect(forMenuOption menuOption: MenuOption?, forShouldExpand shouldExpand: Bool) {
         if !isExpanded {
             configureMenuNavController()

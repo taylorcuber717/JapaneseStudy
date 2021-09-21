@@ -5,6 +5,10 @@
 //  Created by Taylor McLaughlin on 5/19/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This view controller holds the settings that the user can modify to customize their experience.
+//  This includes having supplementary vocabulary in the study controller, whether to include vocab, kanji, or
+//  both in the daily quizzes, and whether to randomize quizzes.  Also where a user logs out and has Icons8 info
+//
 
 import UIKit
 import Firebase
@@ -30,7 +34,7 @@ class SettingsController: UIViewController {
     
     //MARK: - Hanlders:
     
-    func configureTableView() {
+    private func configureTableView() {
         tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
@@ -45,7 +49,8 @@ class SettingsController: UIViewController {
         
     }
     
-    func configureNavigationBar() {
+    // UI and back button
+    private func configureNavigationBar() {
         
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.isTranslucent = false
@@ -64,8 +69,8 @@ class SettingsController: UIViewController {
     
 }
 
+// The table view is constructed using the SettingsSections enumerator
 extension SettingsController: UITableViewDelegate, UITableViewDataSource {
-    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return SettingsSection.allCases.count
@@ -130,6 +135,8 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
         
     }
     
+    // The settings cells will generally either save a setting in User Defaults or do nothing.
+    // The exception being icons link cell which opens a link to the Icon8 homepage
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let section = SettingsSection(rawValue: indexPath.section) else { return }
         
@@ -141,8 +148,6 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
             case "studySupVocab":
                 let currentValue = defaults.bool(forKey: "studySupVocab")
                 defaults.setValue(!currentValue, forKey: "studySupVocab")
-            case "studyTest":
-                print("nothing to do here")
             case "includeKanjiDaily":
                 let currentValue = defaults.bool(forKey: "includeKanjiDaily")
                 defaults.setValue(!currentValue, forKey: "includeKanjiDaily")
@@ -150,7 +155,7 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
                 let currentValue = defaults.bool(forKey: "includeVocabDaily")
                 defaults.setValue(!currentValue, forKey: "includeVocabDaily")
             default:
-                print("bad value for studyOption identifier")
+                print("Error: SettingsController.didSelectRowAt bad value for studyOption identifier")
             }
         case .Quiz:
             guard let quizOption = SettingsQuizOptions(rawValue: indexPath.row) else { return }
@@ -163,18 +168,16 @@ extension SettingsController: UITableViewDelegate, UITableViewDataSource {
                 let currentValue = defaults.bool(forKey: "randomizeQuizOrder")
                 defaults.setValue(!currentValue, forKey: "randomizeQuizOrder")
             default:
-                print("bad value for studyOption identifier")
+                print("Error: SettingsController.didSelectRowAt bad value for quizOption identifier")
             }
         case .Account:
             guard let accountOption = SettingsAccountOptions(rawValue: indexPath.row) else { return }
             if accountOption.identifier == "logOut" {
                 
-                print("log out of firebase account here")
-                
                 do {
                     try Auth.auth().signOut()
                 } catch let signOutError as NSError {
-                  print("Error signing out: %@", signOutError)
+                  print("Error: SettingsController.didSelelectRowAt signing out: %@", signOutError)
                 }
                 
                 let landingPageController = LandingPageController()

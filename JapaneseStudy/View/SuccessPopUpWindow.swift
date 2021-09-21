@@ -5,6 +5,8 @@
 //  Created by Taylor McLaughlin on 5/23/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This is a cool pop up view for a success message.  Must implement delegate to handle the continue function.
+//
 
 import UIKit
 

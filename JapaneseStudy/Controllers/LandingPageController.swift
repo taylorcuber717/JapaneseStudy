@@ -5,6 +5,9 @@
 //  Created by Taylor McLaughlin on 8/19/21.
 //  Copyright © 2021 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This view controller prompts the user to either create an account or sign in.  Once they do one
+//  of those (or continue as a guest) go to the home page.
+//
 
 import UIKit
 import Firebase
@@ -133,6 +136,8 @@ class LandingPageController: UIViewController {
     
     //MARK: Handlers
     
+    // This screen has UI elements that are used for the landing, login, and sign up pages.  Starts in the landing page design
+    // and sets the alpha of certain elements to 0 or 1 to switch between with an animation
     private func setupConstraints() {
         
         view.addSubview(signUpButton)
@@ -188,6 +193,7 @@ class LandingPageController: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
+    // Set the alpha to zero of each of the UI elements only related to the login view and set the alpha to one the ones related to the sign up view
     private func changeToSignUp() {
         
         self.state = "signup"
@@ -205,6 +211,7 @@ class LandingPageController: UIViewController {
         }
     }
     
+    // Set the alpha to zero of each of the UI elements only related to the sign up view and set the alpha to one the ones related to the login view
     private func changeToLogIn() {
         
         self.state = "login"
@@ -222,15 +229,17 @@ class LandingPageController: UIViewController {
         }
     }
     
-    @objc func onSignIn() {
+    @objc private func onSignIn() {
         changeToSignUp()
     }
     
-    @objc func onLogIn() {
+    @objc private func onLogIn() {
         changeToLogIn()
     }
     
-    @objc func onGuest() {
+    // If they select guest, tell the user the limitations of guest login and if they confirm save isGuest into userDefauts
+    // and go to the home page
+    @objc private func onGuest() {
         
         let defaults = UserDefaults.standard
         defaults.setValue(true, forKey: "isGuest")
@@ -248,7 +257,8 @@ class LandingPageController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    @objc func onBack() {
+    // Revert back to the landing page view
+    @objc private func onBack() {
         
         if self.state == "login" {
             UIView.animate(withDuration: 0.5) {
@@ -279,7 +289,9 @@ class LandingPageController: UIViewController {
         self.state = "normal"
     }
     
-    @objc func onSignInSubmit() {
+    // Create an account on the database for the user using the given credentials and go to the home page.  If there is a
+    // problem given an alert
+    @objc private func onSignInSubmit() {
         
         spinner.startAnimating()
         
@@ -289,7 +301,7 @@ class LandingPageController: UIViewController {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             self.spinner.stopAnimating()
             if error != nil {
-                print(error?.localizedDescription)
+                print("Error: LandingPageController.onSignInSubmit() \(String(describing: error?.localizedDescription))")
                 let alert = UIAlertController(title: "Alert", message: error!.localizedDescription, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
                 alert.view.tintColor = .red
@@ -304,7 +316,9 @@ class LandingPageController: UIViewController {
         }
     }
     
-    @objc func onLogInSubmit() {
+    // Check if a user exists within the database with the given credentials, if they do, log them in and go to the home page.
+    // If they do not, give an alert
+    @objc private func onLogInSubmit() {
         
         spinner.startAnimating()
         
@@ -314,7 +328,7 @@ class LandingPageController: UIViewController {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             self.spinner.stopAnimating()
             if error != nil {
-                print(error?.localizedDescription)
+                print("Error: LandingPageController.onLogInSubmit() \(String(describing: error?.localizedDescription))")
                 let alert = UIAlertController(title: "Alert", message: "Account not found, username or password are incorrect", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
                 alert.view.tintColor = .red
@@ -329,20 +343,19 @@ class LandingPageController: UIViewController {
         }
     }
     
+    // When the app is opened check if they are already logged in (they should be unless they were logged out
+    // when they last exited the app), if they are then go to the home page.
     private func checkIfLoggedIn() {
         if Auth.auth().currentUser?.uid != nil {
             let containerController = ContainerController()
             containerController.modalPresentationStyle = .fullScreen
             self.present(containerController, animated: false, completion: nil)
-        } else {
-            print("user currently not logged in")
         }
     }
 
 }
 
 extension LandingPageController: UITextFieldDelegate {
-    
     @objc func dismissKeyboard() {
         self.view.endEditing(true)
     }

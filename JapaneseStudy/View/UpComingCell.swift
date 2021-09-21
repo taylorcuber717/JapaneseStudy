@@ -5,6 +5,8 @@
 //  Created by Taylor McLaughlin on 5/17/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This cell holds the contents of one of the upcoming study objects
+//
 
 import UIKit
 

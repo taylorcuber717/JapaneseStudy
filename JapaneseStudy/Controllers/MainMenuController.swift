@@ -5,6 +5,9 @@
 //  Created by Taylor McLaughlin on 5/2/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This view controller creates the menu that navigates to the study and quiz controllers with the appropriate data.
+//  Most of the functionality lies within the didSelect function within the container controller.
+//
 
 import UIKit
 
@@ -32,7 +35,7 @@ class MainMenuController: UIViewController {
     
     //MARK: - Handlers
     
-    func configureTableView() {
+    private func configureTableView() {
         tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
@@ -48,7 +51,8 @@ class MainMenuController: UIViewController {
         tableView.backgroundColor = .black
     }
     
-    func configureNavigationBar() {
+    // setup style of navigation bar
+    private func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
@@ -57,6 +61,8 @@ class MainMenuController: UIViewController {
 }
 
 extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
+    
+    // These functions all use the enumerators in the Model files to populate the cells
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return MainMenuSection.allCases.count
@@ -84,12 +90,6 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
             let quiz = QuizOptions(rawValue: indexPath.row)
             cell.menuOption = quiz
         }
-        
-//        let mainMenuOption = MainMenuOption(startingRow: indexPath.row)
-//        
-//        cell.descriptionLabel.text = mainMenuOption.description
-//        cell.iconImageView.image = mainMenuOption.image
-//        cell.expandArrowImageView.image = mainMenuOption.expandImage
         
         return cell
     }
@@ -120,7 +120,7 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
         
         switch mainMenuSection {
         case .Study:
-            if indexPath.row == 2 {
+            if indexPath.row == 2 { // if studylist
                 guard let studyOption = StudyOptions(rawValue: indexPath.row) else { return }
                 let shouldExpand = studyOption.hasExpandArrow
                 delegate?.didSelect(forMenuOption: studyOption, forShouldExpand: shouldExpand)
@@ -133,9 +133,9 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
         case .Quiz:
             guard let quizOption = QuizOptions(rawValue: indexPath.row) else { return }
             let shouldExpand = quizOption.hasExpandArrow
-            if indexPath.row == 2 {
+            if indexPath.row == 2 { // if daily quiz
                 delegate?.didSelect(forMenuOption: quizOption, forShouldExpand: shouldExpand)
-            } else if indexPath.row == 3 {
+            } else if indexPath.row == 3 { // if studylist quiz
                 delegate?.didSelect(forMenuOption: quizOption, forShouldExpand: shouldExpand)
             } else {
                 delegate?.didSelect(forMenuOption: quizOption, forShouldExpand: shouldExpand)
@@ -145,15 +145,14 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
-        // If the mainMenuOption's expandImage is not empty then homeview should not return
-        
-        
-        // If shoudldExpand = false then a new view controller should be presented in this nav controller
-        
-        
     }
     
-    func pushToStudyController(studyOption: StudyOptions) {
+    
+    /**
+     The study list case will never run, it is required since it is an option in the enum, but unilke vocab and kanji selectors it does not
+     open a second window to the select the chapter, thus it only needs to call didSelect in the didSelectRowAt function
+     */
+    private func pushToStudyController(studyOption: StudyOptions) {
         
         switch studyOption {
         case .vocab:
@@ -165,13 +164,16 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
             kanjiStudyMenuController.delegate = self.delegate
             self.navigationController?.pushViewController(kanjiStudyMenuController, animated: true)
         case .studyList:
-            let kanjiStudyMenuController = KanjiStudyMenuController()
-            kanjiStudyMenuController.delegate = self.delegate
-            self.navigationController?.pushViewController(kanjiStudyMenuController, animated: true)
+            print("Warning: MainMenuController.pushToStudyController() .studyList case ran and it should not run")
         }
     }
     
-    func pushToQuizController(quizOption: QuizOptions) {
+    /**
+     The daily and study list cases will never run, they are required since they are options in the enum, but unilke vocab and kanji
+     selectors they do not open a second window to the select the chapter, thus they only need to call did select in the didSelectRowAt
+     function
+     */
+    private func pushToQuizController(quizOption: QuizOptions) {
         
         switch quizOption {
         case .vocab:
@@ -183,13 +185,9 @@ extension MainMenuController: UITableViewDelegate, UITableViewDataSource {
             kanjiQuizMenuController.delegate = self.delegate
             self.navigationController?.pushViewController(kanjiQuizMenuController, animated: true)
         case .daily:
-            let vocabularyQuizMenuController = VocabularyQuizMenuController()
-            vocabularyQuizMenuController.delegate = self.delegate
-            self.navigationController?.pushViewController(vocabularyQuizMenuController, animated: true)
+            print("Warning: MainMenuController.pushToQuizController() .daily case ran and it should not run")
         case .studyList:
-            let kanjiQuizMenuController = KanjiQuizMenuController()
-            kanjiQuizMenuController.delegate = self.delegate
-            self.navigationController?.pushViewController(kanjiQuizMenuController, animated: true)
+            print("Warning: MainMenuController.pushToQuizController() .studyList case ran and it should not run")
         }
         
     }

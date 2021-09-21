@@ -5,36 +5,16 @@
 //  Created by Taylor McLaughlin on 5/15/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: Holds the information for every single kanji and vocabulary word that is used in the app.
+//  Note: All of the "temp" variables are there because xcode actually can't compile the variables within
+//  a reasonable time if all of these objects are directly set to one variable.
+//
 
 import Foundation
 
 class WordKanjiDatabase {
     
     //MARK: - Properties:
-    
-    // Variables:
-//    var chapter1Vocab: [Word]
-//    var chapter2Vocab: [Word]
-//    var chapter3Vocab: [Word]
-//    var chapter4Vocab: [Word]
-//    var chapter5Vocab: [Word]
-//    var chapter6Vocab: [Word]
-//    var chapter7Vocab: [Word]
-//    var chapter8Vocab: [Word]
-//    var chapter9Vocab: [Word]
-//    var chapter10Vocab: [Word]
-//    var chapter11Vocab: [Word]
-//    var chapter12Vocab: [Word]
-//
-//    var chapter4Kanji: [Kanji]
-//    var chapter5Kanji: [Kanji]
-//    var chapter6Kanji: [Kanji]
-//    var chapter7Kanji: [Kanji]
-//    var chapter8Kanji: [Kanji]
-//    var chapter9Kanji: [Kanji]
-//    var chapter10Kanji: [Kanji]
-//    var chapter11Kanji: [Kanji]
-//    var chapter12Kanji: [Kanji]
     
     var startKanij = Kanji(identifier: "Kanji", objectText: "Start", imaAnswer: [""], kunAnswer: [""], onAnswer: [""])
     var startVocab = Word(identifier: "Vocab", objectText: "Start", imaAnswer: "", extraInfo: "")

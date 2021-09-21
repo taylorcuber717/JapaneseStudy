@@ -5,6 +5,8 @@
 //  Created by Taylor McLaughlin on 5/19/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: These enumerators hold the main, kanji, and vocabulary menu's sections and rows within those sections.
+//
 
 import UIKit
 import FirebaseAuth

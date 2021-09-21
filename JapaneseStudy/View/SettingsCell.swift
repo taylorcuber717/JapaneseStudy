@@ -5,6 +5,8 @@
 //  Created by Taylor McLaughlin on 5/19/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This cell holds the contents one of the options of the settings page
+//
 
 import UIKit
 import FirebaseAuth
@@ -27,7 +29,6 @@ class SettingsCell: UITableViewCell {
         let switchControl = UISwitch()
         switchControl.isOn = true
         switchControl.translatesAutoresizingMaskIntoConstraints = false
-        switchControl.addTarget(self, action: #selector(handleSwitchAction), for: .valueChanged)
         switchControl.onTintColor = .red
         return switchControl
     }()
@@ -48,17 +49,5 @@ class SettingsCell: UITableViewCell {
     }
     
     //MARK: - Handlers:
-    
-    @objc func handleSwitchAction(sender: UISwitch) {
-        
-        print("handle is running")
-        
-        if sender.isOn {
-            print("on")
-        } else {
-            print("off")
-        }
-        
-    }
     
 }

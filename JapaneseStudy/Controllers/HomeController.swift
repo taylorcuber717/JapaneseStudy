@@ -5,6 +5,9 @@
 //  Created by Taylor McLaughlin on 5/1/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: main page of this view controller doesn't hold any functionality, just welcomes the user.  The navigation bar is how
+//  the user navigates to the menu and the settings page
+//
 
 import UIKit
 
@@ -51,6 +54,7 @@ class HomeController: UIViewController {
     
     //MARK: - Handlers
     
+    // Use this so that they user can go back to the home controller without selecting anyting on the menu
     private func setupGestureRecognizers() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(closeMenu))
         view.addGestureRecognizer(tap)
@@ -60,15 +64,18 @@ class HomeController: UIViewController {
         delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: false)
     }
     
-    @objc func handleToggleMenu() {
+    @objc private func handleToggleMenu() {
         delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: true)
     }
     
-    @objc func moveToSettings() {
+    @objc private func moveToSettings() {
         delegate?.moveToSettings()
     }
     
-    func configureNavigationBar() {
+    /**
+     This function creates the menu, settings, and home button in the navigation bar and sets up the style of the navigation bar
+     */
+    private func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
@@ -102,7 +109,7 @@ class HomeController: UIViewController {
         
     }
     
-    func setupConstraints() {
+    private func setupConstraints() {
         
         view.addSubview(japWorkIconImageView)
         japWorkIconImageView.translatesAutoresizingMaskIntoConstraints = false

@@ -5,6 +5,9 @@
 //  Created by Taylor McLaughlin on 5/9/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This view controller creates a table view that holds each of the kanji chapters and will open either the
+//  study or quiz controller when one is selected
+//
 
 import UIKit
 
@@ -27,7 +30,7 @@ class KanjiStudyMenuController: UIViewController {
     
     //MARK: - Handlers
     
-    func configureTableView() {
+    private func configureTableView() {
         tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
@@ -43,7 +46,7 @@ class KanjiStudyMenuController: UIViewController {
         tableView.backgroundColor = .black
     }
     
-    func configureNavigationBar() {
+    private func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]

@@ -10,8 +10,6 @@ import UIKit
 
 protocol MenuOption {
     
-    //init(startingRow: Int)
-    
     var identifier: String { get }
     
     var description: String { get }

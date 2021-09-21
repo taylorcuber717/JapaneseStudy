@@ -5,6 +5,11 @@
 //  Created by Taylor McLaughlin on 5/20/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: This view controller presents either a Kanji or Vocab object to the user and quizzes them on it.
+//  The user can go to the next study object, the previous, select a particular one via the UpcomingController, or
+//  save the study object to a personal study list.  They can also enter answers in the given textfield, click submit,
+//  see if they got it right or wrong, and see the correct answers if they got it wrong.
+//
 
 import UIKit
 import FirebaseAuth
@@ -22,13 +27,7 @@ class QuizController: UIViewController {
     var spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
     
     // Index to keep track of which StudyObject to use
-    var i = 0
-    
-    var tapRecognizer: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer()
-        tap.addTarget(self, action: #selector(didTapView))
-        return tap
-    }()
+    var quizObjectIndex = 0
     
     lazy var successPopUpWindow: SuccessPopUpWindow = {
         let view = SuccessPopUpWindow()
@@ -208,8 +207,8 @@ class QuizController: UIViewController {
         view.backgroundColor = .white
         addStart()
         changeStudyObject()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         
         view.addSubview(visualEffectView)
         visualEffectView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -225,7 +224,6 @@ class QuizController: UIViewController {
         kunAnswerTextField.delegate = self
         kanjiImaAnswerTextField.delegate = self
         vocabImaAnswerTextField.delegate = self
-        initializeKeyboard()
         setupBorders()
         setupGestureRecognizers()
         let defaults = UserDefaults.standard
@@ -239,7 +237,10 @@ class QuizController: UIViewController {
     
     //MARK: - Handlers
     
-    func setupConstraints() {
+    
+    // This screen has UI elements that are used for only the vocabulary view, only the kanji view, and some user in both views.
+    // Setup all of them and then hide the UI elements by calling either changeToKanjiView or changeToVocabView
+    private func setupConstraints() {
         
         // setup kanji view constraints
         view.addSubview(displayView)
@@ -323,6 +324,7 @@ class QuizController: UIViewController {
         
     }
     
+    // Hide each of the UI elements only related to the vocab view and unhide the ones related to the kanji view
     private func changeToKanjiView() {
         self.isKanji = true
         self.displayLabel.font = UIFont(name: displayLabel.font?.fontName ?? "System", size: 150)
@@ -336,6 +338,7 @@ class QuizController: UIViewController {
         self.onAnswerTextField.isHidden = false
     }
     
+    // Hide each of the UI elements only related to the kanji view and unhide the ones related to the vocab view
     private func changeToVocabView() {
         self.isKanji = false
         self.displayLabel.font = UIFont(name: displayLabel.font?.fontName ?? "System", size: 45)
@@ -349,11 +352,14 @@ class QuizController: UIViewController {
         self.onAnswerTextField.isHidden = true
     }
     
+    // Change the icon of the studyButton to a trash can if in data is from study list
     private func setupStudyListView() {
         self.studyButton.setImage(#imageLiteral(resourceName: "delete_icon").withTintColor(.white), for: .normal)
     }
     
-    func setupToolBarConstraints(bottom: NSLayoutYAxisAnchor) {
+    // Theis is the view at the bottom that holds the next and previous buttons, the save to study list button, the upcoming button
+    // and the large submit button
+    private func setupToolBarConstraints(bottom: NSLayoutYAxisAnchor) {
         view.addSubview(bottomToolBarView)
         bottomToolBarView.translatesAutoresizingMaskIntoConstraints = false
         bottomToolBarView.topAnchor.constraint(equalTo: bottom).isActive = true
@@ -399,14 +405,8 @@ class QuizController: UIViewController {
         
     }
     
-//    func randomizeStudyObjects() {
-//        let firstStudyObject = [wordKanjiInfo[0]]
-//        var tempStudyObjects: [StudyObject] = Array(wordKanjiInfo[1..<wordKanjiInfo.count])
-//        tempStudyObjects = tempStudyObjects.shuffled()
-//        self.wordKanjiInfo = firstStudyObject + tempStudyObjects
-//    }
-    
-    func showPopUp(success: Bool, message: String) {
+    // The the failure or success pop up window
+    private func showPopUp(success: Bool, message: String) {
         
         if success {
             view.addSubview(successPopUpWindow)
@@ -425,7 +425,6 @@ class QuizController: UIViewController {
                 self.successPopUpWindow.alpha = 1
                 self.successPopUpWindow.transform = CGAffineTransform.identity
             }
-            print("Success branch is running")
         } else {
             view.addSubview(failurePopUpWindow)
             failurePopUpWindow.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
@@ -447,7 +446,12 @@ class QuizController: UIViewController {
         
     }
     
-    @objc func onSubmit() {
+    // Check if the user submitted the correct answer.  For each of the text fields where they entered the correct answer
+    // give it a green border, and a red border for each one where they entered the incorrect answer.  If they entered the
+    // correct answer on all of them, show successPopUpWindow that notifies them.  If they didn't enter the correct answer
+    // on at least one, show failurePopUpWindow that notifies them and allows them to either try again or see the correct
+    // answers
+    @objc private func onSubmit() {
         
         var imaAnswer = ""
         if isKanji {
@@ -465,7 +469,7 @@ class QuizController: UIViewController {
         var onCorrect = false
         
         if isKanji {
-            let kanjiInfo = wordKanjiInfo[i] as! Kanji
+            let kanjiInfo = wordKanjiInfo[quizObjectIndex] as! Kanji
             for answer in kanjiInfo.imaAnswer {
                 if imaAnswer == answer {
                     imaCorrect = true
@@ -528,7 +532,7 @@ class QuizController: UIViewController {
             
         } else {
             
-            let vocabInfo = wordKanjiInfo[i] as! Word
+            let vocabInfo = wordKanjiInfo[quizObjectIndex] as! Word
             if imaAnswer == vocabInfo.imaAnswer.lowercased() {
                 imaCorrect = true
             }
@@ -556,33 +560,33 @@ class QuizController: UIViewController {
 
     }
     
-    @objc func onNextClick() {
-        if i < (wordKanjiInfo.count - 1) {
-            i += 1
+    // Move to the next study object, then call change studyObject to present it
+    @objc private func onNextClick() {
+        if quizObjectIndex < (wordKanjiInfo.count - 1) {
+            quizObjectIndex += 1
         } else {
-            i = 0
+            quizObjectIndex = 0
         }
         changeStudyObject()
     }
     
-    @objc func onPreviousClick() {
-        if i > 0 {
-            i -= 1
+    // Move to the previous study object, then call change studyObject to present it
+    @objc private func onPreviousClick() {
+        if quizObjectIndex > 0 {
+            quizObjectIndex -= 1
         } else {
-            i = (wordKanjiInfo.count) - 1
+            quizObjectIndex = (wordKanjiInfo.count) - 1
         }
         changeStudyObject()
     }
     
-    
-    
-    func changeStudyObject() {
+    // Appropriately change each of the labels to show the kanji or vocab info depending on which is currently being presented
+    private func changeStudyObject() {
         
-        
-        if i >= wordKanjiInfo.count {
+        if quizObjectIndex >= wordKanjiInfo.count {
             return
         }
-        if wordKanjiInfo[i].identifier == "Kanji" {
+        if wordKanjiInfo[quizObjectIndex].identifier == "Kanji" {
             changeToKanjiView()
         } else {
             changeToVocabView()
@@ -597,7 +601,7 @@ class QuizController: UIViewController {
         kunAnswerTextField.layer.borderWidth = 0
         onAnswerTextField.layer.borderWidth = 0
         if !(wordKanjiInfo.isEmpty) {
-            if wordKanjiInfo[i].object == "Start" || wordKanjiInfo[i].object == "Supplementary Start" {
+            if wordKanjiInfo[quizObjectIndex].object == "Start" || wordKanjiInfo[quizObjectIndex].object == "Supplementary Start" {
                 kanjiImaAnswerTextField.isHidden = true
                 kunAnswerTextField.isHidden = true
                 onAnswerTextField.isHidden = true
@@ -610,52 +614,40 @@ class QuizController: UIViewController {
                 submitButton.isHidden = false
                 vocabImaAnswerTextField.isHidden = false
             }
-            if wordKanjiInfo[i].identifier == "Kanji" {
+            if wordKanjiInfo[quizObjectIndex].identifier == "Kanji" {
                 let kanjiInfo = wordKanjiInfo as! [Kanji]
-                self.displayLabel.text = kanjiInfo[i].object
-            } else if wordKanjiInfo[i].identifier == "Vocab" {
+                self.displayLabel.text = kanjiInfo[quizObjectIndex].object
+            } else if wordKanjiInfo[quizObjectIndex].identifier == "Vocab" {
                 let vocabInfo = wordKanjiInfo as! [Word]
-                self.displayLabel.text = vocabInfo[i].object
+                self.displayLabel.text = vocabInfo[quizObjectIndex].object
             }
         }
         
     }
     
-    @objc func moveToList() {
-        let upComingController = UpComingController()
-        upComingController.wordKanjiInfo = self.wordKanjiInfo
-        upComingController.offSet = i
-        upComingController.delegate = self
-        upComingController.isQuiz = true
-        self.present(upComingController, animated: true, completion: nil)
+    // Open the upcoming controller, which shows each of the study objects, with the current one at the beginning of the list
+    @objc private func moveToList() {
+        let upcomingController = UpcomingController()
+        upcomingController.wordKanjiInfo = self.wordKanjiInfo
+        upcomingController.offSet = quizObjectIndex
+        upcomingController.delegate = self
+        upcomingController.isQuiz = true
+        self.present(upcomingController, animated: true, completion: nil)
     }
     
-    @objc func didTapView() {
-        view.endEditing(true)
-    }
-    
-    @objc func textFieldDidChange(_ textField: UITextField) {
+    // The keyboard might have a red or green border, if the user has submitted an incorrect or correct
+    // answer respectively.  This will remove that border
+    @objc private func textFieldDidChange(_ textField: UITextField) {
         textField.layer.borderWidth = 0
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo else { return }
-        guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-        let keyboardFrame = keyboardSize.cgRectValue
-        if onAnswerTextField.isFirstResponder {
-            if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardFrame.height - 150
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(notification:NSNotification) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
-        }
-    }
-    
-    @objc func addToStudyList() {
+    // This function assume the user is logged in.  It then checks if the data is from the study list (using the isStudyList
+    // variable).  If it NOT, it creates a document model to hold either the vocab or kanji details.  It then checks if the
+    // kanji/vocab has already been saved to Firebase, if so, it diplays an alert, if not, it saves it to the database using
+    // the users uid and sends an alert to notify the user upon completion
+    // If the data is from the study list, it finds the current study object in the database and deletes it.  Then notifies
+    // the user with an alert
+    @objc private func addToStudyList() {
         
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
@@ -665,7 +657,7 @@ class QuizController: UIViewController {
                 for case let child as DataSnapshot in dataSnapshot.children {
                     let snapshotData = child.value as! [String: Any]
                     if snapshotData["type"] as! String == "Kanji" && self.isKanji {
-                        if snapshotData["kanjiMeaning"] as! String == self.wordKanjiInfo[self.i].object {
+                        if snapshotData["kanjiMeaning"] as! String == self.wordKanjiInfo[self.quizObjectIndex].object {
                             let elementToDelete = StudyController.ref.child("StudyList").child(uid).child(child.key)
                             elementToDelete.removeValue()
                             self.spinner.stopAnimating()
@@ -676,7 +668,7 @@ class QuizController: UIViewController {
                             return
                         }
                     } else if snapshotData["type"] as! String == "Vocab" && !self.isKanji {
-                        if snapshotData["vocabMeaning"] as! String == self.wordKanjiInfo[self.i].object {
+                        if snapshotData["vocabMeaning"] as! String == self.wordKanjiInfo[self.quizObjectIndex].object {
                             let elementToDelete = StudyController.ref.child("StudyList").child(uid).child(child.key)
                             elementToDelete.removeValue()
                             self.spinner.stopAnimating()
@@ -699,13 +691,13 @@ class QuizController: UIViewController {
                 var imaMeaning: [String] = []
                 var onMeaning: [String] = []
                 var kunMeaning: [String] = []
-                for meaning in kanjiInfo[i].imaAnswer {
+                for meaning in kanjiInfo[quizObjectIndex].imaAnswer {
                     imaMeaning.append(meaning)
                 }
-                for meaning in kanjiInfo[i].onAnswer {
+                for meaning in kanjiInfo[quizObjectIndex].onAnswer {
                     onMeaning.append(meaning)
                 }
-                for meaning in kanjiInfo[i].kunAnswer {
+                for meaning in kanjiInfo[quizObjectIndex].kunAnswer {
                     kunMeaning.append(meaning)
                 }
                 data = [
@@ -713,15 +705,15 @@ class QuizController: UIViewController {
                     "imaMeaning": imaMeaning,
                     "kunMeaning": kunMeaning,
                     "onMeaning": onMeaning,
-                    "kanjiMeaning": kanjiInfo[i].object
+                    "kanjiMeaning": kanjiInfo[quizObjectIndex].object
                 ]
             } else {
                 let vocabInfo = wordKanjiInfo as! [Word]
                 data = [
                     "type": "Vocab",
-                    "imaMeaning": vocabInfo[i].imaAnswer,
-                    "extraInfo": vocabInfo[i].extraInfo,
-                    "vocabMeaning": vocabInfo[i].object
+                    "imaMeaning": vocabInfo[quizObjectIndex].imaAnswer,
+                    "extraInfo": vocabInfo[quizObjectIndex].extraInfo,
+                    "vocabMeaning": vocabInfo[quizObjectIndex].object
                 ]
             }
             
@@ -767,11 +759,12 @@ class QuizController: UIViewController {
         
     }
     
-    @objc func handleToggleMenu() {
+    @objc private func handleToggleMenu() {
         delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: true)
     }
     
-    func configureNavigationBar() {
+    // Handle the UI of the navigation bar and setup the functionality of the navigation bar buttons
+    private func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
@@ -805,17 +798,8 @@ class QuizController: UIViewController {
         self.navigationItem.setRightBarButton(UIBarButtonItem(customView: settingsButton), animated: false)
     }
     
-    private func initializeKeyboard() {
-        // tap gesture recognizer to remove the keyboard whenever the user taps outside of the textfield
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc func dismissKeyboard() {
-        self.view.endEditing(true)
-    }
-    
-    func setupBorders() {
+    // sets up the red horizontal lines that separate the labels
+    private func setupBorders() {
         let thickness: CGFloat = 2.0
         let kanjiImaTopBorder = CALayer()
         kanjiImaTopBorder.frame = CGRect(x: 0.0, y: 0.0, width: view.frame.width, height: thickness)
@@ -850,9 +834,11 @@ class QuizController: UIViewController {
     }
     
     @objc private func closeMenu() {
+        view.endEditing(true)
         delegate?.handleMenuToggle(forMenuOption: nil, forShouldExpand: false)
     }
     
+    // Randomize the order of the study objects, only called when randomize setting as true
     private func shuffleWordKanjiInfo() {
         
         for i in 0...wordKanjiInfo.count - 2 {
@@ -868,21 +854,26 @@ class QuizController: UIViewController {
         wordKanjiInfo.insert(start, at: 0)
     }
     
+    // Deactivate the add to study list button if the user is not logged in
     private func makeGuestChanges() {
         self.studyButton.setImage(#imageLiteral(resourceName: "good").withTintColor(.darkGray), for: .normal)
         self.studyButton.isUserInteractionEnabled = false
     }
     
-    @objc func moveToSettings() {
+    @objc private func moveToSettings() {
         delegate?.moveToSettings()
     }
     
-    @objc func moveToHomePage() {
+    // Function that moves to the home screen, is called when the user taps on the main title
+    @objc private func moveToHomePage() {
         let containerController = ContainerController()
         containerController.modalPresentationStyle = .fullScreen
         self.present(containerController, animated: false, completion: nil)
     }
     
+    // Whenever the user is at the beginning of a kanji, vocab, or study list or quiz, START is diplayed in the main
+    // text with all other fields blank.  This is achieve by creating a Kanji or Word object that just has START as
+    // the object text with everything else blank, this function adds this start object to the beginning of the list
     private func addStart() {
         if isKanji {
             wordKanjiInfo.insert(WordKanjiDatabase().startKanij, at: 0)
@@ -892,15 +883,19 @@ class QuizController: UIViewController {
     }
 }
 
-extension QuizController: UpComingControllerDelegate {
+extension QuizController: UpcomingControllerDelegate {
+    
+    // This function is called when a user selects a cell in the upcoming controller.  The function jumps to that
+    //study object and presents it using changeStudyObject
     func didSelect(forIndex index: Int) {
-        self.i = index
+        self.quizObjectIndex = index
         changeStudyObject()
-        print("this is running")
     }
 }
 
 extension QuizController: FailurePopUpDelegate {
+    
+    // remove pop up
     func onTryAgain() {
         UIView.animate(withDuration: 0.5, animations: {
             self.visualEffectView.alpha = 0
@@ -911,6 +906,7 @@ extension QuizController: FailurePopUpDelegate {
         }
     }
     
+    // For each of the text fields, change their text to the correct answer and remove the pop up
     func onShowAnswers() {
         UIView.animate(withDuration: 0.5, animations: {
             self.visualEffectView.alpha = 0
@@ -919,14 +915,14 @@ extension QuizController: FailurePopUpDelegate {
         }) { (_) in
             self.failurePopUpWindow.removeFromSuperview()
         }
-        if let kanji = wordKanjiInfo[i] as? Kanji {
+        if let kanji = wordKanjiInfo[quizObjectIndex] as? Kanji {
             kanjiImaAnswerTextField.text = kanji.imaAnswer[0]
             kunAnswerTextField.text = kanji.kunAnswer[0]
             onAnswerTextField.text = kanji.onAnswer[0]
             kanjiImaAnswerTextField.layer.borderWidth = 0
             kunAnswerTextField.layer.borderWidth = 0
             onAnswerTextField.layer.borderWidth = 0
-        } else if let word = wordKanjiInfo[i] as? Word {
+        } else if let word = wordKanjiInfo[quizObjectIndex] as? Word {
             vocabImaAnswerTextField.text = word.imaAnswer
             vocabImaAnswerTextField.layer.borderWidth = 0
         }
@@ -934,6 +930,8 @@ extension QuizController: FailurePopUpDelegate {
 }
 
 extension QuizController: SuccessPopUpDelegate {
+    
+    // Remove pop up
     func onContinue() {
         UIView.animate(withDuration: 0.5, animations: {
             self.visualEffectView.alpha = 0
@@ -946,7 +944,7 @@ extension QuizController: SuccessPopUpDelegate {
 }
 
 extension QuizController: UITextFieldDelegate{
-    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }

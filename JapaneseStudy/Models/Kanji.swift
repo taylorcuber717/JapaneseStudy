@@ -5,6 +5,8 @@
 //  Created by Taylor McLaughlin on 5/15/20.
 //  Copyright © 2020 Taylor McLaughlin. All rights reserved.
 //
+//  Description: Holds the information for one kanji
+//
 
 import Foundation
 
