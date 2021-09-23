@@ -30,6 +30,9 @@ class ContainerController: UIViewController {
         super.viewDidLoad()
         configureHomeController()
         setupDefaultValues()
+        print("container")
+        view.overrideUserInterfaceStyle = .dark
+        print(view.overrideUserInterfaceStyle.rawValue)
         // Do any additional setup after loading the view.
     }
     
@@ -597,6 +600,7 @@ extension ContainerController: MainControllersDelegate {
         let navController = UINavigationController(rootViewController: settingsController)
         navController.modalPresentationStyle = .fullScreen
         navController.navigationBar.tintColor = .red
+        navController.navigationBar.backgroundColor = .black
         
         self.present(navController, animated: true, completion: nil)
     }

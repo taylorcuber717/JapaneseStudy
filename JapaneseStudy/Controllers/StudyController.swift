@@ -169,13 +169,13 @@ class StudyController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         checkIfLoggedIn()
         configureNavigationBar()
         setupConstraints()
         if self.isStudyList {
             setupStudyListView()
         }
-        view.backgroundColor = .white
         addStart()
         changeStudyObject()
         view.setupSpinner(spinner: spinner)
@@ -576,6 +576,8 @@ class StudyController: UIViewController {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
+        navigationController?.navigationBar.backgroundColor = .black
+        view.backgroundColor = .black
         
         let container = UIView()
         container.frame = CGRect(x: 0, y: 0, width: 200, height: 40)

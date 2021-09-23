@@ -204,11 +204,9 @@ class QuizController: UIViewController {
         if self.isStudyList {
             setupStudyListView()
         }
-        view.backgroundColor = .white
+        
         addStart()
         changeStudyObject()
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         
         view.addSubview(visualEffectView)
         visualEffectView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -768,6 +766,8 @@ class QuizController: UIViewController {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
+        navigationController?.navigationBar.backgroundColor = .black
+        view.backgroundColor = .black
         
         let container = UIView()
         container.frame = CGRect(x: 0, y: 0, width: 200, height: 40)

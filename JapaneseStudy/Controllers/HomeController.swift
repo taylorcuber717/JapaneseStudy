@@ -79,6 +79,7 @@ class HomeController: UIViewController {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.tintColor = .red
+        navigationController?.navigationBar.backgroundColor = .black
         
         let container = UIView()
         container.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
@@ -90,8 +91,10 @@ class HomeController: UIViewController {
         ]
         let attributedTitle = NSAttributedString(string: "JapWork", attributes: attrs)
         button.setAttributedTitle(attributedTitle, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         container.addSubview(button)
         navigationItem.titleView = container
+//        navigationItem.titleView.
         
         let menuButton = UIButton()
         menuButton.setImage(#imageLiteral(resourceName: "hamburger_icon").withTintColor(.red), for: .normal)
