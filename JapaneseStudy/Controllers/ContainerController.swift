@@ -29,12 +29,7 @@ class ContainerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureHomeController()
-        setupDefaultValues()
-        print("container")
-        view.overrideUserInterfaceStyle = .dark
-        print(view.overrideUserInterfaceStyle.rawValue)
-        // Do any additional setup after loading the view.
-    }
+        setupDefaultValues()    }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return.lightContent
